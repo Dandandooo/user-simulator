@@ -28,18 +28,19 @@ class TeachModel:
         print(f"\x1b[34mInitializing TeachModel (\x1b[3{1+ST}mST, \x1b[3{1+DH}mDH, \x1b[3{1+DA_E}mDA-E\x1b[34m) for experiment \x1b[34m{experiment}\x1b[0m")
 
 
-        if data is None:    data = TeachData(model_name, ST=ST, DH=DH, DA_E=DA_E, experiment=experiment)
+        if data is None:
+            data = TeachData(model_name, ST=ST, DH=DH, DA_E=DA_E, experiment=experiment)
 
         self.data = data
 
-        self.run_name = f"{model_name.split('/')[1]}_Utt{'_ST'*ST}{'_DH'*DH}{'_DA-E'*DA_E}___{experiment=}"  # Self naming for wandb
+        self.run_name = f"{model_name.split('/')[1]}_Utt{'_ST'*ST}{'_DH'*DH}{'_DA-E'*DA_E}"  # Self naming for wandb
         self.model = SeqModel.from_pretrained(model_name, num_labels=self.data.num_labels, problem_type="multi_label_classification")
         self.device = self.to_device()
 
         self.model.train()
 
         self.training_args = TrainingArguments(
-            output_dir='./results',  # output directory
+            output_dir=f'./results/{self.run_name}',  # output directory
             num_train_epochs=EPOCHS,  # total number of training epochs
             per_device_train_batch_size=BATCH_SIZE,  # batch size per device during training
             per_device_eval_batch_size=BATCH_SIZE,  # batch size for evaluation
@@ -71,9 +72,6 @@ class TeachModel:
         )
 
     def train(self):
-
-
-        
         self.model.train()
         self.trainer.train()
 
@@ -112,4 +110,4 @@ class TeachModel:
         return {'accuracy': accuracy_score(y_true, y_pred)}
 
     def test(self):
-        self.trainer.evaluate(self.data.test_dataset)
+        self.trainer.evaluate(self.data.test_dataset, metric_key="test")

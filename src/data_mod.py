@@ -107,6 +107,9 @@ class TeachData:
             case "TR-VU-VS":
                 valid_data, valid_labels = valid_unseen, valid_unseen_labels
                 test_data, test_labels = valid_seen, valid_seen_labels
+            case "TR-V-None":
+                valid_data, valid_labels = valid_seen + valid_unseen, valid_seen_labels + valid_unseen_labels
+                test_data, test_labels = valid_seen + valid_unseen, valid_seen_labels + valid_unseen_labels
             case _:
                 raise ValueError(f"Invalid experiment: {self.experiment}")
 
