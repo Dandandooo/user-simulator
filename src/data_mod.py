@@ -11,20 +11,19 @@ from time import perf_counter
 
 class TeachData:
     def __init__(self,
-                 tokenizer: str or Tokenizer,
+                 tokenizer: str,
                  path="teach-dataset-parsed/",
                  ST=False, DH=False, DA_E=False,
                  experiment="TR-VSA-VSB",
                  ):
 
-        if isinstance(tokenizer, str):
-            self.tokenizer = Tokenizer.from_pretrained(
-                tokenizer,
-                do_lower_case=True,
-                use_fast=True,
-            )
-        else:
-            self.tokenizer = tokenizer
+        self.tokenizer = Tokenizer.from_pretrained(
+            tokenizer,
+            do_lower_case=True,
+            use_fast=True,
+            padding_side="left",
+            truncation_side="left",
+        )
 
         self.ST = ST
         self.DH = DH
@@ -141,9 +140,13 @@ class TeachData:
 
 # Debugging purposes only when you run this file directly
 if __name__ == "__main__":
-    data = TeachData("roberta-base")
+    import sys
+    if len(sys.argv) > 1:
+        data = TeachData("FacebookAI/roberta-base", ST=sys.argv[1], DH=sys.argv[2], DA_E=sys.argv[3])
+    else:
+        data = TeachData("FacebookAI/roberta-base")
     print(data.labels)
-    print(data.train_dataset)
+    print("Last utterance:" data.train_dataset["input_ids"][-1])
     print(data.valid_dataset)
     print(data.test_dataset)
     print("Number of Labels: ",data.num_labels)

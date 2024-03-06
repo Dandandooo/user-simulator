@@ -110,4 +110,4 @@ class TeachModel:
         return {'accuracy': accuracy_score(y_true, y_pred)}
 
     def test(self):
-        self.trainer.evaluate(self.data.test_dataset, metric_key="test")
+        self.trainer.evaluate(self.data.test_dataset, metric_key_prefix="test")
