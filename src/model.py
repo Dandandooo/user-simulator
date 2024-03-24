@@ -1,6 +1,3 @@
-# Data
-from transformers import RobertaTokenizerFast as Tokenizer
-
 # Training
 from transformers import AutoModelForSequenceClassification as SeqModel
 from transformers import TrainingArguments, Trainer
@@ -27,7 +24,6 @@ class TeachModel:
                  ):
         print(f"\x1b[34mInitializing TeachModel (\x1b[3{1+ST}mST, \x1b[3{1+DH}mDH, \x1b[3{1+DA_E}mDA-E\x1b[34m) for experiment \x1b[34m{experiment}\x1b[0m")
 
-
         if data is None:
             data = TeachData(model_name, ST=ST, DH=DH, DA_E=DA_E, experiment=experiment)
 
@@ -40,7 +36,7 @@ class TeachModel:
         self.model.train()
 
         self.training_args = TrainingArguments(
-            output_dir=f'./results/{self.run_name}',  # output directory
+            output_dir=f'./results/{experiment}/{self.run_name}',  # output directory
             num_train_epochs=EPOCHS,  # total number of training epochs
             per_device_train_batch_size=BATCH_SIZE,  # batch size per device during training
             per_device_eval_batch_size=BATCH_SIZE,  # batch size for evaluation
@@ -53,7 +49,7 @@ class TeachModel:
             warmup_steps=500,  # number of warmup steps for learning rate scheduler
             weight_decay=0.01,  # strength of weight decay
 
-            learning_rate=5e-5,  # learning rate
+            learning_rate=2e-5,  # learning rate
 
             # WandB Logging
             report_to=["wandb"],
@@ -80,7 +76,7 @@ class TeachModel:
         self.model.save_pretrained(path)
 
     def predict(self, text):
-        inputs = self.tokenizer(text, return_tensors="pt")
+        inputs = self.data.tokenizer(text, return_tensors="pt")
         outputs = self.model(**inputs)
         return outputs.logits
 
@@ -101,6 +97,8 @@ class TeachModel:
     def compute_metric(pred: EvalPrediction, threshold=0.5):
         predictions = pred.predictions
         labels = pred.label_ids
+
+        #TODO: Just find the best values  
 
         sigmoid = torch.nn.Sigmoid()
         probs = sigmoid(torch.tensor(predictions, dtype=torch.float32))
