@@ -113,7 +113,7 @@ class TeachModel:
         y_true = torch.tensor(labels, dtype=torch.int32)
 
         acc_score = accuracy_score(y_true, y_pred)
-        bal_acc_score = balanced_accuracy_score(y_true, y_pred)
+        # bal_acc_score = balanced_accuracy_score(y_true, y_pred)
         f1_score_val = f1_score(y_true, y_pred, average='macro')
 
         # Argmax(es) from case
@@ -132,7 +132,7 @@ class TeachModel:
         return {
             'accuracy': acc_score,
             'argmax_accuracy': argmax_score,
-            'balanced_accuracy': bal_acc_score,
+            # 'balanced_accuracy': bal_acc_score,
             'f1_score': f1_score_val,
             'max_confidence': max_conf.values.mean(),
         }
