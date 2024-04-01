@@ -38,7 +38,7 @@ else:
 
 MODEL = "FacebookAI/roberta-base"
 
-wandb.init(project="TeachRecreate", name=f"{model}-{data_flags}", tags=[model, data_flags, experiment], group=experiment)
+wandb.init(project="TeachRecreate", name=f"{model.split('/')[-1]}-{data_flags}", tags=[model, data_flags, experiment], group=experiment)
 
 print(f"\x1b[33;1mTraining {model} on {experiment}\x1b[0m")
 teach_model = TeachModel(model_name=model, **data_flag_maps[data_flags], experiment=experiment)

@@ -4,7 +4,7 @@ from transformers import TrainingArguments, Trainer
 
 # Evaluation
 from transformers import EvalPrediction
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, f1_score
 
 import torch
 # import numpy as np
@@ -28,7 +28,7 @@ class TeachModel:
 
         self.data: TeachData = data
 
-        self.run_name = f"{model_name.split('/')[1]}_Utt{'_ST'*ST}{'_DH'*DH}{'_DA-E'*DA_E}"  # Self naming for wandb
+        self.run_name = f"{model_name.split('/')[-1]}_Utt{'_ST'*ST}{'_DH'*DH}{'_DA-E'*DA_E}"  # Self naming for wandb
         self.model = SeqModel.from_pretrained(model_name, num_labels=self.data.num_labels, problem_type="multi_label_classification")
         self.device = self.to_device()
 
@@ -53,10 +53,10 @@ class TeachModel:
             # WandB Logging
             report_to=["wandb"],
             run_name=self.run_name,
-            evaluation_strategy="steps",
-            eval_steps=100,
-            logging_strategy="steps",
-            logging_steps=100,
+            evaluation_strategy="epoch",
+            # eval_steps=100,
+            logging_strategy="epoch",
+            # logging_steps=100,
             save_strategy="epoch",
         )
 
@@ -132,7 +132,6 @@ class TeachModel:
         return {
             'accuracy': acc_score,
             'argmax_accuracy': argmax_score,
-            # 'balanced_accuracy': bal_acc_score,
             'f1_score': f1_score_val,
             'max_confidence': max_conf.values.mean(),
         }
