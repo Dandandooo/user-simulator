@@ -6,20 +6,20 @@
 
 models=(
     "FacebookAI/roberta-base"
-    "FacebookAI/roberta-large"
+    # "FacebookAI/roberta-large"
     "t5-base"
-    "t5-large"
+    # "t5-large"
 )
 
 data_flags=(
-    "Utt"
-    "Utt_ST"
-    "Utt_DH"
-    "Utt_DA-E"
-    "Utt_ST_DH"
-    "Utt_ST_DA-E"
-    "Utt_DH_DA-E"
-    "Utt_ST_DH_DA-E"
+    # "Utt"
+    # "Utt_ST"
+    # "Utt_DH"
+    # "Utt_DA-E"
+    # "Utt_ST_DH"
+    # "Utt_ST_DA-E"
+    # "Utt_DH_DA-E"
+    # "Utt_ST_DH_DA-E"
     "DH"
     "DH_ST"
     "DH_DA-E"

@@ -28,7 +28,7 @@ class TeachModel:
 
         self.data: TeachData = data
 
-        self.run_name = f"{model_name.split('/')[-1]}_Utt{'_ST'*ST}{'_DH'*DH}{'_DA-E'*DA_E}"  # Self naming for wandb
+        self.run_name = f"{model_name.split('/')[-1]}{'_Utt'*UTT}{'_ST'*ST}{'_DH'*DH}{'_DA-E'*DA_E}"  # Self naming for wandb
         self.model = SeqModel.from_pretrained(model_name, num_labels=self.data.num_labels, problem_type="multi_label_classification")
         self.device = self.to_device()
 

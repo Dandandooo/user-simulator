@@ -47,13 +47,14 @@ print(f"\x1b[32;4mFinished training {model} with {data_flags} on {experiment}\x1
 print(f"\x1b[33;1mTesting {model} with {data_flags}\x1b[0m") # ]]]]]]
 results = teach_model.eval_paper()
 
-wandb.summary["valid_seen"] = results["valid_seen"]["accuracy"]
-wandb.summary["valid_unseen"] = results["valid_unseen"]["accuracy"]
+metric = "test_accuracy"
+wandb.summary["valid_seen"] = results["valid_seen"][metric]
+wandb.summary["valid_unseen"] = results["valid_unseen"][metric]
 
-wandb.summary["valid_seen_commander"] = results["valid_seen_commander"]["accuracy"]
-wandb.summary["valid_seen_driver"] = results["valid_seen_driver"]["accuracy"]
-wandb.summary["valid_unseen_commander"] = results["valid_unseen_commander"]["accuracy"]
-wandb.summary["valid_unseen_driver"] = results["valid_unseen_driver"]["accuracy"]
+wandb.summary["valid_seen_commander"] = results["valid_seen_commander"][metric]
+wandb.summary["valid_seen_driver"] = results["valid_seen_driver"][metric]
+wandb.summary["valid_unseen_commander"] = results["valid_unseen_commander"][metric]
+wandb.summary["valid_unseen_driver"] = results["valid_unseen_driver"][metric]
 wandb.summary.update()
 
 teach_model.save()
