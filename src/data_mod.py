@@ -7,10 +7,6 @@ from datasets import Dataset
 from transformers import AutoTokenizer
 
 
-
-
-    
-
 class TeachData:
     def __init__(self,
                  tokenizer: str,
@@ -44,7 +40,8 @@ class TeachData:
 
         self.num_labels = len(self.labels)
 
-    def read_utterances(self, *files, labels=set()) -> tuple[list, list, list]:
+    @staticmethod
+    def read_utterances(*files, labels=set()) -> tuple[list, list, list]:
         def read_utters(filename: str) -> tuple[list, list, list]:
             data_file = json.load(open(filename, 'r'))
 
@@ -105,6 +102,7 @@ class TeachData:
             "attention_mask": torch.tensor(data_encodings["attention_mask"], dtype=torch.int32),
             "labels": torch.tensor([remap_labels(item_labels) for item_labels in data_labels], dtype=torch.float32)
         }
+
         return Dataset.from_dict(data)
 
     def make_dataset(self, tokenizer, *paths, agent=None, split=None) -> Dataset:
@@ -138,7 +136,7 @@ class TeachData:
 
         return self.get_dataset(encodings, labels)
 
-    def load_data(self) -> dict[str, Dataset | list]:
+    def load_data(self) -> dict[str, Dataset]:
         train_path = os.path.join(self.path, "train.json")
         valid_seen_path = os.path.join(self.path, "valid_seen.json")
         valid_unseen_path = os.path.join(self.path, "valid_unseen.json")
