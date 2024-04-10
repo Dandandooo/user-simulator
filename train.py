@@ -47,7 +47,7 @@ print(f"\x1b[32;4mFinished training {model} with {data_flags} on {experiment}\x1
 print(f"\x1b[33;1mTesting {model} with {data_flags}\x1b[0m") # ]]]]]]
 results = teach_model.eval_paper()
 
-metric = "test_accuracy"
+metric = "test_accuracy (multi)"
 wandb.summary["valid_seen"] = results["valid_seen"][metric]
 wandb.summary["valid_unseen"] = results["valid_unseen"][metric]
 

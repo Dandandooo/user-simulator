@@ -4,10 +4,9 @@ from transformers import TrainingArguments, Trainer
 
 # Evaluation
 from transformers import EvalPrediction
-from sklearn.metrics import accuracy_score, f1_score
+from src.eval import metrics as calc_metrics
 
 import torch
-# import numpy as np
 
 # Import class from data_mod.py
 from src.data_mod import TeachData
@@ -105,35 +104,12 @@ class TeachModel:
         predictions = pred.predictions
         labels = pred.label_ids
 
-        # SKLearn Accuracy
-        threshold = 0.5
-        sigmoid = torch.nn.Sigmoid()
-        probs = sigmoid(torch.tensor(predictions, dtype=torch.float32))
-        y_pred = probs > threshold
-        y_true = torch.tensor(labels, dtype=torch.int32)
-
-        acc_score = accuracy_score(y_true, y_pred)
-        # bal_acc_score = balanced_accuracy_score(y_true, y_pred)
-        f1_score_val = f1_score(y_true, y_pred, average='macro')
-
-        # Argmax(es) from case
-        n_maxes = y_true.count_nonzero()
-        y_arg_pred = torch.zeros_like(y_pred)
-        predict_indices = torch.argsort(probs, descending=True, dim=1)[:, :n_maxes]
-        for i in range(len(y_true)):
-            for j in predict_indices[i]:
-                y_arg_pred[i][j] = 1
-
-        argmax_score = accuracy_score(y_true, y_arg_pred)
-
-        # Max confidence
-        max_conf = torch.max(probs, dim=1)
+        scores = calc_metrics(labels, predictions)
 
         return {
-            'accuracy': acc_score,
-            'argmax_accuracy': argmax_score,
-            'f1_score': f1_score_val,
-            'max_confidence': max_conf.values.mean(),
+            'accuracy (single)': scores['single_argmax_accuracy'],
+            'accuracy (multi)': scores['multi_argmax_accuracy'],
+            'max confidence': scores['max_confidence'],
         }
 
     def test(self, test_data="test"):
