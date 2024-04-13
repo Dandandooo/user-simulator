@@ -242,12 +242,13 @@ class TeachData:
         return datasets
 
 if __name__ == "__main__":
-    td = TeachData("FacebookAI/roberta-base", UTT=True, ST=False, DH=False, DA_E=False, experiment="TR-V-V")
+    # model = "FacebookAI/roberta-base"
+    model = "t5-base"
+    td = TeachData(model, UTT=False, ST=False, DH=True, DA_E=False, experiment="TR-V-V")
     print("Data keys:", ', '.join(td.datasets.keys()))
     print("Data shapes:")
     for key, value in td.datasets.items():
         if isinstance(value, Dataset):
-            print("=>", key, ":", value.shape)
-            print("  -> input_ids:", len(value["input_ids"]), len(value["input_ids"][0]), len(value["input_ids"][0][0]))
-            # print("  -> attention_masks:", len(value["attention_mask"]), type(value["attention_mask"][0]), len(value["attention_mask"][0][0]))
-            # print("  -> labels:", len(value["labels"]), type(value["l)
+            print("\x1b[32m=>\x1b[0;3;4;34m", key, "\x1b[0;90m:\x1b[0m", value.shape) # ]]]]]
+            for k in ["input_ids", "attention_mask", "labels"]:
+                print("  \x1b[33m->\x1b[0m", k, "\x1b[90m:\x1b[0m", (*torch.tensor(value[k]).shape,)) # ]]]]
