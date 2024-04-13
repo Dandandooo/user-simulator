@@ -5,7 +5,7 @@
 # This script takes no arguments
 
 models=(
-    "FacebookAI/roberta-base"
+    # "FacebookAI/roberta-base"
     # "FacebookAI/roberta-large"
     "t5-base"
     # "t5-large"

@@ -21,6 +21,7 @@ class TeachData:
             use_fast=True,
             padding_side="left",
             truncation_side="left",
+            model_max_length=512,
         )
 
         self.max_tokens = self.tokenizer.model_max_length

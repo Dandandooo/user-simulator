@@ -16,8 +16,7 @@ def metrics(y_true, probs):
     }
 
 
-def normalize_probs(probs, choice = 'softmax'):
-    # WARN: This function got a wrong type during runtime
+def normalize_probs(probs: torch.Tensor, choice = 'softmax'):
     match choice:
         case 'softmax':
             return torch.softmax(probs, dim=1)
