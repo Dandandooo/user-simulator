@@ -4,7 +4,7 @@ from transformers import TrainingArguments, Trainer
 
 # Evaluation
 from transformers import EvalPrediction
-from src.eval import metrics as calc_metrics
+from src.sequence.eval import metrics as calc_metrics
 
 import torch
 
@@ -65,6 +65,7 @@ class TeachModel:
             train_dataset=self.data.datasets["train"],  # training dataset
             eval_dataset=self.data.datasets["valid"],  # evaluation dataset
             compute_metrics=TeachModel.compute_metric,
+            tokenizer=self.data.tokenizer,
         )
 
     def train(self):
@@ -101,8 +102,8 @@ class TeachModel:
 
     @staticmethod
     def compute_metric(pred: EvalPrediction):
-        predictions = pred.predictions
-        labels = pred.label_ids
+        predictions = torch.tensor(pred.predictions)
+        labels = torch.tensor(pred.label_ids)
 
         scores = calc_metrics(labels, predictions)
 

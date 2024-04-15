@@ -1,4 +1,4 @@
-from src.model import TeachModel
+from src.sequence.model import TeachModel
 import sys
 import os
 import wandb
