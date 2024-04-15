@@ -1,4 +1,4 @@
-from src.sequence.model import TeachModel
+from src.model.encoder import TeachModel
 import sys
 import os
 import wandb
@@ -27,10 +27,20 @@ data_flag_maps = {
     "DH_ST_DA-E": {"UTT": False, "ST": True, "DH": True, "DA_E": True},
 }
 
+log = True
 if len(args) > 1:
     model = args[1]
     experiment = args[2]
     data_flags = args[3]
+    if len(args) > 4:
+        match args[4]:
+            case "F" | "f" | "false" | "False" | "FALSE" | "0" | "no" | "No" | "NO" | "n" | "N":
+                log = False
+            case "T" | "t" | "true" | "True" | "TRUE" | "1" | "yes" | "Yes" | "YES" | "y" | "Y":
+                log = True
+            case _:
+                print("Invalid log argument, defaulting to True")
+
 else:
     model = "FacebookAI/roberta-base"
     experiment = "TR-VSA-VSB"
@@ -38,24 +48,26 @@ else:
 
 MODEL = "FacebookAI/roberta-base"
 
-wandb.init(project="TeachRecreate", name=f"{model.split('/')[-1]}-{data_flags}", tags=[model, data_flags, experiment], group=experiment)
+if log:
+    wandb.init(project="TeachRecreate", name=f"{model.split('/')[-1]}-{data_flags}", tags=[model, data_flags, experiment], group=experiment)
 
 print(f"\x1b[33;1mTraining {model} on {experiment}\x1b[0m")
-teach_model = TeachModel(model_name=model, **data_flag_maps[data_flags], experiment=experiment)
+teach_model = TeachModel(model_name=model, **data_flag_maps[data_flags], experiment=experiment, log=log)
 teach_model.train()
 print(f"\x1b[32;4mFinished training {model} with {data_flags} on {experiment}\x1b[0m") # ]]]]]]
 print(f"\x1b[33;1mTesting {model} with {data_flags}\x1b[0m") # ]]]]]]
 results = teach_model.eval_paper()
 
 metric = "test_accuracy (multi)"
-wandb.summary["valid_seen"] = results["valid_seen"][metric]
-wandb.summary["valid_unseen"] = results["valid_unseen"][metric]
+if log:
+    wandb.summary["valid_seen"] = results["valid_seen"][metric]
+    wandb.summary["valid_unseen"] = results["valid_unseen"][metric]
 
-wandb.summary["valid_seen_commander"] = results["valid_seen_commander"][metric]
-wandb.summary["valid_seen_driver"] = results["valid_seen_driver"][metric]
-wandb.summary["valid_unseen_commander"] = results["valid_unseen_commander"][metric]
-wandb.summary["valid_unseen_driver"] = results["valid_unseen_driver"][metric]
-wandb.summary.update()
+    wandb.summary["valid_seen_commander"] = results["valid_seen_commander"][metric]
+    wandb.summary["valid_seen_driver"] = results["valid_seen_driver"][metric]
+    wandb.summary["valid_unseen_commander"] = results["valid_unseen_commander"][metric]
+    wandb.summary["valid_unseen_driver"] = results["valid_unseen_driver"][metric]
+    wandb.summary.update()
 
 teach_model.save()
 print(f"\x1b[32;2mModel {model} saved\x1b[0m")

@@ -1,10 +1,12 @@
 import torch
-import json
 import os
 import sys
 
 from datasets import Dataset
 from transformers import AutoTokenizer
+
+from src.data.read_files import read_utterances
+from src.data.process_data import format_data
 
 
 class TeachData:
@@ -35,64 +37,11 @@ class TeachData:
         self.path = path
 
         self.labels = set()
-        self.read_utterances(os.path.join(path, "train.json"), labels=self.labels)
+        read_utterances(os.path.join(path, "train.json"), labels=self.labels)
         self.labels = sorted(self.labels)
         self.datasets = self.load_data()
 
         self.num_labels = len(self.labels)
-
-    @staticmethod
-    def read_utterances(*files, labels=set()) -> tuple[list, list, list]:
-        def read_utters(filename: str) -> tuple[list, list, list]:
-            data_file = json.load(open(filename, 'r'))
-
-            agents = []
-            utterances = []
-            utterance_labels = []
-            for event in data_file:
-                agents.append(event["agent"].capitalize())
-                utterances.append(event["utterance"].lower())
-                utterance_labels.append(
-                    [da[0].upper() + da[1:] for da in event["das"] if da]  # Filters out empty Dialogue Acts
-                )
-                labels.update(utterance_labels[-1])
-
-            return agents, utterances, utterance_labels
-        agents = []
-        utterances = []
-        utterance_labels = []
-        for file in files:
-            agent, utterance, utterance_label = read_utters(file)
-            agents += agent
-            utterances += utterance
-            utterance_labels += utterance_label
-
-        return agents, utterances, utterance_labels
-
-    def format_data(self, agents, utterances, utterance_labels) -> list:
-        data = []
-        for i, (agent, utterance, _) in enumerate(zip(agents, utterances, utterance_labels)):
-            cur_data = ""
-            if self.DH and i > 0:
-                cur_data += data[-1] + ' '
-                if self.DA_E:
-                    cur_data += f'<<{",".join(utterance_labels[i - 1])}>> '
-                cur_data += '<<TURN>> '
-            if self.ST:
-                cur_data += f'<<{agent}>> '
-            cur_data += utterance
-            # The following slice decreased runtime from 685s to 6s
-            if self.DH:
-                data.append(" ".join(cur_data.split()[-self.max_tokens:]))
-            else:
-                data.append(cur_data)
-
-        # Remove utterances if trying to predict future dialogue acts
-        if not self.UTT:
-            for i in range(len(data)):
-                data[i] = data[i][:data[i].rfind("<<TURN>>") + 8]
-
-        return data
 
     def get_dataset(self, data_encodings, data_labels) -> Dataset:
         def remap_labels(label_list: list[str]) -> list[int]:
@@ -107,8 +56,8 @@ class TeachData:
         return Dataset.from_dict(data)
 
     def make_dataset(self, tokenizer, *paths, agent=None, split=None) -> Dataset:
-        agents, utterances, labels = self.read_utterances(*paths)
-        data = self.format_data(agents, utterances, labels)
+        agents, utterances, labels = read_utterances(*paths)
+        data = format_data(agents, utterances, labels, self.UTT, self.DH, self.ST, self.DA_E, self.max_tokens)
         match agent:
             case None:
                 pass
@@ -179,47 +128,47 @@ class TeachData:
         print("0/11: Training dataset", end="\r")
         train_dataset = self.make_dataset(self.tokenizer, train_path)
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("1/11: Validation dataset", end="\r")
         valid_dataset = self.make_dataset(self.tokenizer, *valid_paths, split=valid_split)
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("2/11: Test dataset", end="\r")
         test_dataset = self.make_dataset(self.tokenizer, *test_paths, split=test_split)
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("3/11: Test dataset (Commander)", end="\r")
         test_dataset_commander = self.make_dataset(self.tokenizer, *test_paths, agent="commander", split=test_split)
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("4/11: Test dataset (Driver)", end="\r")
         test_dataset_driver = self.make_dataset(self.tokenizer, *test_paths, agent="driver", split=test_split)
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("5/11: Validation Seen dataset", end="\r")
         valid_seen_dataset = self.make_dataset(self.tokenizer, valid_seen_path)
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("6/11: Validation Seen dataset (Commander)", end="\r")
         valid_seen_dataset_commander = self.make_dataset(self.tokenizer, valid_seen_path, agent="commander")
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("7/11: Validation Seen dataset (Driver)", end="\r")
         valid_seen_dataset_driver = self.make_dataset(self.tokenizer, valid_seen_path, agent="driver")
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("8/11: Validation Unseen dataset", end="\r")
         valid_unseen_dataset = self.make_dataset(self.tokenizer, valid_unseen_path)
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("9/11: Validation Unseen dataset (Commander)", end="\r")
         valid_unseen_dataset_commander = self.make_dataset(self.tokenizer, valid_unseen_path, agent="commander")
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("10/11: Validation Unseen dataset (Driver)", end="\r")
         valid_unseen_dataset_driver = self.make_dataset(self.tokenizer, valid_unseen_path, agent="driver")
 
-        sys.stdout.write("\033[K") # ]]
+        sys.stdout.write("\033[K")  # ]]
         print("11/11: Done initializing datasets")
 
         datasets = {
@@ -241,14 +190,15 @@ class TeachData:
 
         return datasets
 
+
 if __name__ == "__main__":
     # model = "FacebookAI/roberta-base"
     model = "t5-base"
-    td = TeachData(model, UTT=False, ST=False, DH=True, DA_E=False, experiment="TR-V-V")
+    td = TeachData(model, UTT=False, DH=True, ST=False, DA_E=False, experiment="TR-V-V")
     print("Data keys:", ', '.join(td.datasets.keys()))
     print("Data shapes:")
     for key, value in td.datasets.items():
         if isinstance(value, Dataset):
-            print("\x1b[32m=>\x1b[0;3;4;34m", key, "\x1b[0;90m:\x1b[0m", value.shape) # ]]]]]
+            print("\x1b[32m=>\x1b[0;3;4;34m", key, "\x1b[0;90m:\x1b[0m", value.shape)  # ]]]]]
             for k in ["input_ids", "attention_mask", "labels"]:
-                print("  \x1b[33m->\x1b[0m", k, "\x1b[90m:\x1b[0m", (*torch.tensor(value[k]).shape,)) # ]]]]
+                print("  \x1b[33m->\x1b[0m", k, "\x1b[90m:\x1b[0m", (*torch.tensor(value[k]).shape,))  # ]]]]

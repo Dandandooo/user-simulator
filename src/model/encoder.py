@@ -4,12 +4,13 @@ from transformers import TrainingArguments, Trainer
 
 # Evaluation
 from transformers import EvalPrediction
-from src.sequence.eval import metrics as calc_metrics
+from src.model.eval import metrics as calc_metrics
 
 import torch
 
 # Import class from data_mod.py
-from src.data_mod import TeachData
+from src.data.dataclass import TeachData
+
 
 class TeachModel:
     def __init__(self, model_name="FacebookAI/roberta-base",
@@ -18,6 +19,7 @@ class TeachModel:
                  experiment="TR-V-V",
                  EPOCHS=5,
                  BATCH_SIZE=16,
+                 log=True,
                  ):
         print(f"\x1b[34mInitializing TeachModel (\x1b[3{1+UTT}mUtt, \x1b[3{1+ST}mST, \x1b[3{1+DH}mDH, \x1b[3{1+DA_E}mDA-E\x1b[34m) for experiment \x1b[34m{experiment}\x1b[0m")
         # ]]]]]]]])  Neovim LSP problems
@@ -31,10 +33,10 @@ class TeachModel:
         self.model = SeqModel.from_pretrained(model_name, num_labels=self.data.num_labels, problem_type="multi_label_classification")
         self.device = self.to_device()
 
-        self.model.train()
 
         self.training_args = TrainingArguments(
             output_dir=f'./results/{experiment}/{self.run_name}',  # output directory
+            overwrite_output_dir=True,  # overwrite the content of the output directory
             num_train_epochs=EPOCHS,  # total number of training epochs
             per_device_train_batch_size=BATCH_SIZE,  # batch size per device during training
             per_device_eval_batch_size=BATCH_SIZE,  # batch size for evaluation
@@ -50,7 +52,7 @@ class TeachModel:
             learning_rate=2e-5,  # learning rate
 
             # WandB Logging
-            report_to=["wandb"],
+            report_to=(["wandb"] if log else None),
             run_name=self.run_name,
             evaluation_strategy="epoch",
             # eval_steps=100,
@@ -126,3 +128,7 @@ class TeachModel:
             "valid_unseen_driver": self.test("valid_unseen_driver"),
         }
         return results 
+
+if __name__ == "__main__":
+    model = TeachModel("t5-small", UTT=False, ST=False, DH=True, DA_E=False, experiment="TR-V-V", log=False)
+    model.test()
