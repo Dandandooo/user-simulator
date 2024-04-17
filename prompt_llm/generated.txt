@@ -1,0 +1,228 @@
+I need you to predict dialogue acts from the given dialogue history between a user (the commander) and a robot
+(the follower/driver). You will need to predict what the dialogue act will be for the next turn in the dialogue,
+not shown in the data given to you.
+
+The possible dialogue acts are:
+
+[
+ 'Acknowledge', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Below are some examples of dialogues, with the dialogue act for the following turn shown to you.
+Example 1:
+<<COMMANDER>> great. now please make a toasted lettuce and tomato sandwich. <<TURN>>
+<<COMMANDER>> need help? <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<COMMANDER>> great task done awesome job <<TURN>>
+<<DRIVER>> hi! how can i help you today? <<TURN>>
+<<COMMANDER>> pls make a coffee in clean mug <<TURN>>
+<<DRIVER>> sure. where is the mug? <<TURN>>
+<<COMMANDER>> mug is on the coffee maker <<TURN>>
+<<COMMANDER>> clean it <<TURN>>
+<<DRIVER>> there you go! <<TURN>>
+<<COMMANDER>> good <<TURN>>
+<<COMMANDER>> next make salad <<TURN>>
+
+Answer1: Instruction
+
+Example 2:
+<<COMMANDER>> knife is in the fridge <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<COMMANDER>> now can you slice tomato <<TURN>>
+<<COMMANDER>> tomato is in microwave <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<COMMANDER>> can you now slice and  cook 2 slice of potato? <<TURN>>
+<<COMMANDER>> potato is in the fridge <<TURN>>
+<<COMMANDER>> at the top <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<DRIVER>> what's next? <<TURN>>
+<<COMMANDER>> now add all of those components to the clean plate to make a salada <<TURN>>
+<<COMMANDER>> salad <<TURN>>
+<<COMMANDER>> plate is on the worktop where the bin is <<TURN>>
+<<COMMANDER>> on the other side of the fridge <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<COMMANDER>> that is all i needed thank you <<TURN>>
+<<DRIVER>> hi, what should i do today? <<TURN>>
+<<COMMANDER>> hi <<TURN>>
+
+Answer2: Acknowledge
+
+Example 3:
+<<DRIVER>> ok now what <<TURN>>
+<<DRIVER>> picky <<TURN>>
+<<COMMANDER>> perfect nice work <<TURN>>
+<<COMMANDER>> lol <<TURN>>
+<<DRIVER>> what do i do <<TURN>>
+<<COMMANDER>> lets start with slicing the bread <<TURN>>
+<<COMMANDER>> we need to make a toast <<TURN>>
+<<COMMANDER>> pick up the bread on ur left <<TURN>>
+<<DRIVER>> that 1 <<TURN>>
+<<COMMANDER>> yes <<TURN>>
+<<COMMANDER>> please slice it with a knife <<TURN>>
+<<DRIVER>> sliced <<TURN>>
+<<COMMANDER>> pick up the slice <<TURN>>
+<<DRIVER>> picked <<TURN>>
+<<COMMANDER>> find a toaster <<TURN>>
+<<DRIVER>> toasted <<TURN>>
+<<COMMANDER>> place it on a clean plate <<TURN>>
+
+Answer3: Instruction
+
+Example 4:
+<<DRIVER>> done <<TURN>>
+<<COMMANDER>> now we need plate <<TURN>>
+<<COMMANDER>> by the toaster <<TURN>>
+<<COMMANDER>> there is one <<TURN>>
+<<COMMANDER>> please get and put 1 slice on it <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<COMMANDER>> thank you <<TURN>>
+<<DRIVER>> hi, first task? <<TURN>>
+<<COMMANDER>> make 1 slice of potato and cook it <<TURN>>
+<<COMMANDER>> the potato is in the sink <<TURN>>
+<<COMMANDER>> put the cooked potato the the clean plate to the left of the sink <<TURN>>
+<<COMMANDER>> done thank you <<TURN>>
+<<DRIVER>> hello, what is my task? <<TURN>>
+<<COMMANDER>> please fill coffee in mug <<TURN>>
+<<COMMANDER>> mug is in coffee maker <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<DRIVER>> next please <<TURN>>
+<<COMMANDER>> not done <<TURN>>
+<<COMMANDER>> please clean the mug and fill again <<TURN>>
+<<DRIVER>> it was dirty <<TURN>>
+<<DRIVER>> done now? <<TURN>>
+
+Answer4: Instruction
+
+Example 5:
+<<DRIVER>> ok <<TURN>>
+<<DRIVER>> where is a dirty plate? <<TURN>>
+<<COMMANDER>> check under the sink <<TURN>>
+<<COMMANDER>> on the right <<TURN>>
+<<COMMANDER>> that's it, nice work! <<TURN>>
+<<DRIVER>> the plate is clean <<TURN>>
+<<COMMANDER>> hello <<TURN>>
+<<DRIVER>> hi ) <<TURN>>
+<<DRIVER>> what is my first task? <<TURN>>
+<<COMMANDER>> lets make some toast <<TURN>>
+<<COMMANDER>> first we need to slice some bread with a knife <<TURN>>
+<<DRIVER>> sounds good <<TURN>>
+<<DRIVER>> bread and knife location , please. <<TURN>>
+<<DRIVER>> i got a knife <<TURN>>
+
+Answer5: InformationOnObjectDetails
+
+Example 6:
+<<COMMANDER>> on a stool <<TURN>>
+<<DRIVER>> how many lettuce slices are needed? <<TURN>>
+<<COMMANDER>> says just one. <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<COMMANDER>> we need to slice the tomato <<TURN>>
+<<COMMANDER>> it is behind the plant on the table. <<TURN>>
+<<DRIVER>> where is it? <<TURN>>
+<<COMMANDER>> now we need to clean a plate. <<TURN>>
+<<COMMANDER>> everything needs to go on the plate. <<TURN>>
+
+Answer6: Instruction
+
+Example 7:
+<<COMMANDER>> the other 2 are on same sofa itself <<TURN>>
+<<COMMANDER>> small ones <<TURN>>
+<<COMMANDER>> tiny <<TURN>>
+<<COMMANDER>> yes <<TURN>>
+<<DRIVER>> i see 2 credits cards on the sofa <<TURN>>
+<<COMMANDER>> ya <<TURN>>
+<<COMMANDER>> one more <<TURN>>
+<<COMMANDER>> done thanks <<TURN>>
+<<DRIVER>> those are now on the table as well <<TURN>>
+<<COMMANDER>> i need help <<TURN>>
+<<DRIVER>> what can i help you with? <<TURN>>
+<<COMMANDER>> please put the forks on the dining table <<TURN>>
+<<COMMANDER>> there should be 3 of them <<TURN>>
+<<DRIVER>> sure <<TURN>>
+<<COMMANDER>> check the cupboard above the sink <<TURN>>
+<<COMMANDER>> there is also one on the small table <<TURN>>
+<<COMMANDER>> opposite the fridge <<TURN>>
+<<COMMANDER>> and the last one should be in the fridge <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<COMMANDER>> thank you, that's all for today <<TURN>>
+<<DRIVER>> what should i do today? <<TURN>>
+
+Answer7: Instruction
+
+Example 8:
+<<COMMANDER>> rinse the dirty plate with water <<TURN>>
+<<DRIVER>> where is the plate? <<TURN>>
+<<COMMANDER>> it is next to the sink <<TURN>>
+<<DRIVER>> plate is clean <<TURN>>
+<<COMMANDER>> well done <<TURN>>
+<<COMMANDER>> hello <<TURN>>
+<<DRIVER>> what should i do today? <<TURN>>
+<<COMMANDER>> please put the 2 sponges into the sink. you can begin with the one in the microwave <<TURN>>
+<<COMMANDER>> great job task complete <<TURN>>
+<<DRIVER>> i have placed two sponges in the sink <<TURN>>
+<<COMMANDER>> thank you <<TURN>>
+<<COMMANDER>> have a nice day <<TURN>>
+<<DRIVER>> first task? <<TURN>>
+<<COMMANDER>> water plant please <<TURN>>
+<<COMMANDER>> done thanks <<TURN>>
+<<DRIVER>> next <<TURN>>
+<<DRIVER>> hello <<TURN>>
+
+Answer8: RequestForInstruction
+
+Example 9:
+<<COMMANDER>> the newspaper is in the drawer on the coffee table. <<TURN>>
+<<COMMANDER>> below the laptop <<TURN>>
+<<COMMANDER>> o <<TURN>>
+<<COMMANDER>> oh not in the drawer just on the shelf <<TURN>>
+<<COMMANDER>> the coffee table in front of the couch <<TURN>>
+<<COMMANDER>> done <<TURN>>
+<<DRIVER>> what is my task <<TURN>>
+
+Answer9: Acknowledge
+
+Example 10:
+<<DRIVER>> whats first <<TURN>>
+<<COMMANDER>> hi <<TURN>>
+<<DRIVER>> hey <<TURN>>
+<<COMMANDER>> today we need to put the potato in cabinet <<TURN>>
+<<DRIVER>> where are the potato <<TURN>>
+<<COMMANDER>> potato is in the sink <<TURN>>
+<<DRIVER>> next <<TURN>>
+<<COMMANDER>> done <<TURN>>
+<<COMMANDER>> good job <<TURN>>
+<<DRIVER>> hello <<TURN>>
+<<COMMANDER>> hello <<TURN>>
+<<DRIVER>> what's the task for today? <<TURN>>
+<<COMMANDER>> just need to clean the mug <<TURN>>
+<<DRIVER>> can you tap on the mug location <<TURN>>
+<<COMMANDER>> near the stove <<TURN>>
+<<COMMANDER>> boil a potato <<TURN>>
+<<COMMANDER>> place in pot on stove <<TURN>>
+<<COMMANDER>> place in pot on stove <<TURN>>
+<<DRIVER>> done <<TURN>>
+<<COMMANDER>> good job <<TURN>>
+<<COMMANDER>> clean all the cookware <<TURN>>
+
+Answer10: Acknowledge
+
+Your job is to guess the dialogue act of the next dialogue after the dialogue history given, just like the above example.
+Your only output should be the dialogue act, nothing else.
+

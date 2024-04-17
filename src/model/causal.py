@@ -7,7 +7,7 @@ from transformers import DataCollatorForLanguageModeling
 import torch
 
 class TeachModelLM:
-    def __init__(self, model_name="google/gemma-2b", UTT=False, ST=False, DH=True, DA_E=False, data=None):
+    def __init__(self, model_name="bigscience/bloom-7b1", UTT=False, ST=False, DH=True, DA_E=False, data=None):
         # if data is None:
         #     data = TeachData(model_name, UTT=UTT, ST=ST, DH=DH, DA_E=DA_E)
         #
@@ -56,8 +56,6 @@ class TeachModelLM:
                 param.data = param.data.to(torch.float32)
 
 if __name__ == "__main__":
-    import os, sys
-    sys.path.insert(0, os.curdir)
     model = TeachModelLM()
     model.freeze()
 
