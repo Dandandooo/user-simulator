@@ -1,0 +1,366 @@
+I need you to predict dialogue acts from the given dialogue history between a user (the commander) and a robot
+(the follower/driver). You will need to predict what the dialogue act will be for the next turn in the dialogue,
+not shown in the data given to you.
+
+Example :
+<goal> Cook 3 slice(s) of Potato and serve on a Plate. </goal>
+<TURN> <COMMANDER> hi, today you need to cook 3 slices of potato </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> potato is in the fridge. </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <open> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+
+Example :
+<goal> Make a sandwich. </goal>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> i would like the filling of the sandwich to be 2 slices of lettuce </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <slice> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+
+Example :
+<goal> Clean all the Drinkwares. </goal>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <toggle off> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> there is also another one in the cabinet above the coffeee-making machine. </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <open> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <toggle on> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <toggle off> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pour> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pour> </DRIVER> </TURN>
+<TURN> <COMMANDER> Good job </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+
+Example :
+<goal> Cook 1 slice(s) of Potato and serve on a Plate. </goal>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> 3 slices on clean plate </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> ensure you put off the fire and close everything open </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> how many cooked potato need to be on plate? </DRIVER> </TURN>
+<TURN> <COMMANDER> cook a slice </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <close> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <toggle off> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <toggle off> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+
+Example :
+<goal> Make a salad. </goal>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> what next? </DRIVER> </TURN>
+<TURN> <COMMANDER> put the 2 slices of lattice on a plate </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> where is it? </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> the plate is in the fridge </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+
+Example :
+<goal> Serve 1 slice(s) of Tomato on a Plate. </goal>
+<TURN> <COMMANDER> please slice the tomato on the table </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> knife is in the fridge </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <slice> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <slice> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> next? </DRIVER> </TURN>
+<TURN> <COMMANDER> put one slice on the plate </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> plate is on this table </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+
+Example :
+<goal> Put all Pillow on any Sofa. </goal>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> what can I do today? </DRIVER> </TURN>
+<TURN> <COMMANDER> Hello. We are finding pillows and putting them on a sofa. </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> there is one on a table in the corner </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> done </DRIVER> </TURN>
+<TURN> <COMMANDER> There's one more. It's in the cabinet I think next to the blue chair </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <open> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+
+Example :
+<goal> Clean all the Drinkwares. </goal>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <toggle on> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <toggle off> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pour> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <open> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+
+Example :
+<goal> Cook 2 slice(s) of Potato and serve on a Plate. </goal>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> where can i find a plate? </DRIVER> </TURN>
+<TURN> <COMMANDER> in the cupboard above the sink </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <open> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <open> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+
+Example :
+<goal> Prepare breakfast. </goal>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> You can try a small piece of lettuce, </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> There is another plate near the microwave but I can't tall if it is the same size </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> did that work </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <putdown> </DRIVER> </TURN>
+<TURN> <COMMANDER> Yes just completed. Great job </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+
+Your job is to guess the dialogue act of the next dialogue after the dialogue history given, just like the above example.
+Your only output should be the dialogue act, nothing else.
+
+Give your answer for the following example:
+<goal> Put all Potato in any Cabinet. </goal>
+<TURN> <COMMANDER> Please put all the potatoes in a cabinet </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <pickup> </DRIVER> </TURN>
+<TURN> <COMMANDER> I left one near the stove to the right </COMMANDER>
+       <DRIVER> <observe> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> which cabinet would you like me to put them in </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <move> </DRIVER> </TURN>
+<TURN> <COMMANDER> <observe> </COMMANDER>
+       <DRIVER> <open> </DRIVER> </TURN>
+
