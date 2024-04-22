@@ -29,7 +29,7 @@ class TurnMaker:
 
     def get_rand_turns(self, task: dict) -> list[str]:
         length = self.task_length if self.task_length is not None else random.randint(6, min(len(task['turns']) - 2, 25))
-        start = random.randint(0, len(task['turns']) - length - 1)
+        start = 0
         end = start + length
         return [self.process_turn(turn) for turn in task['turns'][start:end]]
 
