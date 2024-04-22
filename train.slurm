@@ -4,7 +4,7 @@
 #SBATCH --job-name="teach-recreate-train"
 #SBATCH --output="/projects/bckf/dphilipov/teach-recreate/logs/delta.out"
 
-#SBATCH --partition="gpuA40x4"
+#SBATCH --partition="gpuA100x4"
 #SBATCH --mem=64G
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -13,7 +13,7 @@
 #SBATCH --gpu-bind=closest
 
 #SBATCH --exclusive
-#SBATCH -t 12:00:00
+#SBATCH -t 16:00:00
 
 # Run training script
 /projects/bckf/dphilipov/teach-recreate/train.bash

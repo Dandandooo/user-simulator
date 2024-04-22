@@ -17,7 +17,7 @@ class TeachModelLM:
 
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            # load_in_8bit=True,
+            load_in_8bit=True,
             device_map="auto",
             # num_labels=self.data.num_labels,
             # problem_type="multi_label_classification",
