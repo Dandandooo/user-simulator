@@ -1,302 +1,388 @@
-I need you to predict dialogue acts from the given dialogue history between a user (the commander) and a robot
-(the follower/driver). You will need to predict what the dialogue act will be for the next turn in the dialogue,
-not shown in the data given to you.
+Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
+be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
 
 Example :
-<goal> Clean all the Plates. </goal>
-<TURN> <COMMANDER> Hi! </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> What should I do today? </DRIVER> </TURN>
-<TURN> <COMMANDER> Please clean the square plate next tot he sink. </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
+<goal> Make a plate of toast. </goal>
+COMMANDER: <observe>
+DRIVER: what can i do today <<RequestForInstruction>>
+COMMANDER: bread needs to be toasted <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the bread <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: bread is in lower cabinet under coffee maker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: bread need to be sliced <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown Toaster>
+COMMANDER: toast the 1 slice <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle on Toaster>
+COMMANDER: <observe>
+DRIVER: done next? <<Acknowledge,RequestMore>>
+COMMANDER: put in the plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER: plate t <<MiscOther>>
+DRIVER: <observe>
+Commander's Response:
+COMMANDER: <observe>
 
-Example :
-<goal> Make a salad. </goal>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> my task </DRIVER> </TURN>
-<TURN> <COMMANDER> Hello, you need to make a salad please. </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> There is a knife by the sink </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> The lettuce is in the upper cabinet above the fridge on the right </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <open> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <open> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <open> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> with what </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> do i make asalad </DRIVER> </TURN>
-<TURN> <COMMANDER> Lettuce, tomato and potato please </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <close> </DRIVER> </TURN>
-<TURN> <COMMANDER> you will need to cook 2 sliced of potato </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
 
-Example :
-<goal> Put all Fork in any Sink. </goal>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> how can I help? </DRIVER> </TURN>
-<TURN> <COMMANDER> i need 4 forks put into the sink please </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <open> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-
-Example :
-<goal> Prepare coffee in a clean mug. </goal>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> what can I do for you? </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> i'd like a cup of coffee </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> mug is to right of stove </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> thank you! </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> kinda dirty </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <toggle on> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <toggle off> </DRIVER> </TURN>
-<TURN> <COMMANDER> you may need to clean it </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pour> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> huh, maybe not. </DRIVER> </TURN>
-
-Example :
-<goal> Serve 1 slice(s) of Tomato in a Bowl. </goal>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> Hello. What should I do? </DRIVER> </TURN>
-<TURN> <COMMANDER> Make one slice of tomato </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> Tomato is inside the microwave </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <slice> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <slice> </DRIVER> </TURN>
-
-Example :
-<goal> Put all Newspaper on one Chairs. </goal>
-<TURN> <COMMANDER> hi </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> hi </DRIVER> </TURN>
-<TURN> <COMMANDER> Please put the newspaper on the table onto the chair </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> done </DRIVER> </TURN>
-
-Example :
-<goal> Put all TissueBox on one Tables. </goal>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> What should I do today? </DRIVER> </TURN>
-<TURN> <COMMANDER> find a tissuebox </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> put on a table </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> I have founhd the tissue box </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> found* </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> I have placed it on the table </DRIVER> </TURN>
-<TURN> <COMMANDER> find another and put on same table </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> it is showing me the one that was already on the table </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-
-Example :
-<goal> Put all Candle on one Tables. </goal>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> what should I do? </DRIVER> </TURN>
-<TURN> <COMMANDER> Hi please put candle on table </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> candle on couch </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> candle in box </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
 
 Example :
 <goal> Make a salad. </goal>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> what can i do today </DRIVER> </TURN>
-<TURN> <COMMANDER> make a salad </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> slice lettuce first </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <slice> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> done </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> next </DRIVER> </TURN>
-<TURN> <COMMANDER> slice a potato </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> in the cabinet under the microwave </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <slice> </DRIVER> </TURN>
-<TURN> <COMMANDER> now cook </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> microwave or stove </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
+COMMANDER: <observe>
+DRIVER: hi how can I help? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: i want a salad with two tomato slices and one cooked potato slice <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <move>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <move>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: <move>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <slice Egg>
+COMMANDER: <move>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: do you see a potato anywhere? <<RequestForObjectLocationAndOtherDetails>>
+Commander's Response:
+COMMANDER: <observe>
+
+
 
 Example :
-<goal> Prepare coffee in a clean mug. </goal>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> What do I need to do? </DRIVER> </TURN>
-<TURN> <COMMANDER> <move> </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> rinse the dirty mug </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <move> </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <move> </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <putdown> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <toggle on> </DRIVER> </TURN>
-<TURN> <COMMANDER> <move> </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <toggle off> </DRIVER> </TURN>
-<TURN> <COMMANDER> <move> </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <move> </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
+<goal> Make a plate of toast. </goal>
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what is my task? <<RequestForInstruction>>
+COMMANDER: Please make a slice of toast. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown Toaster>
+Commander's Response:
+COMMANDER: <observe>
 
-Your job is to guess the dialogue act of the next dialogue after the dialogue history given, just like the above example.
-Your only output should be the dialogue act, nothing else.
+
+
+Example :
+<goal> Put all AlarmClock on any Bed. </goal>
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what should i do today <<RequestForInstruction>>
+COMMANDER: put alarm clocks on bed <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: where can i find alarm clock <<RequestForObjectLocationAndOtherDetails>>
+Commander's Response:
+COMMANDER: under the laptop cabinet <<InformationOnObjectDetails>>
+
+
+
+Example :
+<goal> Put all RemoteControl on one ArmChair. </goal>
+COMMANDER: task <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: What do I need to do? <<RequestForInstruction>>
+COMMANDER: all remote controls on the arm chair <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Do I need to move the remote? <<RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown ArmChair>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: only thr remote controls that are not on armchair <<InformationOnObjectDetails>>
+DRIVER: <observe>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Make a plate of toast. </goal>
+COMMANDER: <observe>
+DRIVER: hi, what is task <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: make a plate of toast <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: bread in the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: knife <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: on the chair beside the table <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <move>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Serve 2 slice(s) of Tomato on a Plate. </goal>
+COMMANDER: <observe>
+DRIVER: what shall i do? <<RequestForInstruction>>
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: please slice the tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: hloo <<Greetings/Salutations>>
+COMMANDER: tomato and knife are in the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: what next <<RequestForInstruction>>
+COMMANDER: get a plate in the cabinet left to the microwave <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+COMMANDER: place two slices of tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Cup>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Serve 3 slice(s) of Tomato in a Bowl. </goal>
+COMMANDER: <observe>
+DRIVER: how can I help <<RequestForInstruction>>
+COMMANDER: please slice a tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: there is one on the stool <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where can I find the knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: there is one in the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: <observe>
+DRIVER: done slicing the tomato <<Acknowledge>>
+Commander's Response:
+COMMANDER: I have connected with the wrong partner. Would you like to continue? <<OtherInterfaceComment>>
+
+
+
+Example :
+<goal> Make a salad. </goal>
+COMMANDER: <observe>
+DRIVER: hello what would you like done? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: I need you to make a salad with sliced lettuce and cooked potato slice <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: sure thing <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: where is the lettuce? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <move>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Water the plant. </goal>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: please water the plant <<Instruction>>
+DRIVER: <observe>
+COMMANDER: fill the containter from the sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Your job is to respond to a given dialogue/action history with only one word of the following: SPEAK or OBSERVE.
 
 Give your answer for the following example:
-<goal> Water the plant. </goal>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> wht is my task today </DRIVER> </TURN>
-<TURN> <COMMANDER> Hello please water the plant. </COMMANDER>
-       <DRIVER> <observe> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pickup> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <move> </DRIVER> </TURN>
-<TURN> <COMMANDER> <observe> </COMMANDER>
-       <DRIVER> <pour> </DRIVER> </TURN>
+<goal> Clean all the Plates. </goal>
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: Good day.  Please clean the plate on the counter. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
 

@@ -23,18 +23,34 @@ def convert_dialogue(dialogue_action: dict) -> dict:
     }
     return action
 
-def convert_generic(dialogue_action: dict, action: str) -> dict:
-    agent = {0: "COMMANDER", 1: "DRIVER"}[dialogue_action['agent_id']]
-    action = {
+def convert_generic(generic_action: dict, action: str) -> dict:
+    agent = {0: "COMMANDER", 1: "DRIVER"}[generic_action['agent_id']]
+    act = {
         agent: {
-            'action': action,
+            'action': f'<{action}>',
         },
         "COMMANDER" if agent == "DRIVER" else "DRIVER": {
             'action': '<observe>',
         },
         'turn_action': action
     }
-    return action
+    return act
+
+# Pass in action without the < > tags
+def convert_object(object_action: dict, action: str) -> dict:
+    agent = {0: "COMMANDER", 1: "DRIVER"}[object_action['agent_id']]
+    obj = object_action['oid'].split('|')[0]  # Assuming this is the case for every example
+    act = {
+        agent: {
+            'action': f'<{action} {obj}>',
+            'object': obj
+        },
+        "COMMANDER" if agent == "DRIVER" else "DRIVER": {
+            'action': '<observe>',
+        },
+        'turn_action': action
+    }
+    return act
 
 
 def parse_game(filename: str) -> dict:
@@ -44,16 +60,17 @@ def parse_game(filename: str) -> dict:
     data['goal'] = task['desc']
     # Action ID 100 is a dialogue action
     turns = data['turns'] = []
+    # print(filename)
     for interaction in task['episodes'][0]['interactions']:
         match interaction['action_id']:
             case 100:
                 turns.append(convert_dialogue(interaction))
             case 0:
-                turns.append(convert_generic(interaction, '<stop moving>'))
+                turns.append(convert_generic(interaction, 'stop moving'))
             case 1 | 2 | 3 | 10 | 11 | 12 | 13:
-                if turns and turns[-1]['turn_action'] == '<move>':
+                if turns and turns[-1]['turn_action'] == 'move':
                     continue
-                turns.append(convert_generic(interaction, '<move>'))
+                turns.append(convert_generic(interaction, 'move'))
             # case 4 | 5:
             #     if turns and turns[-1]['turn_action'] == '<turn>':
             #         continue
@@ -63,31 +80,57 @@ def parse_game(filename: str) -> dict:
             #         continue
             #     turns.append(convert_generic(interaction, '<look around>'))
             case 200:
-                turns.append(convert_generic(interaction, '<pickup>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'pickup'))
             case 201:
-                turns.append(convert_generic(interaction, '<putdown>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'putdown'))
             case 202:
-                turns.append(convert_generic(interaction, '<open>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'open'))
             case 203:
-                turns.append(convert_generic(interaction, '<close>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'close'))
             case 204:
-                turns.append(convert_generic(interaction, '<toggle on>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'toggle on'))
             case 205:
-                turns.append(convert_generic(interaction, '<toggle off>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'toggle off'))
             case 206:
-                turns.append(convert_generic(interaction, '<slice>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'slice'))
             case 207:
-                turns.append(convert_generic(interaction, '<dirty>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'dirty'))
             case 208:
-                turns.append(convert_generic(interaction, '<clean>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'clean'))
             case 209:
-                turns.append(convert_generic(interaction, '<fill>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'fill'))
             case 210:
-                turns.append(convert_generic(interaction, '<empty>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'empty'))
             case 211:
-                turns.append(convert_generic(interaction, '<pour>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'pour'))
             case 212:
-                turns.append(convert_generic(interaction, '<break>'))
+                if interaction["oid"] is None:
+                    continue
+                turns.append(convert_object(interaction, 'break'))
             case _:
                 # I don't know how to handle anything else yet
                 pass
