@@ -1,0 +1,433 @@
+Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
+be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+<goal> Put all RemoteControl on one ArmChair. </goal>
+COMMANDER: <observe>
+DRIVER: Greetings! What's my task for today?
+COMMANDER: place 2 remotes onto single seating sofa chair
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: Where might I find a remote?
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: first one is in the white box next to tv
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Safe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown ArmChair>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: And the next one?
+COMMANDER: <observe>
+DRIVER: I see it.
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: the other one is beside night lamp on the brown table
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Prepare breakfast. </goal>
+COMMANDER: hi
+DRIVER: <observe>
+COMMANDER: pls make coffee in a clean mug
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: mug?
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: there is a clean mug on the cabinet under the toaster
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER: now toast two slices of bread
+DRIVER: <observe>
+COMMANDER: knife is close to the microwave
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup WineBottle>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Serve 1 slice(s) of Lettuce in a Bowl. </goal>
+COMMANDER: <observe>
+DRIVER: How can I help?
+COMMANDER: Hey Can you put a slice of lettuce in a bowl for me please
+DRIVER: <observe>
+COMMANDER: there's a bowl in the fridge
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Bowl>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pour Sink>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: Where can I find the knife to slice the lettuce?
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: there should be one in the fridge
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <slice Lettuce>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER: <observe>
+DRIVER: <move>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Cook 5 slice(s) of Potato and serve on a Plate. </goal>
+COMMANDER: <observe>
+DRIVER: hi how can I help?
+COMMANDER: can you cook 5 slices of potato
+DRIVER: <observe>
+COMMANDER: the potato is on the shefl
+DRIVER: <observe>
+COMMANDER: shelf*
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <move>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Boil Potato. </goal>
+COMMANDER: Hello there!
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what shall i do ?
+COMMANDER: today we're going to boil a potato
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: there's already a potato in a pan on the stove
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is potato?
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: ok
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: boil it in a pot!
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off StoveKnob>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Spatula>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Prepare coffee in a clean mug. </goal>
+COMMANDER: <observe>
+DRIVER: hi
+COMMANDER: <observe>
+DRIVER: what can I do today?
+COMMANDER: Hello, we must locate the bug
+DRIVER: <observe>
+COMMANDER: mug*
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: It is sitting on the barstool
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: done
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: Then we must rinse it with water
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <pour Sink>
+COMMANDER: <observe>
+DRIVER: done
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Now we must repeat that with the green cup located to theft of the stove
+DRIVER: <observe>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Serve 3 slice(s) of Tomato on a Plate. </goal>
+COMMANDER: <observe>
+DRIVER: What shall I do today?
+COMMANDER: hello
+DRIVER: <observe>
+COMMANDER: slice a tomato thrice
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Can you help me find tomato and knife?
+COMMANDER: inside the cabinet above the microwave
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: the knife is inside the sink
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Cannot reach
+COMMANDER: use the up option
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: <observe>
+DRIVER: <close Microwave>
+COMMANDER: <observe>
+DRIVER: I can only reach microwave
+COMMANDER: above the microwave
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: I cannot reach
+COMMANDER: <observe>
+DRIVER: Search for another
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: go to the sink and rinse the plate
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Water the plant. </goal>
+COMMANDER: <observe>
+DRIVER: What can I help you with today?
+COMMANDER: i'd like my plant watered
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Bowl>
+COMMANDER: <observe>
+DRIVER: <pour HousePlant>
+COMMANDER: <observe>
+DRIVER: anything else?
+Commander's Response:
+COMMANDER: thank you! <<FeedbackPositive>>
+
+
+
+Example :
+<goal> Put all Newspaper on one ArmChair. </goal>
+COMMANDER: <observe>
+DRIVER: what is my task today
+COMMANDER: put newspaper on the single arm chair
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Drawer>
+COMMANDER: <observe>
+DRIVER: <close Drawer>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Prepare breakfast. </goal>
+COMMANDER: <observe>
+DRIVER: Hi, how can I help?
+COMMANDER: I'd like you to make breakfast for me
+DRIVER: <observe>
+COMMANDER: One cup of coffee and a sandwich
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Okay
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pour Sink>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: what would you like your sandwich with?
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: A slice of lettuce please
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+Give your answer for the following example:
+<goal> Prepare coffee in a clean mug. </goal>
+COMMANDER: <observe>
+DRIVER: Hello. What is my first task?
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Please put coffee in mug
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: Coffee is done
+

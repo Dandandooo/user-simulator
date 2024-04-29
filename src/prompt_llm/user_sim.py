@@ -15,6 +15,8 @@ class TurnMaker:
         self.save_path = kwargs["save_path"]
         self.give_task = kwargs["give_task"]
         self.include_das = kwargs["include_das"]
+        self.max_length = kwargs["max_length"]
+        self.min_length = kwargs["min_length"]
         self.nl_ify = kwargs["nl_ify"]
         self.html_format = kwargs["html_format"]
         self.predict_das = kwargs["predict_das"]
@@ -70,7 +72,7 @@ class TurnMaker:
     def agent_name(self, original_name) -> str:
         return self.commander_name if original_name.lower() == "commander" else self.driver_name
 
-    def process_turn(self, turn: dict) -> str:
+    def process_turn(self, turn: dict, is_last) -> str:
         driver_action = turn['DRIVER']['action'] if turn['DRIVER']['action'] != 'dialogue' else turn["DRIVER"]['utterance']
         commander_action = turn['COMMANDER']['action'] if turn['COMMANDER']['action'] != 'dialogue' else turn["COMMANDER"]['utterance']
         if turn['DRIVER']['action'] == 'dialogue':
@@ -85,15 +87,18 @@ class TurnMaker:
             return (f"<TURN> <{self.commander_name}> {commander_action} {f'<<{commander_das}>> ' if self.include_das and commander_das else ''}</{self.commander_name}>\n"
                     f"       <{self.driver_name}> {driver_action} {f'<<{driver_das}>> ' if self.include_das and driver_das else ''}</{self.driver_name}> </TURN>")
         else:
-            return f"{self.commander_name}: {commander_action}{f' <<{commander_das}>>' if self.include_das and commander_das else ''}\n{self.driver_name}: {driver_action}{f' <<{driver_das}>>' if self.include_das and driver_das else ''}"
+            return f"{self.commander_name}: {commander_action}{f' <<{commander_das}>>'if (self.include_das or (self.predict_das and is_last)) and commander_das else ''}\n{self.driver_name}: {driver_action}{f' <<{driver_das}>>' if self.include_das and driver_das else ''}"
 
     def get_rand_turns(self, task: dict) -> list[str]:
-        length = self.task_length if self.task_length is not None else random.randint(6, min(len(task['turns']) - 2, 25))
+        if len(task['turns']) < self.min_length:
+            length = len(task['turns'])
+        else:
+            length = self.task_length if self.task_length is not None else random.randint(self.min_length, min(len(task['turns']), self.max_length))
         start = 0
         end = start + length
-        return [self.process_turn(turn) for turn in task['turns'][start:end]]
+        return [self.process_turn(turn, i == length - 1) for i, turn in enumerate(task['turns'][start:end])]
 
-    def make_prompt(self) -> str:
+    def make_prompt(self) -> tuple[str, str]:
         prompt = ""
         prompt += open("src/prompt_llm/user_sim_segments/initial_instructions.txt", "r").read() + '\n\n'
 
@@ -119,16 +124,59 @@ class TurnMaker:
         else:
             prompt += open("src/prompt_llm/user_sim_segments/final_instructions.txt", "r").read() + '\n\n'
 
+        answer = ""
         if self.give_task:
             prompt += "Give your answer for the following example:\n"
-            prompt += f"<goal> {tasks[-1]['goal']} </goal>\n"
-            prompt += "\n".join(self.get_rand_turns(tasks[-1])) + '\n\n'
-        return prompt
+            task = tasks[-1]
+            prompt += f"<goal> {task['goal']} </goal>\n"
+            turns = self.get_rand_turns(task)
+            prompt += "\n".join(turns[:-1]) + '\n\n'
+            ans = turns[-1].splitlines()[0]
+            if self.predict_das:
+                answer += "OBSERVE" if "<observe>" in ans else ans[ans.index("<<") + 2:ans.index(">>")].split(",")[0].strip()
+            else:
+                answer += "OBSERVE" if "<observe>" in ans else "SPEAK"
 
-    def generate_prompt(self):
-        with open(self.save_path, "w+") as f:
-            f.write(self.make_prompt())
-        print(f"Prompt generated and saved to {self.save_path}")
+        return prompt, answer
+
+    def generate_prompt(self, save_answer=False, save_path=None, num_to_gen=1):
+        if save_path is None:
+            save_path = self.save_path
+        prompts = []
+        answers = []
+
+        while len(prompts) < num_to_gen:
+            prompt, answer = self.make_prompt()
+            if not prompts:
+                prompts.append(prompt)
+                answers.append(answer)
+            elif answer.endswith("OBSERVE") and answers.count(answer) < (float(self.kwargs["max_percent_observe"]) / 100.0) * len(answers):
+                prompts.append(prompt)
+                answers.append(answer)
+            elif not answer.endswith("OBSERVE"):
+                prompts.append(prompt)
+                answers.append(answer)
+            else:
+                print("Skipping b/c too many observes")
+
+        if num_to_gen == 1:
+            prompt, answer = prompts[0], answers[0]
+            with open(save_path, "w+") as f:
+                f.write(prompt)
+                if save_answer:
+                    root, ext = save_path.rsplit(".", 1)
+                    with open(f"{root}_answer.{ext}", "w+") as a:
+                        a.write(answer)
+            print(f"Prompt generated and saved to {save_path}")
+            return
+        root, ext = save_path.rsplit(".", 1)
+        for i, (prompt, answer) in enumerate(zip(prompts, answers)):
+            with open(f"{root}_{i}.{ext}", "w+") as f:
+                f.write(prompt)
+                if save_answer:
+                    with open(f"{root}_{i}_answer.{ext}", "w+") as a:
+                        a.write(answer)
+            print(f"Prompt generated and saved to {root}_{i}.{ext}")
 
 
 @click.command()
@@ -146,9 +194,12 @@ class TurnMaker:
 @click.option("--nl_ify", "--nl", is_flag=True, help="Make dialogue acts be more natural language-y")
 @click.option("--html-format", is_flag=True, help="Whether to format the prompt in HTML")
 @click.option("--predict_das", "-p", is_flag=True, help="Whether to make the task be predicting dialogue acts")
+@click.option("--num_prompts", default=1, help="Number of prompts to generate")
+@click.option("--save_answer", "-a", is_flag=True, help="Whether to save the answer to the prompt")
+@click.option("--max_percent_observe", default=50, help="Maximum percentage of examples to be observation (to balance the data)")
 def main(**kwargs):
     tm = TurnMaker(**kwargs)
-    tm.generate_prompt()
+    tm.generate_prompt(save_answer=kwargs["save_answer"], num_to_gen=kwargs["num_prompts"])
 
 
 if __name__ == "__main__":

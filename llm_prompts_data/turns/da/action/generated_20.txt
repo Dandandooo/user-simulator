@@ -1,0 +1,314 @@
+Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
+be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+<goal> Prepare coffee in a clean mug. </goal>
+COMMANDER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: clean mug is in brown shelf <<Instruction>>
+DRIVER: <observe>
+COMMANDER: prepare coffee <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup PaperTowelRoll>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <pour Sink>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle off CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+Commander's Response:
+COMMANDER: done <<FeedbackPositive>>
+
+
+
+Example :
+<goal> Clean all the Plates. </goal>
+COMMANDER: <observe>
+DRIVER: how may i help you? <<RequestForInstruction>>
+COMMANDER: Hi, I have a neat task for you today. I'd like all my plates cleaned please <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: the first plate can be found to the right of the oven <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: great ill get started <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Thank you! <<FeedbackPositive>>
+DRIVER: <observe>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Prepare coffee in a clean mug. </goal>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what to do <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: there is a mug behind the lettuce <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: pour the water in it and make coffee <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Make a salad. </goal>
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: We need to make a salad <<Instruction>>
+DRIVER: <observe>
+COMMANDER: Slice tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Spoon>
+COMMANDER: <observe>
+DRIVER: <putdown GarbageCan>
+COMMANDER: <observe>
+DRIVER: <move>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Make a sandwich. </goal>
+COMMANDER: <observe>
+DRIVER: how can I help you? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: i'd like a sandwich <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: whats in it? <<RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: 2 slices of lettuce between slices of toast <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: ok, where is the knife? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Prepare coffee in a clean mug. </goal>
+COMMANDER: prepare coffee in a clean mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Cook 5 slice(s) of Potato and serve on a Plate. </goal>
+COMMANDER: <observe>
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER: Can you cook 5 slices of potato please? <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: sure, where can I find the potatoe? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+COMMANDER: the potato is on the central big counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: and a knife please <<RequestForObjectLocationAndOtherDetails>>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Put all Mug in any Sink. </goal>
+COMMANDER: I need help <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what can I help with? <<RequestForInstruction>>
+COMMANDER: I need mugs putting in the sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: okay <<Acknowledge>>
+COMMANDER: There should be three of them <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <move>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Example :
+<goal> Put all PepperShaker in any Cabinet. </goal>
+COMMANDER: <observe>
+DRIVER: how can help <<RequestForInstruction>>
+COMMANDER: I need you to put the pepper shaker in the cabinet <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where can I find it? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: You can find the pepper shaker on the shelf next to the kitchen counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: I want it in the cabinet under the sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown Cabinet>
+COMMANDER: <observe>
+DRIVER: is this done? <<Confirm>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+Commander's Response:
+COMMANDER: Thank you. Now I need you to do the same with the second pepper shaker <<FeedbackPositive,Instruction>>
+
+
+
+Example :
+<goal> Make a sandwich. </goal>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what can I do? <<RequestForInstruction>>
+COMMANDER: Hello, first slice the bread <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: Knife is by the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: Toast two slices <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown Toaster>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown Toaster>
+Commander's Response:
+COMMANDER: <observe>
+
+
+
+Your job is to respond to a given dialogue/action history with only one word of the following: SPEAK or OBSERVE.
+
+Give your answer for the following example:
+<goal> Clean all the Cloths. </goal>
+COMMANDER: <observe>
+DRIVER: what should i do <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Cloth>
+COMMANDER: please rinse cloth <<Instruction>>
+DRIVER: <observe>
+COMMANDER: try not to pick up toilet paper, it is a glitch <<OtherInterfaceComment>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+

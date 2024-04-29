@@ -1,27 +1,48 @@
-from transformers import AutoModelForCausalLM, Trainer, TrainingArguments
+from transformers import AutoModelForCausalLM, Trainer, TrainingArguments, AutoTokenizer
 from peft import LoraConfig, get_peft_model
+from glob import glob
+import os
 
 # from src.data.dataclass import TeachData
 from transformers import DataCollatorForLanguageModeling
 
 import torch
 
-class TeachModelLM:
-    def __init__(self, model_name="bigscience/bloom-7b1", UTT=False, ST=False, DH=True, DA_E=False, data=None):
-        # if data is None:
-        #     data = TeachData(model_name, UTT=UTT, ST=ST, DH=DH, DA_E=DA_E)
-        #
-        # self.data: TeachData = data
-
-        self.run_name = f"{model_name.split('/')[-1]}{'_Utt'*UTT}{'_ST'*ST}{'_DH'*DH}{'_DA-E'*DA_E}"
+class EvalLM:
+    def __init__(self, model_name="google/gemma-2b"):
 
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            load_in_8bit=True,
             device_map="auto",
-            # num_labels=self.data.num_labels,
-            # problem_type="multi_label_classification",
         )
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left", truncation_side="left")
+
+        self.data = None
+
+    def set_data(self, folder: str, prompt_glob: str, answer_glob: str):
+        prompts = glob(os.path.join(folder, prompt_glob))
+        answers = glob(os.path.join(folder, answer_glob))
+        self.data = list(zip(prompts, answers))
+
+    def answer(self, prompt: str):
+        tokenized = self.data.tokenizer(prompt, return_tensors="pt")
+        self.model
+
+    def load_data(self, folder: str, prompt_glob: str, answer_glob: str):
+        prompts = glob(os.path.join(folder, prompt_glob))
+        answers = glob(os.path.join(folder, answer_glob))
+        paths = list(zip(prompts, answers))
+        self.data = [(open(prompt).read(), open(answer).read()) for prompt, answer in paths]
+
+    def eval(self, input_ids):
+        if self.data is None:
+            raise ValueError("Data not set")
+        pass
+
+
+
+class LoraLM(EvalLM):
+    def __init__(self, model_name="google/gemma-2b"):
         self.model.gradient_checkpointing_enable()
         self.model.enable_input_require_grads()
 
@@ -48,7 +69,6 @@ class TeachModelLM:
         #     ),
         #     data_collator=DataCollatorForLanguageModeling(tokenizer=self.data.tokenizer, mlm=False),
         # )
-
     def freeze(self):
         for param in self.model.parameters():
             param.requires_grad = False
@@ -56,7 +76,5 @@ class TeachModelLM:
                 param.data = param.data.to(torch.float32)
 
 if __name__ == "__main__":
-    model = TeachModelLM()
-    model.freeze()
-
+    model = LoraLM()
     model.peft_model.print_trainable_parameters()

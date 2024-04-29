@@ -14,7 +14,7 @@ def convert_dialogue(dialogue_action: dict) -> dict:
         agent: {
             'action': 'dialogue',
             'utterance': dialogue_action['utterance'],
-            'das': [da for da in dialogue_action['da_metadata']['das'] if da]
+            'das': [da[0].upper() + da[1:] for da in dialogue_action['da_metadata']['das'] if da]
         },
         "COMMANDER" if agent == "DRIVER" else "DRIVER": {
             'action': '<observe>',
@@ -70,6 +70,8 @@ def parse_game(filename: str) -> dict:
             case 1 | 2 | 3 | 10 | 11 | 12 | 13:
                 if turns and turns[-1]['turn_action'] == 'move':
                     continue
+                if interaction['agent_id'] == 0:  # Don't track movement for the commander
+                    continue
                 turns.append(convert_generic(interaction, 'move'))
             # case 4 | 5:
             #     if turns and turns[-1]['turn_action'] == '<turn>':
@@ -80,55 +82,55 @@ def parse_game(filename: str) -> dict:
             #         continue
             #     turns.append(convert_generic(interaction, '<look around>'))
             case 200:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'pickup'))
             case 201:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'putdown'))
             case 202:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'open'))
             case 203:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'close'))
             case 204:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'toggle on'))
             case 205:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'toggle off'))
             case 206:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'slice'))
             case 207:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'dirty'))
             case 208:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'clean'))
             case 209:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'fill'))
             case 210:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'empty'))
             case 211:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'pour'))
             case 212:
-                if interaction["oid"] is None:
+                if interaction["oid"] is None or interaction["agent_id"] == 0:
                     continue
                 turns.append(convert_object(interaction, 'break'))
             case _:
