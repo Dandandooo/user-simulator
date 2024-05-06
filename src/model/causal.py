@@ -43,6 +43,7 @@ class EvalLM:
 
 class LoraLM(EvalLM):
     def __init__(self, model_name="google/gemma-2b"):
+        #TODO change model to use the bitsandbytes integration (CUDA ONLY)
         self.model.gradient_checkpointing_enable()
         self.model.enable_input_require_grads()
 

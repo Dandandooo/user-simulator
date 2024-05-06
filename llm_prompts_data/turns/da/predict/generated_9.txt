@@ -28,376 +28,136 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-<goal> Make a salad. </goal>
+<goal> Clean all the Cloths. </goal>
+COMMANDER: grab the purple object in the tub <<Instruction,InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
+DRIVER: What task do I do today? <<RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: make a slice of tomato <<Instruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Cloth>
+COMMANDER: take it to the sink but first turn off the water <<Instruction,InformationOther>>
 DRIVER: <observe>
-COMMANDER: tomato is on the chair <<InformationOnObjectDetails>>
+COMMANDER: <observe>
+DRIVER: I have picked the purple object. What next? <<Acknowledge,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: Going to the sink now. <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: I have turned off the sink. <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: drop it in the sink and turn on the water <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Tomato>
+DRIVER: I have placed it in the sink. <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: <putdown DiningTable>
+DRIVER: <toggle on Faucet>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: <observe>
-DRIVER: <slice Tomato>
+DRIVER: I have turned on the water. <<Acknowledge>>
 Commander's Response:
-COMMANDER: knife is on the left side to the oven <<InformationOnObjectDetails>>
-
-
+Acknowledge
 
 Example :
-<goal> Serve 2 slice(s) of Tomato on a Plate. </goal>
+<goal> Make a plate of toast. </goal>
 COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER: 2 slices tomato on plate <<Instruction>>
+DRIVER: Hi what are my directions? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: can you make me a slice of toast please <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: knife on table next to fridge <<InformationOnObjectDetails>>
+DRIVER: where is the knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: found it <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: theres a knife next to the sink <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <slice Tomato>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
 COMMANDER: <observe>
 DRIVER: <putdown SideTable>
 COMMANDER: <observe>
-DRIVER: <pickup Tomato>
+DRIVER: <pickup Bread>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <putdown Plate>
+DRIVER: <putdown Toaster>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Tomato>
-COMMANDER: <observe>
-DRIVER: <move>
-Commander's Response:
-COMMANDER: <observe>
-
-
-
-Example :
-<goal> Cook 5 slice(s) of Potato and serve on a Plate. </goal>
-COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER: coook 5 slices of potato <<Instruction>>
+DRIVER: done <<Acknowledge>>
+COMMANDER: thanks can you put it on a clean plate <<FeedbackPositive,Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
 DRIVER: <pickup Potato>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: potato is on pan on the stove <<InformationOnObjectDetails>>
-DRIVER: <observe>
-Commander's Response:
-COMMANDER: <observe>
-
-
-
-Example :
-<goal> Serve 1 slice(s) of Lettuce on a Plate. </goal>
-COMMANDER: <observe>
-DRIVER: Hi how can I help <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: please get the lettuce out of the microwave <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: Will do <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: Then use the knife form the fridge to cut it <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <toggle off Microwave>
-COMMANDER: <observe>
-DRIVER: <open Microwave>
-COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
-COMMANDER: <observe>
 DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
-DRIVER: <close Microwave>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: <observe>
-DRIVER: <close Fridge>
-COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: <pickup Plate>
 Commander's Response:
-COMMANDER: <observe>
-
-
-
-Example :
-<goal> Make a salad. </goal>
-COMMANDER: <observe>
-DRIVER: Hello. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: slice lettuce <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Ok. Where is the lettuce? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
-COMMANDER: microwave <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: knife in the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Microwave>
-COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
-COMMANDER: after slicing the lettuce slice tomato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: tomato on the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: plate in the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-Commander's Response:
-COMMANDER: <observe>
-
-
-
-Example :
-<goal> Clean all the Cloths. </goal>
-COMMANDER: Good day! <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: We are going to be cleaning the clothes. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: how many? <<RequestOtherInfo>>
-COMMANDER: You will find the cloth under the sink. <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: In the cabinet. <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: <observe>
-DRIVER: <close Cabinet>
-COMMANDER: <observe>
-DRIVER: <close Cabinet>
-COMMANDER: Just the one cloth. <<InformationOther>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: Under the sink. <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: Then you will rinse it with water. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <close Cabinet>
-COMMANDER: <observe>
-DRIVER: <close Cabinet>
-COMMANDER: On the other side. <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-Commander's Response:
-COMMANDER: <observe>
-
-
-
-Example :
-<goal> Make a sandwich. </goal>
-COMMANDER: I need you to help make a sandwhich <<Instruction>>
-DRIVER: <observe>
-COMMANDER: first lets slice the bread <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Whats my first task? <<RequestForInstruction>>
-COMMANDER: for it <<MiscOther>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Bread>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: the bread should be above the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: in the left cabinet <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: when you have the bread <<InformationOther>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: there is a knife by the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-Commander's Response:
-COMMANDER: <observe>
-
-
-
-Example :
-<goal> Put all SaltShaker on any DiningTable. </goal>
-COMMANDER: <observe>
-DRIVER: Hi, what  are my directions? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hi i need 2 saltshakers put onto the dining table <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup SaltShaker>
-COMMANDER: one is next to the microwave <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <putdown DiningTable>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup PepperShaker>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <putdown DiningTable>
-COMMANDER: just one more next to the microwave <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: done <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup SaltShaker>
-Commander's Response:
-COMMANDER: <observe>
-
-
-
-Example :
-<goal> Put all RemoteControl on one ArmChair. </goal>
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: what shall i do <<RequestForInstruction>>
-COMMANDER: put the remote controls on the single arm chair <<Instruction>>
-DRIVER: <observe>
-COMMANDER: 3 remotes <<InformationOnObjectDetails>>
-DRIVER: <observe>
-Commander's Response:
-COMMANDER: <observe>
-
-
-
-Example :
-<goal> Serve 1 slice(s) of Tomato in a Bowl. </goal>
-COMMANDER: <observe>
-DRIVER: hello task plz <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: First make a slice of tomato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Tomato>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: Tomato is on the round table <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup ButterKnife>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <slice Tomato>
-Commander's Response:
-COMMANDER: <observe>
-
-
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
 
 Give your answer for the following example:
-<goal> Clean all the Plates. </goal>
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what task today <<RequestForInstruction>>
-COMMANDER: clean the plate <<Instruction>>
-DRIVER: <observe>
-COMMANDER: plate is on white dining table <<InformationOnObjectDetails>>
+<goal> Clean all the Cups. </goal>
+COMMANDER: Hello <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: where is it <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: wht is my tsk today <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: what is my task <<RequestForInstruction>>
+COMMANDER: Task is to clean all the cups <<Instruction>>
+DRIVER: <observe>
+COMMANDER: cup is dirty rinse with water <<InformationOther,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where are they <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup SoapBottle>
-COMMANDER: <observe>
-DRIVER: <putdown DiningTable>
-COMMANDER: <observe>
-DRIVER: <pickup Plate>
-COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: <pickup PaperTowelRoll>
 COMMANDER: <observe>
 DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: <pickup PaperTowelRoll>
 COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
+DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
-DRIVER: <pickup Plate>
+DRIVER: <pickup CellPhone>
 COMMANDER: <observe>
-DRIVER: <putdown Sink>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Egg>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup CreditCard>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: how many cups am i supposed to clen <<RequestOtherInfo>>
+COMMANDER: one <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: clean, that is <<Confirm>>
+COMMANDER: It says clean all the cups <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <toggle on Faucet>
 COMMANDER: <observe>
 DRIVER: <toggle off Faucet>
 COMMANDER: <observe>
-DRIVER: <pickup Plate>
+DRIVER: <pickup Mug>
 

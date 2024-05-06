@@ -19,7 +19,8 @@ def convert_dialogue(dialogue_action: dict) -> dict:
         "COMMANDER" if agent == "DRIVER" else "DRIVER": {
             'action': '<observe>',
         },
-        'turn_action': 'dialogue'
+        'turn_action': 'dialogue',
+        'timestamp': dialogue_action['time_start']
     }
     return action
 
@@ -51,7 +52,6 @@ def convert_object(object_action: dict, action: str) -> dict:
         'turn_action': action
     }
     return act
-
 
 def parse_game(filename: str) -> dict:
     file = json.load(open(filename, 'r'))
