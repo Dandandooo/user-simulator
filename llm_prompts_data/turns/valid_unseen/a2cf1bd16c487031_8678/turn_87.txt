@@ -1,0 +1,281 @@
+Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
+be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Make a salad.
+
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what should i do today? <<RequestForInstruction>>
+COMMANDER: you need to make a salad <<Instruction>>
+DRIVER: <observe>
+COMMANDER: first make a slice of tomato using a knife. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the knife <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: near the sink. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: hi what is my task <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: 2 slices tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Put all Fork in any Sink.
+COMMANDER: <observe>
+DRIVER: hi, how can i help? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: can you put all the forks in the sink? <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: sure <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: where are the forks? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: there's one on the counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what should I do? <<RequestForInstruction>>
+COMMANDER: we need to slice a tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER response:
+InformationOnObjectDetails
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Make a plate of toast.
+COMMANDER: <observe>
+DRIVER: Hi may I have the directions please <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: anyone there? <<MiscOther>>
+COMMANDER: You need to find the knife on the counter. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: got it <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Okay, now get to the bread. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: where is the bread <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: The bread is on a stool near the counter. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Okay, just stop and let me direct you. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: I see it <<InformationOther>>
+COMMANDER: Yes, turn left again. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: Slice the bread with the knife. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: You need to press use item and then click on the bread, I think. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: I can't hold either the bread or knife. <<NotifyFailure>>
+COMMANDER: Are you still holding the knife? <<AlternateQuestions>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Stool>
+COMMANDER: Pick up the knife. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: not anymore, let me try again, sorry.  this is annoying <<MiscOther>>
+COMMANDER: It's okay. <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: You don't need to pick up the bread, just slice it where it is. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Stool>
+COMMANDER: It's done. <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: No, I'm not sure. Is the bread cut yet? <<AlternateQuestions>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: don't think so <<Deny>>
+COMMANDER: <observe>
+DRIVER: <putdown Stool>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: There's a use item button on your interface. <<OtherInterfaceComment>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: I am holding the knife and click on the "slice" but nothing happens. <<OtherInterfaceComment>>
+COMMANDER: After clicking slice click on the bread. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: done it a million times.  first time having such issues <<NotifyFailure>>
+COMMANDER: Maybe you need to take the bread somewhere else to cut it. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Stool>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: Try putting the bread on the counter. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Ha, it is cut in half <<Acknowledge>>
+COMMANDER: Wait it's cut, right? <<AlternateQuestions>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: one half is on the island now <<InformationOther>>
+COMMANDER: <observe>
+DRIVER: it wasn't a slice of bread, it must have sliced in the middle but didn't know until i picked it up <<InformationOther>>
+COMMANDER: <observe>
+DRIVER: anything else? <<RequestForInstruction>>
+COMMANDER: We can try slicing it on the plate. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: We're trying to make a plate of toast. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: Wait you got it, yes? <<AlternateQuestions>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: yes <<Affirm>>
+COMMANDER: A slice? <<AlternateQuestions>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: yes <<Affirm>>
+COMMANDER: <observe>
+DRIVER: on the plate now <<Acknowledge>>
+COMMANDER: Okay, good work. <<FeedbackPositive>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: sorry <<MiscOther>>
+COMMANDER: No we'll need to toast it first I think. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Go straight ahead. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown Toaster>
+COMMANDER: You got it. <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle on Toaster>
+COMMANDER: <observe>
+DRIVER: now what, back to plate? <<RequestForInstruction>>
+COMMANDER: Turn left. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Toaster>
+COMMANDER: <observe>
+DRIVER: with the toast? <<AlternateQuestions>>
+COMMANDER: It's a different plate. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: Yes take the toast. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok, turning left <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Straight ahead. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Left again. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Straight ahead. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: plate on shelving unit> <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Yes, straight and on your right. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER response:

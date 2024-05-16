@@ -28,72 +28,60 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-<goal> Put all RemoteControl on one Chairs. </goal>
-COMMANDER: <observe>
-DRIVER: what shall i do? <<RequestForInstruction>>
-COMMANDER: There are 2 remotes <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: You need to put them both on a single chair <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
+Goal: Make a salad.
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: Hi! Today, you'll be making a salad. <<Greetings/Salutations,Instruction>>
+COMMANDER: Let's start by slicing a tomato. <<Instruction>>
 DRIVER: <move>
-COMMANDER: One is on coffee table <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: First, you'll need a knife. <<Instruction>>
+DRIVER: <putdown CounterTop>
+DRIVER: Ok. I have a knife <<Acknowledge,Acknowledge>>
+DRIVER: <pickup Knife>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Prepare coffee in a clean mug.
+DRIVER: Hi what to do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all Condiments in one Cabinet.
+DRIVER: how can I help <<RequestForInstruction>>
+COMMANDER: please place all of the condiments in a single cabinet <<Instruction>>
+COMMANDER: There is already one in the top right cabinet to the stove <<InformationOnObjectDetails>>
 DRIVER: <move>
-COMMANDER: Actually it looks like they are both on the coffee table - one on top and one on bottom <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: put it on the wicker chair to the right <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-Commander's Response:
+COMMANDER: sorry <<Acknowledge>>
+COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-<goal> Prepare coffee in a clean mug. </goal>
-COMMANDER: <observe>
-DRIVER: Hello. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: We need to make coffee <<Instruction>>
-DRIVER: <observe>
-COMMANDER: Grab the coffee mug in front of you <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Ok <<Acknowledge>>
-COMMANDER: Head to the coffee machine <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Mug>
-COMMANDER: Teh coffee machine is on the table <<InformationOnObjectDetails>>
-DRIVER: <observe>
-Commander's Response:
+Goal: Serve 2 slice(s) of Tomato on a Plate.
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER: serve 2 slices of tomato on a clean plate pelase <<Instruction>>
+DRIVER: <move>
+COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Put all Fruit in any Fridge.
+DRIVER: Hi what are my directions? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: i left my fruit out, could you put them in the fridge for me <<Instruction>>
+COMMANDER: there is a couple on the table <<InformationOnObjectDetails>>
+DRIVER: <move>
+DRIVER: Do you mean Tomatoes? <<Confirm>>
+COMMANDER response:
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
 
 Give your answer for the following example:
-<goal> Make a salad. </goal>
-COMMANDER: <observe>
-DRIVER: Hi! What can I do for you today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: today we need to make salad <<Instruction>>
-DRIVER: <observe>
-COMMANDER: you need to slice lettuce first <<Instruction>>
-DRIVER: <observe>
-COMMANDER: knife is in the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
+Goal: Put all Spatula in one Cabinet.
+DRIVER: hi <<Greetings/Salutations>>
+DRIVER: what can I do today? <<RequestForInstruction>>
+COMMANDER: hi...put all spatula in one cabinet <<Greetings/Salutations,Instruction>>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: lettuce? <<RequestOtherInfo>>
-COMMANDER: <observe>
-DRIVER: <move>
-
+COMMANDER response:

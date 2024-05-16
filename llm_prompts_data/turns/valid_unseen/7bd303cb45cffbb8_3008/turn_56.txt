@@ -1,0 +1,230 @@
+Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
+be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Cook 3 slice(s) of Potato and serve on a Plate.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what can i do today <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: cook 3 slices of potatos with the help of knife <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all Candle on one Tables.
+COMMANDER: <observe>
+DRIVER: what should I do? <<RequestForInstruction>>
+COMMANDER: Hi please put candle on table <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: candle on couch <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Candle>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeTable>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Put all RemoteControl on one CoffeeTable.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: how can i serve you today/ <<RequestForInstruction>>
+COMMANDER: Please put the remote controls on the coffee table <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeTable>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Put all Watch on one Tables.
+COMMANDER: <observe>
+DRIVER: what shall I do today? <<RequestForInstruction>>
+COMMANDER: put all Watch on one Tables <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: where is the watch? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Watch>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all Watch on one ArmChair.
+COMMANDER: <observe>
+DRIVER: hi what is my first task <<RequestForInstruction>>
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER response:
+Instruction
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what should i do today? <<RequestForInstruction>>
+COMMANDER: make a slice of tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: slice it using a knife <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where can i find the knife.? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: where can i find the tomato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: and place it on a clean plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: where can i find the knife and tomato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: i looking for it <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: search it in the progress check <<OtherInterfaceComment>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: i have sliced the tomato <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: where can i find the plate? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: in the microwave <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Microwave>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <close Microwave>
+COMMANDER: <observe>
+DRIVER: please find the plate <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: the tomato slice needs to be on a clean plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER: the plate is in the microwave <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: <observe>
+DRIVER: that is not the plate. <<InformationOther>>
+COMMANDER: <observe>
+DRIVER: that is microwave tray <<InformationOther>>
+COMMANDER: <observe>
+DRIVER: <close Microwave>
+COMMANDER: the upper cabinet <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: click on the clean plate in the progress check <<OtherInterfaceComment>>
+COMMANDER: <observe>
+DRIVER: it will show you the location <<OtherInterfaceComment>>
+COMMANDER: okay <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: a minute <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: the cabinet under the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+COMMANDER: <observe>
+DRIVER: <open Drawer>
+COMMANDER: <observe>
+DRIVER: <close Drawer>
+COMMANDER: <observe>
+DRIVER: <open Drawer>
+COMMANDER: <observe>
+DRIVER: <close Drawer>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+COMMANDER: <observe>
+DRIVER: <open Drawer>
+COMMANDER: <observe>
+DRIVER: <close Drawer>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER response:

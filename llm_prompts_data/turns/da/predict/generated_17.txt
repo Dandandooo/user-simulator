@@ -28,78 +28,67 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-<goal> Make a salad. </goal>
-COMMANDER: <observe>
-DRIVER: hi what should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: First, slice the lettuce <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
+Goal: Prepare coffee in a clean mug.
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: prepare coffee <<Instruction>>
 DRIVER: <move>
-COMMANDER: Lettuce is inside the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup ButterKnife>
-COMMANDER: <observe>
-DRIVER: <putdown Sink>
-COMMANDER: <observe>
-DRIVER: thanks <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: Knife is also in the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
+COMMANDER: mug is clean <<InformationOther>>
+DRIVER: <move>
+DRIVER: <pickup Mug>
+DRIVER: <pour Sink>
+DRIVER: <putdown CoffeeMachine>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER response:
+Acknowledge
+
+Example :
+Goal: Water the plant.
+COMMANDER: water the plant <<Instruction>>
+DRIVER: hello how may i help you with <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: where is the water <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <move>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Serve 2 slice(s) of Lettuce on a Plate.
+COMMANDER: hello! <<Greetings/Salutations>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: Get a knife and cut 2 slices of lettuce. <<Instruction>>
+DRIVER: Can you help me find knife? <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <move>
+COMMANDER: I believe it is in the sink <<InformationOnObjectDetails>>
+DRIVER: <move>
 DRIVER: <pickup Knife>
-Commander's Response:
+DRIVER: Where is lettuce? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER response:
 OBSERVE
 
 Example :
-<goal> Put all Lettuce in any Cabinet. </goal>
-COMMANDER: <observe>
-DRIVER: how can I help <<RequestForInstruction>>
-COMMANDER: please get the lettuce out of the microwave and place it in any cabinet <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
+Goal: Put all RemoteControl on one Tables.
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER: I need you to put the remotes on one of the tables <<Instruction>>
+DRIVER: ok where's the remote? <<RequestForObjectLocationAndOtherDetails>>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <toggle off Microwave>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Microwave>
-COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
-COMMANDER: <observe>
-DRIVER: <close Microwave>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Drawer>
-COMMANDER: <observe>
-DRIVER: <close Drawer>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-Commander's Response:
+COMMANDER: there's one on the couch <<InformationOnObjectDetails>>
+COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Put all Lettuce on any DiningTable.
+DRIVER: what can I help you with? <<RequestForInstruction>>
+COMMANDER: Hi what are my directions <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: <move>
+COMMANDER: You have to put all lettuce on any dinning table <<Instruction>>
+COMMANDER response:
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
 
 Give your answer for the following example:
-<goal> Boil Potato. </goal>
-COMMANDER: <observe>
-DRIVER: Hi whats the task <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: please boil a potato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
+Goal: Boil Potato.
+DRIVER: hi <<Greetings/Salutations>>
+DRIVER: what should I do? <<RequestForInstruction>>
 DRIVER: <move>
-COMMANDER: on the stove <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-
+COMMANDER response:

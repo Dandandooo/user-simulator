@@ -28,76 +28,67 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-<goal> Serve 1 slice(s) of Tomato on a Plate. </goal>
-COMMANDER: <observe>
+Goal: Boil Potato.
+DRIVER: hi, what can i do for you? <<Greetings/Salutations,RequestForInstruction>>
 DRIVER: <move>
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Hello <<Greetings/Salutations>>
-COMMANDER: today you need to slice a tomato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: What's our first task? <<RequestForInstruction>>
-COMMANDER: tomato is in the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Boil Potato.
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: boil a potato <<Instruction>>
+DRIVER: where is the potato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: go to the esspresso maker <<Instruction>>
+DRIVER: where is the vessel to boil it? <<RequestForObjectLocationAndOtherDetails>>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: <observe>
-DRIVER: <pickup Tomato>
-Commander's Response:
+COMMANDER: there is a drawer under the esspresso maker, open <<InformationOnObjectDetails>>
+COMMANDER response:
 OBSERVE
 
 Example :
-<goal> Make a plate of toast. </goal>
-COMMANDER: <observe>
-DRIVER: Hello, what is my task today? <<Greetings/Salutations,RequestForInstruction>>
+Goal: Prepare breakfast.
 COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: lets make toast <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Where is bread please <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: <observe>
-DRIVER: <close Fridge>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: <observe>
-DRIVER: <pickup Bread>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <close Cabinet>
-COMMANDER: <observe>
-DRIVER: found it <<Acknowledge>>
-COMMANDER: <observe>
+DRIVER: Hello! What should I do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: task is to prepare breakfast <<Instruction>>
+COMMANDER: first prepare coffee in a clean mug <<Instruction>>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup ButterKnife>
-COMMANDER: <observe>
+DRIVER: <pickup Mug>
 DRIVER: <move>
-Commander's Response:
+DRIVER: <putdown CoffeeMachine>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Water the plant.
+DRIVER: what can i do for you today? <<RequestForInstruction>>
+DRIVER: <move>
+COMMANDER: hello <<Greetings/Salutations>>
+COMMANDER: we'll be watering the plant <<Instruction>>
+DRIVER: <move>
+DRIVER: ok <<Acknowledge>>
+DRIVER: i see the plant <<Acknowledge>>
+DRIVER: ill get some water <<Acknowledge>>
+DRIVER: <move>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a salad.
+DRIVER: what can i do today <<RequestForInstruction>>
+COMMANDER: Hi!  The directions say make a salad, but it starts out with slicing the lettuce using a knife <<Greetings/Salutations,Instruction>>
+COMMANDER response:
 OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
 
 Give your answer for the following example:
-<goal> Put all Newspaper on one CoffeeTable. </goal>
-COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER: Today we are collecting newspapers.  There is one in front of the television set that must be placed on the coffee table. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
+Goal: Boil Potato.
+DRIVER: What do I need to do today? <<RequestForInstruction>>
+COMMANDER: boiling a potatoe <<Instruction>>
+COMMANDER: potatoe next to the fridge <<InformationOnObjectDetails>>
+DRIVER: where is it <<RequestForObjectLocationAndOtherDetails>>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Newspaper>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: where should I place it? <<RequestForInstruction>>
-
+COMMANDER: by the tea maker <<InformationOnObjectDetails>>
+COMMANDER response:

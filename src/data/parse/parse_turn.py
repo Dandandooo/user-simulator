@@ -8,6 +8,10 @@ folders = [
     "teach-dataset/games/valid_unseen",
 ]
 
+# TODO download images dataset
+
+# TODO work on paper!
+
 def convert_dialogue(dialogue_action: dict) -> dict:
     agent = dialogue_action['da_metadata']['agent'].upper()
     action = {
@@ -58,7 +62,7 @@ def parse_game(filename: str) -> dict:
     data = {}
     task = file['tasks'][0]  # I am assuming there is only one task. I haven't seen more yet
     data['goal'] = task['desc']
-    # Action ID 100 is a dialogue action
+    data['file_id'] = filename.split('/')[-1].split('.')[0]
     turns = data['turns'] = []
     # print(filename)
     for interaction in task['episodes'][0]['interactions']:

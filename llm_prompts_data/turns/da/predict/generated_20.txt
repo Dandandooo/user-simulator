@@ -28,112 +28,59 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-<goal> Serve 1 slice(s) of Tomato in a Bowl. </goal>
-COMMANDER: <observe>
-DRIVER: hello task plz <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: First make a slice of tomato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Tomato>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: Tomato is on the round table <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup ButterKnife>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <slice Tomato>
-COMMANDER: <observe>
-DRIVER: done <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: Knife is beside the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <slice Bread>
-COMMANDER: <observe>
-DRIVER: <slice Potato>
-COMMANDER: Next clean a bowl <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: <observe>
-DRIVER: <pickup SoapBottle>
-COMMANDER: Bowl is on the round table <<InformationOnObjectDetails>>
-DRIVER: <observe>
-Commander's Response:
+Goal: Make a plate of toast.
+DRIVER: task? <<RequestForInstruction>>
+DRIVER: ? <<RequestForInstruction>>
+COMMANDER response:
 OBSERVE
 
 Example :
-<goal> Cook 2 slice(s) of Potato and serve in a Bowl. </goal>
-COMMANDER: <observe>
-DRIVER: Hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What do we do today? <<RequestForInstruction>>
-COMMANDER: make 2 pieces of potato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: potato is in the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
+Goal: Cook 3 slice(s) of Potato and serve on a Plate.
+DRIVER: HI! What can I do for you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Clean all the Cloths.
+DRIVER: What should I do today? <<RequestForInstruction>>
 DRIVER: <move>
-COMMANDER: knife is the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-Commander's Response:
+COMMANDER: hi <<Greetings/Salutations>>
+COMMANDER: you need to clean all the cloths <<Instruction>>
+DRIVER: <move>
+DRIVER: Where are the clothes <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <move>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Boil Potato.
+DRIVER: task? <<RequestForInstruction>>
+DRIVER: ? <<RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Water the plant.
+DRIVER: hi, what should i do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: we need to water the plant. <<Instruction>>
+DRIVER: <move>
+COMMANDER: the plant is on the counter near the sink <<InformationOnObjectDetails>>
+DRIVER: <move>
+COMMANDER response:
 OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
 
 Give your answer for the following example:
-<goal> Put all Fork in any Sink. </goal>
-COMMANDER: <observe>
-DRIVER: hi, how can i help? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
+Goal: Prepare breakfast.
+DRIVER: what should i do? <<RequestForInstruction>>
+COMMANDER: Hi <<Greetings/Salutations>>
+COMMANDER: Prepare coffee in a clean mug <<Instruction>>
 DRIVER: <move>
-COMMANDER: can you put all the forks in the sink? <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: sure <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: where are the forks? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: there's one on the counter <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Fork>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <putdown Sink>
-COMMANDER: <observe>
-DRIVER: any more? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: yeah there's another in the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: <observe>
-DRIVER: <move>
-
+DRIVER: <toggle on CoffeeMachine>
+DRIVER: <toggle off CoffeeMachine>
+DRIVER: done <<Acknowledge>>
+COMMANDER: No coffee in it <<InformationOther>>
+DRIVER: check progress <<RequestForInstruction>>
+COMMANDER response:
