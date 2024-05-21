@@ -19,7 +19,7 @@ else:
 
 for i, folder in enumerate(sorted(os.listdir(datapath)), start=1):
     # Todo: run with 0, 2, and 5 examples
-    if os.path.exists(os.path.join(destpath, folder + "_result.json")) or True:
+    if os.path.exists(os.path.join(destpath, folder + "_result.json")):
         print("Skipping", folder, f"({i}/{len(os.listdir(datapath))})")
         continue
     print("Running", folder, f"({i}/{len(os.listdir(datapath))})")
@@ -31,16 +31,16 @@ for i, folder in enumerate(sorted(os.listdir(datapath)), start=1):
 
 overall = np.zeros((2, 2))
 alls = np.zeros((3, 2))
-speaks = np.zeros((2, 2))
-observes = np.zeros((2, 2))
-actions = np.zeros((2, 2))
+speaks = np.zeros((3, 2))
+observes = np.zeros((3, 2))
+actions = np.zeros((3, 2))
 for folder in sorted(os.listdir(datapath)):
     try:
         overall += conf_matrix(os.path.join(destpath, f"{folder}_result.json"))
         alls += all_matrix(os.path.join(destpath, f"{folder}_result.json"))
-        speaks += conf_matrix(os.path.join(destpath, f"{folder}_result.json"), prev="speak")
-        observes += conf_matrix(os.path.join(destpath, f"{folder}_result.json"), prev="observe")
-        actions += conf_matrix(os.path.join(destpath, f"{folder}_result.json"), prev="action")
+        speaks += all_matrix(os.path.join(destpath, f"{folder}_result.json"), prev="speak")
+        observes += all_matrix(os.path.join(destpath, f"{folder}_result.json"), prev="observe")
+        actions += all_matrix(os.path.join(destpath, f"{folder}_result.json"), prev="action")
     except FileNotFoundError:
         # print("Skipping", folder)
         continue

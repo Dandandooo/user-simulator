@@ -6,6 +6,7 @@ from tqdm import tqdm
 from functools import lru_cache
 import os
 import re
+import json
 
 # import bitsandbytes
 
@@ -61,7 +62,12 @@ class BaseLM:
 
     def answer_dataset(self, dataset_name: str) -> dict:
         for file_id, folder in self.data[dataset_name].items():
-            yield file_id, self.answer_folder(folder)
+            yield file_id, list(self.answer_folder(folder))
+
+    def save_answers(self, dataset_name: str, dest_folder: str):
+        for file_id, folder in self.answer_dataset(dataset_name):
+            with open(f"{dest_folder}/{file_id}_result.json", "w") as f:
+                json.dump(folder, f)
 
     def tp_etc(self, dataset_name: str) -> tuple[int, int, int, int, int, int]:
         true_observed = 0
@@ -134,15 +140,16 @@ class GPT4LM(BaseLM):
 
 # To work with huggingface models
 class HugLM(BaseLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it", **model_kwargs):
+    def __init__(self, model_name="google/gemma-1.1-2b-it", load_in_8bit=True, **model_kwargs):
         super().__init__()
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
             device_map="auto",
+            load_in_8bit=load_in_8bit,
             **model_kwargs
         )
 
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left", truncation_side="left")
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     @lru_cache
     def answer(self, prompt: str) -> str:
@@ -161,9 +168,8 @@ class LoraLM(HugLM):
 
         self.lora_config = LoraConfig(
             r=16,
-            lora_alpha=32,
-            lora_dropout=0.05,
-            # init_lora_weights="gaussian",
+            lora_alpha=8,
+            lora_dropout=0.1,
             bias='none',
             task_type="CAUSAL_LM",
         )

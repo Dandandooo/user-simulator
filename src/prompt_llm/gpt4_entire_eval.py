@@ -57,8 +57,8 @@ def conf_matrix(filename="gpt4_result.json", prev=None) -> np.array:
     return np.array([[true_observed, false_speak], [false_observed, true_speak]])
 
 
-def all_matrix(filename="gpt4_result.json") -> np.array:
-    true_observed, false_observed, true_speak, false_speak, correct_speak, incorrect_speak = calc_score(filename)
+def all_matrix(filename="gpt4_result.json", prev=None) -> np.array:
+    true_observed, false_observed, true_speak, false_speak, correct_speak, incorrect_speak = calc_score(filename, prev)
     return np.array([[true_observed, false_speak], [false_observed, true_speak], [correct_speak, incorrect_speak]])
 
 
