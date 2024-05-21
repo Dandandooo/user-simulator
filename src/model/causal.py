@@ -62,7 +62,7 @@ class BaseLM:
 
     def save_answers(self, dataset_name: str, dest_folder: str):
         for file_id, answered_folder in self.answer_dataset(dataset_name):
-            with open(f"{dest_folder}/{file_id}_result.json", "w") as f:
+            with open(os.path.join(dest_folder, f"{file_id}_result.json"), "w") as f:
                 json.dump(answered_folder, f)
 
     def tp_etc(self, dataset_name: str) -> tuple[int, int, int, int, int, int]:
