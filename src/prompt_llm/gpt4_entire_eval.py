@@ -20,6 +20,62 @@ def get_last_turn_type(prompt: str) -> str or None:
         return "speak"
 
 
+das_options = [
+        "OBSERVE",
+        'Acknowledge',
+        'Affirm',
+        'AlternateQuestions',
+        'Confirm',
+        'Deny',
+        'FeedbackNegative',
+        'FeedbackPositive',
+        'Greetings/Salutations',
+        'InformationOnObjectDetails',
+        'InformationOther',
+        'Instruction',
+        'MiscOther',
+        'NotifyFailure',
+        'OtherInterfaceComment',
+        'RequestForInstruction',
+        'RequestForObjectLocationAndOtherDetails',
+        'RequestMore',
+        'RequestOtherInfo',
+        "OTHER"
+    ]
+
+
+def das_index(response) -> int:
+    if response in das_options:
+        return das_options.index(response)
+    return len(das_options) - 1
+
+
+def das_confusion(results_filename="gpt4_result.json", prev=None) -> np.array:
+
+    confusion_matrix = np.zeros((len(das_options), len(das_options)))
+
+    results = load(open(results_filename, "r"))
+
+    for result in results:
+        if prev is not None and get_last_turn_type(result["prompt"]) != prev:
+            continue
+        answer, response = result["answer"], result["response"]
+        confusion_matrix[das_index(answer), das_index(response)] += 1
+
+    return confusion_matrix
+
+
+def das_stats(das_matrix: np.array):
+    for i, das in enumerate(das_options[:-1]):
+        tp = das_matrix[i, i]
+        fp = das_matrix[i].sum() - tp
+        fn = das_matrix[:, i].sum() - tp
+
+        fscore = 2 * tp / (2 * tp + fp + fn) if tp != 0 else 0
+
+        print(f"{das} fscore: {fscore:.2%}")
+
+
 def calc_score(results_filename="gpt4_result.json", prev=None) -> tuple[int, int, int, int, int, int]:
     true_observed = 0
     false_observed = 0

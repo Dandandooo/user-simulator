@@ -123,7 +123,7 @@ class HugLM(BaseLM):
     @lru_cache
     def answer(self, prompt: str) -> str:
         tokenized = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-        result = self.model.generate(tokenized["input_ids"], max_length=1000)
+        result = self.model.generate(tokenized["input_ids"], max_length=1000, attention_mask=tokenized["attention_mask"])
         decoded: str = self.tokenizer.decode(result[0], skip_special_tokens=True)
         return decoded
 
