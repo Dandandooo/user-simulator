@@ -32,6 +32,7 @@ class TurnMaker:
         self.split_dataset = kwargs["split_dataset"]
         self.train = kwargs["train"]
         self.entire_dataset = kwargs["entire_dataset"]
+        self.no_move = kwargs["no_move"]
 
         if self.nl_ify:
             self.das = {
@@ -78,16 +79,21 @@ class TurnMaker:
 
         self.kwargs = kwargs
 
+        def filter_move(task) -> dict:
+            if self.no_move:
+                task['turns'] = [turn for turn in task['turns'] if "move" not in turn['DRIVER']['action']]
+            return task
+
         # Chosen since it has the most examples
         with open(os.path.join(self.data_path, "train_turn.json"), 'r') as f:
-            train_source: list[dict] = [task for task in json.load(f)]
+            train_source: list[dict] = [filter_move(task) for task in json.load(f)]
 
         # Chosen since it has the least number of examples
         with open(os.path.join(self.data_path, "valid_seen_turn.json"), 'r') as f:
-            valid_seen_source: list[dict] = [task for task in json.load(f)]
+            valid_seen_source: list[dict] = [filter_move(task) for task in json.load(f)]
 
         with open(os.path.join(self.data_path, "valid_unseen_turn.json"), 'r') as f:
-            valid_unseen_source: list[dict] = [task for task in json.load(f)]
+            valid_unseen_source: list[dict] = [filter_move(task) for task in json.load(f)]
 
         self.example_source: list[dict] = train_source + valid_unseen_source
 
@@ -120,7 +126,7 @@ class TurnMaker:
             commander_das = ""
         if self.html_format:
             to_ret = "<TURN> "
-            if not (("observe" in commander_action.lower()) and self.no_obs):  # Either none or both
+            if is_last or not (("observe" in commander_action.lower()) and self.no_obs):  # Either none or both
                 to_ret += f"<{self.commander_name}> {commander_action} {f'<<{commander_das}>> ' if self.include_das and commander_das else ''}</{self.commander_name}>"
                 if is_last:
                     return to_ret
@@ -129,7 +135,7 @@ class TurnMaker:
             to_ret += "</TURN>"
         else:
             to_ret = ""
-            if not (("observe" in commander_action.lower()) and self.no_obs):  # Either none or both
+            if is_last or not (("observe" in commander_action.lower()) and self.no_obs):  # Either none or both
                 to_ret += f"{self.commander_name}: {commander_action}{f' <<{commander_das}>>' if self.include_das and commander_das else ''}" + "\n" * (not self.no_obs)
                 if is_last:
                     return to_ret
@@ -338,12 +344,14 @@ class TurnMaker:
 @click.option("--split_dataset", is_flag=True, help="Whether to split the dataset")
 @click.option("--train", is_flag=True, help="Whether to generate prompts for the training set, not the entire dataset")
 @click.option("--entire_dataset", is_flag=True, help="Whether to generate prompts for the entire dataset. Save path should be a folder for this one.")
+@click.option("--no_move", is_flag=True, help="Whether to not remove the move actions")
 def main(**kwargs):
     tm = TurnMaker(**kwargs)
     if kwargs["entire_dataset"]:
         tm.generate_entire_dataset(kwargs["save_path"])
     else:
         tm.generate_prompt(save_answer=kwargs["save_answer"], num_to_gen=kwargs["num_prompts"])
+
 
 if __name__ == "__main__":
     main()

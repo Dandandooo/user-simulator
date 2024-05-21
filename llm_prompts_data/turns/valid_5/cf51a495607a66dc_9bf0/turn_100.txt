@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,12 +28,29 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a salad.
+Goal: Prepare breakfast.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+DRIVER: Hi, What is the task in hand <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Hello! <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: First there are two mugs of coffee to be made, but one is dirty and has to be rinsed with water first <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what is my task? <<RequestForInstruction>>
-COMMANDER: make 2 slices lettuce <<Instruction>>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Boil Potato.
+COMMANDER: <observe>
+DRIVER: Hi. What do I need to do? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: we need to boil 1 potato please <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: there is 1 on the chair <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails
@@ -41,44 +58,45 @@ InformationOnObjectDetails
 Example :
 Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: what shall I do today? <<RequestForInstruction>>
-COMMANDER: make a salad. <<Instruction>>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: Hi! Today, you'll be making a salad. <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
-COMMANDER: we need a slice of tomato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: the tomato is on the island <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: the knife is in the fridge <<InformationOnObjectDetails>>
+COMMANDER: Let's start by slicing a tomato. <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Make a sandwich.
-COMMANDER: <observe>
-DRIVER: whats first <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: Hello. First we need to make 2 slices of toast. <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
+DRIVER: <pickup Tomato>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+DRIVER: how can i help? <<RequestForInstruction>>
+COMMANDER: can you please make coffee? <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-Greetings/Salutations
+InformationOnObjectDetails
 
 Example :
-Goal: Clean all the Pots.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: Hello, what shall I   be ing today? <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER: Hi there! Can you make me a coffee in a clean mug? <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: surely <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: do you see a mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: there's one by the toaster <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
 COMMANDER response:
 OBSERVE
 

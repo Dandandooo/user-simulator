@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,62 +28,86 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Boil Potato.
-COMMANDER: <observe>
-DRIVER: hi what can i do for you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
+Goal: Serve 1 slice(s) of Tomato in a Bowl.
+
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Water the plant.
-
+Goal: Serve 1 slice(s) of Lettuce in a Bowl.
+COMMANDER: <observe>
+DRIVER: hi how can i be of assistance? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: please serve one slice of lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER: this needs to be in a bowl <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a plate of toast.
+Goal: Put all TissueBox on one CoffeeTable.
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: Hello. <<Greetings/Salutations>>
+DRIVER: What do I do first? <<RequestForInstruction>>
+COMMANDER: Grab a tissue box and put it onto a single coffee table <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup TissueBox>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
+DRIVER: <putdown CoffeeTable>
 COMMANDER: <observe>
-DRIVER: <slice Lettuce>
-COMMANDER: <observe>
-DRIVER: <slice Apple>
+DRIVER: Next? <<RequestForInstruction>>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve on a Plate.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: what can we do today <<RequestForInstruction>>
-COMMANDER: cook two slices of potato and serve on a plate please <<Instruction>>
+DRIVER: Hi what to do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Today you will prepare coffee in a mug. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: It is towards the right of the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Inside the white vessel that resemblesa grabage bin <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Mug in one Cabinet.
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: Hello. What is my first task? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Put  a mug into a cabinet <<Instruction>>
+Goal: Prepare breakfast.
+COMMANDER: Hello <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Great. Where do I find the mug? <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: hello whats my task <<RequestForInstruction>>
+COMMANDER: Prepare coffee in a clean mug <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
+COMMANDER: Mug is dirty <<InformationOther>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <open Microwave>
+DRIVER: <move>
+COMMANDER: Mug is in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <close Microwave>
+DRIVER: where is the mug? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
 InformationOnObjectDetails
 

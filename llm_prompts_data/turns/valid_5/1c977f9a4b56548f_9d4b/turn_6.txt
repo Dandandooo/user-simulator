@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,73 +28,70 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Boil Potato.
-COMMANDER: <observe>
-DRIVER: my task <<RequestForInstruction>>
-COMMANDER: boil a potato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: where is it <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: on the chair <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Potato>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <putdown Pot>
-COMMANDER: <observe>
-DRIVER: <toggle on StoveKnob>
+Goal: Put all RemoteControl on any Chairs.
+
 COMMANDER response:
-Acknowledge
+OBSERVE
 
 Example :
-Goal: Put all Drinkware on any DiningTable.
+Goal: Put all Newspaper on one Dresser.
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: We will place all drinkware on the dining table <<Instruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: whats the task? <<RequestForInstruction>>
+COMMANDER: hello <<Greetings/Salutations>>
 DRIVER: <observe>
+COMMANDER: Place the newspaper into the single dresser <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is it? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Put all RemoteControl on any ArmChair.
+COMMANDER: <observe>
+DRIVER: what would you like me to do? <<RequestForInstruction>>
+COMMANDER: we need to place the remotes on the armchair <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the remote? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: there is one in the box on the shelf <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Box>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Put all TissueBox on one CoffeeTable.
+Goal: Put all Spoon in any Sink.
 COMMANDER: <observe>
-DRIVER: ho can I help <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: how" <<RequestForInstruction>>
-COMMANDER: put all tissuebox on one coffee table <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup TissueBox>
-COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: How can I help <<RequestForInstruction>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare breakfast.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: how can I help? <<RequestForInstruction>>
+DRIVER: what can i do for you? <<RequestForInstruction>>
+COMMANDER: I just need my plant watered <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: i'd like breakfast <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: what do i do <<RequestForInstruction>>
+DRIVER: sure <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: i found a container <<Acknowledge>>
 COMMANDER response:
-InformationOnObjectDetails
+FeedbackPositive
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

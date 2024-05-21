@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,74 +28,71 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a salad.
-COMMANDER: <observe>
-DRIVER: how can i help today <<RequestForInstruction>>
-COMMANDER: i would like you to prepare a salad for me <<Instruction>>
-DRIVER: <observe>
-COMMANDER: could you include tomato and cook a slice of potato for it <<Instruction>>
+Goal: Clean all the Cloths.
+COMMANDER: Please clean all the cloths <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
+COMMANDER: there is one in the bathtub <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
+COMMANDER: and another one on the drawer unit next to the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Potato>
+DRIVER: <toggle off ShowerHead>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup Cloth>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a salad.
-
+Goal: Put all Newspaper on one Dresser.
+COMMANDER: <observe>
+DRIVER: how can i help you today? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
 Greetings/Salutations
 
 Example :
-Goal: Prepare coffee in a clean mug.
+Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: what shall i do? <<RequestForInstruction>>
+DRIVER: what is your bidding? <<RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER response:
+MiscOther
+
+Example :
+Goal: Water the plant.
+COMMANDER: hello <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: today we will be making coffee <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: hello what is the task today <<Greetings/Salutations>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Make a salad.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: what should i do? <<RequestForInstruction>>
-COMMANDER response:
-Greetings/Salutations
-
-Example :
-Goal: Prepare breakfast.
-COMMANDER: <observe>
-DRIVER: what should i do? <<RequestForInstruction>>
-COMMANDER: hi, we will prepare breakfast today. please start with making a mug of coffee <<Greetings/Salutations,Instruction>>
+DRIVER: hello how can i help you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: please water the plant <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <toggle on CoffeeMachine>
+DRIVER: <pickup Cup>
 COMMANDER: <observe>
-DRIVER: <toggle off CoffeeMachine>
-COMMANDER: <observe>
-DRIVER: done <<Acknowledge>>
-COMMANDER: it's not showing donw <<OtherInterfaceComment>>
-DRIVER: <observe>
+DRIVER: <move>
 COMMANDER response:
-OtherInterfaceComment
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

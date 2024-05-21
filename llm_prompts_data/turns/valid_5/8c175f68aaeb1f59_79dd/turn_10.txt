@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,81 +28,60 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all Newspaper on any Sofa.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what should i do today? <<RequestForInstruction>>
-COMMANDER: grab newpaper off the chair and place on sofa <<Instruction>>
-DRIVER: <observe>
-COMMANDER: the chair at the table <<InformationOnObjectDetails>>
-DRIVER: <observe>
+Goal: Clean all the Pots.
+
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
+Goal: Clean all the Dishwares.
 COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
-COMMANDER: Hello <<Greetings/Salutations>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what is my task? <<RequestForInstruction>>
+COMMANDER: Clean a plate and a bowl <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Bowl>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Clean all the Mugs.
+COMMANDER: <observe>
+DRIVER: what shall I do today? <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Water the plant.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: what can i help with? <<RequestForInstruction>>
-COMMANDER: water my plant please! <<Instruction>>
-DRIVER: <observe>
+DRIVER: hi,what should i do today? <<Greetings/Salutations,RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Mug>
-COMMANDER: <observe>
-DRIVER: sure thing <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: i found a mug on the table with water in it <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <pour HousePlant>
-COMMANDER: Go for it! <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: done <<Acknowledge>>
-COMMANDER response:
-FeedbackPositive
-
-Example :
-Goal: Put all Apple in one Cabinet.
-COMMANDER: put apple into a single cabinet <<Instruction>>
-DRIVER: <observe>
-COMMANDER: it is in the wash basin <<InformationOnObjectDetails>>
+COMMANDER: Add coffee to a mug <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: what can i do for you <<RequestForInstruction>>
-COMMANDER: Let <<Instruction>>
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: i'd like a salad <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: s start witha clean plate <<Instruction>>
-DRIVER: <observe>
+DRIVER: whats in it? <<RequestOtherInfo>>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: where is the plate? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: A plate is under the cabinet by the dishwasher. <<InformationOnObjectDetails>>
+COMMANDER: tomato and potato <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

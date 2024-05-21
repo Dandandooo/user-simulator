@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,75 +28,70 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Boil Potato.
+Goal: Make a salad.
+
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Clean all the Cloths.
+COMMANDER: <observe>
+DRIVER: Hi, how are you? What would you like me to do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Great how are you? <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Good, thank you. <<Acknowledge>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all Newspaper on one Furniture.
 COMMANDER: <observe>
 DRIVER: hello <<Greetings/Salutations>>
-COMMANDER: hello <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what is task? <<RequestForInstruction>>
+COMMANDER: put the newspaper on one funiture <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What is my task <<RequestForInstruction>>
-COMMANDER: lets boil a potato <<Instruction>>
+DRIVER: <move>
+COMMANDER: in the trash <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: behind you <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup Pot>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: on the stove please <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <putdown Floor>
+DRIVER: <pickup Newspaper>
 COMMANDER response:
-OBSERVE
+Acknowledge
 
 Example :
-Goal: Make a salad.
+Goal: Clean all the Plates.
 COMMANDER: <observe>
-DRIVER: hello how can I help you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what do i do today? <<RequestForInstruction>>
+COMMANDER: Hello. Please clean the plate on the book shelf. <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
-Instruction
+OBSERVE
 
 Example :
 Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: what can i do today <<RequestForInstruction>>
 COMMANDER response:
 Instruction
-
-Example :
-Goal: Make a sandwich.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what should I do today? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: slice bread <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Clean all the Drinkwares.
-COMMANDER: Hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: clean all the drinkwares <<Instruction>>
-DRIVER: <observe>
-COMMANDER: it's in the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER response:
-InformationOther
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

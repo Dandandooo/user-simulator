@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,47 +28,57 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
-
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: slice a tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: 2 slices <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Clean all the Dishwares.
+Goal: Put all Cloth in any Bathtub.
+COMMANDER: We need to put a cloth in the bathtub. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: The cloth is white and on the counter to the left of the shower. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Clean all the Mugs.
 COMMANDER: <observe>
-DRIVER: whats the first task? <<RequestForInstruction>>
+DRIVER: Hello what is my task <<Greetings/Salutations,RequestForInstruction>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Put all Pillow on any Sofa.
+Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
 COMMANDER: <observe>
-DRIVER: what shall I do today? <<RequestForInstruction>>
-COMMANDER: Place the pillow on the sofa <<Instruction>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: Hi. Please cook two slices of potato. <<Instruction>>
 DRIVER: <observe>
-COMMANDER: It is a pink/red pillow <<InformationOther>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: where is the pillow? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: Pick it up. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Pillow>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Prepare coffee in a clean mug.
-
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 2 slice(s) of Tomato in a Bowl.
+Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
 COMMANDER: <observe>
-DRIVER: what do i do <<RequestForInstruction>>
+DRIVER: what should I do? <<RequestForInstruction>>
+COMMANDER: it's the same thing <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
 Instruction
 

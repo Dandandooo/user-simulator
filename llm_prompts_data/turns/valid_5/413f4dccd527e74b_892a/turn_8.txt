@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,77 +28,75 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Water the plant.
-COMMANDER: <observe>
-DRIVER: hi how can I help you? <<Greetings/Salutations,RequestForInstruction>>
+Goal: Prepare coffee in a clean mug.
+COMMANDER: prepare coffee in clean mug <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: please wtaetr the plant <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Serve 1 slice(s) of Lettuce on a Plate.
-COMMANDER: Hello <<Greetings/Salutations>>
-DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
-COMMANDER: Please slice lettuce <<Instruction>>
-DRIVER: <observe>
+DRIVER: <pickup Mug>
 COMMANDER: <observe>
-DRIVER: what can I do today? <<RequestForInstruction>>
+DRIVER: <putdown Sink>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: slice lettuce <<Instruction>>
-DRIVER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Boil Potato.
-COMMANDER: please boil a potato on teh stove <<Instruction>>
+Goal: Make a salad.
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: Please put 2 lettuce on a plate <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: hi <<Greetings/Salutations>>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: there is one in the microwave <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: what should i do today <<RequestForInstruction>>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER response:
-InformationOther
-
-Example :
-Goal: Boil Potato.
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
+DRIVER: ok <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: what shall i do? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: lets boil a potato <<Instruction>>
-DRIVER: <observe>
+DRIVER: where can i find lettuce <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Make a sandwich.
+Goal: Clean all the Cloths.
 COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: today we need to make sandwich <<Instruction>>
+DRIVER: hello <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: my task <<RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: what can i do today <<RequestForInstruction>>
+COMMANDER: Hello please make a cup of coffee <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what should i do today? <<RequestForInstruction>>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <pour Sink>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: bread is in the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: <putdown CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: how can i help? <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 

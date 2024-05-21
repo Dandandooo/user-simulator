@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,64 +28,78 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Drinkwares.
-COMMANDER: Hi <<Greetings/Salutations>>
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: hello what can I do for you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: i'd like a salad <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hi, First task? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: rinse the drinkware <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: we got ten min <<OtherInterfaceComment>>
+DRIVER: sure thing, what ingredients? <<Acknowledge,RequestOtherInfo>>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: on the chair <<InformationOnObjectDetails>>
+COMMANDER: preferrably with lettuce and tomato <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Boil Potato.
+Goal: Put all Pillow on any ArmChair.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Clean all the Mugs.
-COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Bread>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: clean the mugs <<Instruction>>
+DRIVER: Hello, what shall I   do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: lets put three pillows onto an arm chair <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
+DRIVER: Ok. <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: <slice Lettuce>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Pillow>
+COMMANDER: <observe>
+DRIVER: <putdown ArmChair>
+COMMANDER: <observe>
+DRIVER: <pickup Pillow>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Prepare coffee in a clean mug.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what's the task <<RequestForInstruction>>
+Goal: Put all AlarmClock on any Bed.
+
 COMMANDER response:
-Greetings/Salutations
+Instruction
 
 Example :
-Goal: Make a sandwich.
-
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: hi how can i help? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: i want some breakfast <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: sure thing <<Acknowledge>>
+COMMANDER: you can start with some coffee <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: is there a mug? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: my task <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: hello <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: my task today please <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER response:
+Greetings/Salutations
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

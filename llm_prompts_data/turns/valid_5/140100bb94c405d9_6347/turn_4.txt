@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,79 +28,64 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Water the plant.
+Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: please water the plant <<Instruction>>
-DRIVER: <observe>
-COMMANDER: fill the containter from the sink <<Instruction>>
+DRIVER: Hi, first task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Hi. Please make a plate of toast. <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: <pickup Knife>
 COMMANDER: <observe>
-DRIVER: <pickup Pot>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: <observe>
-DRIVER: <pickup Pot>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Serve 3 slice(s) of Lettuce in a Bowl.
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: can you please slice a lettuce and place 3 pieces of it into a clean bowl <<Instruction>>
-DRIVER: <observe>
-COMMANDER: there is a lettuce and a knife on the table <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
-COMMANDER: and a bowl in a lower corner cupboard <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: <slice Bread>
 COMMANDER: <observe>
 DRIVER: <putdown DiningTable>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
+DRIVER: how many <<RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: Just one. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Boil Potato.
-COMMANDER: <observe>
-DRIVER: Hello, what should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
+Goal: Clean all the Cloths.
+
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Put all Newspaper on one Furniture.
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
+Goal: Clean all the Cloths.
 COMMANDER: <observe>
-DRIVER: what should i do? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: we need to slice a tomato <<Instruction>>
+DRIVER: whats first? <<RequestForInstruction>>
+COMMANDER: hello <<Greetings/Salutations>>
 DRIVER: <observe>
+COMMANDER: we need to clean a dirty cloth <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the cloth? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER response:
 InformationOnObjectDetails
+
+Example :
+Goal: Cook 3 slice(s) of Potato and serve in a Bowl.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: What can I do for you today? <<RequestForInstruction>>
+COMMANDER: slice bread <<Instruction>>
+DRIVER: <observe>
+COMMANDER response:
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

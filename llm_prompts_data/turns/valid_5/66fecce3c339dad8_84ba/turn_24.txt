@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,53 +28,85 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all Mug in one Cabinet.
-COMMANDER: can you put all mugs in a single cabinet please <<Instruction>>
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: hello how can I help you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: hello <<Greetings/Salutations>>
 DRIVER: <observe>
+COMMANDER: i'd like a salad today <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: <observe>
+DRIVER: <slice Lettuce>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
 COMMANDER response:
 OBSERVE
 
 Example :
+Goal: Put all PepperShaker in one Cabinet.
+COMMANDER: <observe>
+DRIVER: how can i help you today <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: Hello! <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER response:
+Instruction
+
+Example :
 Goal: Prepare breakfast.
-COMMANDER: I need help <<Instruction>>
-DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hi, how can I help you today? <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: What should i do today? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <toggle on LightSwitch>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
-Instruction
+Greetings/Salutations
 
 Example :
-Goal: Clean all the Cups.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all Cloth in any Bathtub.
-COMMANDER: Hello How are you <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Hi what are we doing today <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Shall we begin <<Confirm>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: yeah <<Acknowledge>>
-COMMANDER: put a cloth in any bathtub <<Instruction>>
-DRIVER: <observe>
-COMMANDER: 2 of each <<Instruction>>
+DRIVER: what should I do first? <<RequestForInstruction>>
+COMMANDER: The plant by the sink needs to be watered <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: one is in the cabinet to the right of the sink <<InformationOnObjectDetails>>
+COMMANDER: <observe>
+DRIVER: <pickup SoapBottle>
+COMMANDER: Get the mug from the coffee machine and fill it with water from the sink <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: or any container you can find <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
-InformationOnObjectDetails
+OBSERVE
 
 Example :
-Goal: Cook 3 slice(s) of Potato and serve on a Plate.
+Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: Hello. What is my task? <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: what next <<RequestForInstruction>>
+COMMANDER: hi there <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what should i do <<RequestForInstruction>>
+COMMANDER: make a plate of toast <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the toast and plate? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
 Instruction
 

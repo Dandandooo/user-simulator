@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,83 +28,59 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
-COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
-COMMANDER: Hello <<Greetings/Salutations>>
+Goal: Boil Potato.
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
-COMMANDER: Make a slice of tomato <<Instruction>>
+COMMANDER: <observe>
+DRIVER: what is my task today <<RequestForInstruction>>
+COMMANDER: Please boil potato there is one in cabinet over microwave <<Instruction,InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: where can i get a knife <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <open Cabinet>
 COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: <pickup Potato>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a salad.
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
+Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: hi, what should i do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: lets make salad <<Instruction>>
-DRIVER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Cook 1 slice(s) of Potato and serve in a Bowl.
+Goal: Put all RemoteControl on one Chairs.
 COMMANDER: <observe>
-DRIVER: what is my task please <<RequestForInstruction>>
-COMMANDER: Cook one slice of potato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Potato>
+DRIVER: what shall i do? <<RequestForInstruction>>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Make a salad.
+Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what is the task? <<RequestForInstruction>>
-COMMANDER: u are making a salad <<Instruction>>
+DRIVER: what do i do' <<RequestForInstruction>>
+COMMANDER: slice bred <<Instruction>>
+DRIVER: <observe>
+COMMANDER: bread <<Instruction>>
+DRIVER: <observe>
+COMMANDER: and toast 1 slice <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: what do I do first? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup ButterKnife>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all RemoteControl on one Sofa.
-COMMANDER: <observe>
-DRIVER: task? <<RequestForInstruction>>
-COMMANDER: place 2 remotes onto single chair sofa <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: remote place <<Instruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: one is on the white shelfnext to tv <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: on the brown table <<InformationOnObjectDetails>>
+COMMANDER: then serve it on a clean plate <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: what can i do today <<RequestForInstruction>>
+COMMANDER response:
+Greetings/Salutations
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

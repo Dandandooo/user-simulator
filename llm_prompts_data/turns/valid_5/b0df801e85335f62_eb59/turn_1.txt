@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -30,83 +30,76 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 Example :
 Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: what shall I do today? <<RequestForInstruction>>
-COMMANDER: make a salad. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: we need a slice of tomato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: the tomato is on the island <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: the knife is in the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: hi what can i do for you today? <<Greetings/Salutations,RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: <move>
+COMMANDER: I'd like you to make a salad <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: sure, what kind of salad? <<Acknowledge,RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: sliced lettuce and two tomato slices <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
 COMMANDER response:
 OBSERVE
 
 Example :
 Goal: Make a salad.
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hello <<Greetings/Salutations>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: first make two slices of tomato <<Instruction>>
 DRIVER: <observe>
-COMMANDER: Make a salad <<Instruction>>
-DRIVER: <observe>
-COMMANDER: First <<Instruction>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Can you help me find knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
 
 Example :
-Goal: Serve 2 slice(s) of Tomato in a Bowl.
-COMMANDER: <observe>
-DRIVER: hello how can I help today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: can i please have two slices of tomato in a clean bowl <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: sure, do you know where the bowl is? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: in the fridge i believe <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
+Goal: Put all TissueBox on one Tables.
+
 COMMANDER response:
-InformationOther
+Greetings/Salutations
 
 Example :
-Goal: Make a sandwich.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: task? <<RequestForInstruction>>
-COMMANDER: bread and knife are in the fridge <<InformationOnObjectDetails>>
+DRIVER: hi, what can i do for you today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: I need you to water my plant <<Instruction>>
 DRIVER: <observe>
-COMMANDER: make 2 toasts <<Instruction>>
+COMMANDER: <observe>
+DRIVER: sure <<Acknowledge>>
+COMMANDER: you can use the water from the sink <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <open Fridge>
+DRIVER: <pickup Cup>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Bread>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare breakfast.
+Goal: Put all Plate on any DiningTable.
 COMMANDER: <observe>
-DRIVER: hey <<Greetings/Salutations>>
-COMMANDER: we need to slice bread first please <<Instruction>>
+DRIVER: how can i help? <<RequestForInstruction>>
+COMMANDER: Hi! We're going to be gathering the plates and placing them onto the dining table <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: where is the bread <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: lets grab a knife <<Instruction>>
-DRIVER: <observe>
+DRIVER: of course, ill get started <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
 InformationOnObjectDetails
 

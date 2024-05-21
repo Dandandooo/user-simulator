@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,61 +28,73 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
-COMMANDER: hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what can I do? <<RequestForInstruction>>
-COMMANDER: Please put a slice of tomato on a clean plate. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Cook 1 slice(s) of Potato and serve in a Bowl.
-COMMANDER: <observe>
-DRIVER: what shall I do today? <<RequestForInstruction>>
-COMMANDER response:
-Greetings/Salutations
-
-Example :
 Goal: Clean all the Plates.
-COMMANDER: today we need to clean the plate <<Instruction>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
 COMMANDER response:
-InformationOther
+Instruction
 
 Example :
-Goal: Put all Newspaper on one Chairs.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: hello, what should I do today? <<RequestForInstruction>>
-COMMANDER: place 2 newspapers onto single chair <<Instruction>>
+DRIVER: Hi. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: First task? <<RequestForInstruction>>
+COMMANDER: Hi. Please water the plant. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: By the sink. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: where is the bowl to water it? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: You can use that mug <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare breakfast.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: hello, what should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hello. We need to make a plate of toast. <<Greetings/Salutations,Instruction>>
+DRIVER: my task <<RequestForInstruction>>
+COMMANDER: Hello, you need to make a salad please. <<Instruction>>
 DRIVER: <observe>
-COMMANDER: The bread needs to be sliced using a knife. <<Instruction>>
+COMMANDER: There is a knife by the sink <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: Where is the bread? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: The lettuce is in the upper cabinet above the fridge on the right <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
 DRIVER: <open Fridge>
 COMMANDER: <observe>
-DRIVER: <close Fridge>
+DRIVER: with what <<AlternateQuestions>>
+COMMANDER: <observe>
+DRIVER: do i make asalad <<AlternateQuestions>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all RemoteControl on one Chairs.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what is my first task <<RequestForInstruction>>
+COMMANDER: Hello! Please place 3 remote controls onto one chair <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails
 

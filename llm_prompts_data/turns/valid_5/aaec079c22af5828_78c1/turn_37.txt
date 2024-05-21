@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,69 +28,87 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Cook 1 slice(s) of Potato and serve on a Plate.
-
-COMMANDER response:
-Greetings/Salutations
-
-Example :
-Goal: Water the plant.
-
+Goal: Put all Newspaper on one Chairs.
+COMMANDER: <observe>
+DRIVER: What task can I do? <<RequestForInstruction>>
+COMMANDER: Today you will put all newspapers on one chair <<Instruction>>
+DRIVER: <observe>
+COMMANDER: One newspaper is next the laptop <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: do you mean the dining chairs? <<Confirm>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Clean all the Cloths.
+Goal: Clean all the Drinkwares.
 COMMANDER: <observe>
-DRIVER: What should I do today> <<RequestForInstruction>>
-COMMANDER: find a cloth <<Instruction>>
+DRIVER: whats first? <<RequestForInstruction>>
+COMMANDER: We need to rinse the drinkware with water. <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: on back of commode <<InformationOnObjectDetails>>
+DRIVER: cup, mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: there is something in the cabinet in the top right corner of the room <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: above something ? <<RequestOtherInfo>>
 COMMANDER: <observe>
-DRIVER: <pickup Cloth>
-COMMANDER: <observe>
-DRIVER: I have the cloth <<Acknowledge>>
-COMMANDER: rinse it with water <<Instruction>>
+DRIVER: there is alot of cabinets <<RequestOtherInfo>>
+COMMANDER: It looks like it's something white on the floor? <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: to the left of the stove <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: 'just tell me the task? <<RequestForInstruction>>
 COMMANDER response:
-InformationOther
+Instruction
 
 Example :
-Goal: Put all Newspaper on one ArmChair.
+Goal: Prepare coffee in a clean mug.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hello! What shall I   do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: we need to find newspaper <<Instruction>>
+DRIVER: hello <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what can I do today? <<RequestForInstruction>>
+COMMANDER: rinse the mug on the coffee maker <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Pillow>
-COMMANDER: <observe>
-DRIVER: <putdown Sofa>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Newspaper>
-COMMANDER: on the table <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: I   found it. Place it on the table? <<Acknowledge,RequestOtherInfo>>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: first task? <<RequestForInstruction>>
+COMMANDER: water plant please <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER response:
+OBSERVE
 
 Example :
 Goal: Make a sandwich.
-COMMANDER: make toast <<Instruction>>
+COMMANDER: <observe>
+DRIVER: Hi. What can i do for you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: slice bread first <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
+COMMANDER: bread on counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: on top of the counter <<InformationOnObjectDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: where is the knife <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: using a knife <<Acknowledge>>
 COMMANDER response:
 InformationOnObjectDetails
 

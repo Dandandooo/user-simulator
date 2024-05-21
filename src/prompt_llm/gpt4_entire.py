@@ -1,4 +1,4 @@
-import os, sys, json
+import os, sys, json, re
 from openai import AzureOpenAI
 from tqdm import tqdm
 
@@ -11,12 +11,14 @@ client = AzureOpenAI(
 # I don't really know what this does
 role = "system"
 
+digits = re.compile(r"\d+")
+
 
 def run_gpt(folder="llm_prompts_data/turns/entire"):
     prompts = []
     answers = []
 
-    for filename in sorted(os.listdir(folder)):
+    for filename in sorted(os.listdir(folder), key=lambda e: int(digits.search(e).group())):
         if "answer" in filename:
             answers.append(open(os.path.join(folder, filename), "r").read())
         else:
@@ -40,7 +42,7 @@ def run_gpt(folder="llm_prompts_data/turns/entire"):
     results = [{
             "prompt": prompt,
             "answer": answer,
-            "response": response
+            "response": response if response else ""
         } for prompt, response, answer in zip(prompts, responses, answers)
     ]
 

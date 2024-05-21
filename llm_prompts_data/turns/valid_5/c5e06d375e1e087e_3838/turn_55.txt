@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,79 +28,71 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a salad.
+Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
 COMMANDER: <observe>
-DRIVER: Hi what shall I do today <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: let's make a salad <<Instruction>>
-DRIVER: <observe>
+DRIVER: hello <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what is my task please <<RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: first you need to find the knife <<Instruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Apple>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: 2x cook a slice of potato slice it using a knife <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a plate of toast.
+Goal: Cook 1 slice(s) of Potato and serve in a Bowl.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: First slice the bread <<Instruction>>
+DRIVER: what is my task today <<RequestForInstruction>>
+COMMANDER: slice potato <<Instruction>>
 DRIVER: <observe>
-COMMANDER: It's on one of the brown chairs <<InformationOnObjectDetails>>
+COMMANDER: potato inpot on counter <<InformationOnObjectDetails>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Make a plate of toast.
+Goal: Boil Potato.
+COMMANDER: this is a test <<OtherInterfaceComment>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what should I do today? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Mug>
-COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: what can I help you with? <<RequestForInstruction>>
+COMMANDER: yes hello! <<Greetings/Salutations>>
+DRIVER: <observe>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Clean all the Cups.
+Goal: Make a sandwich.
 COMMANDER: <observe>
-DRIVER: Hi! What can I do for you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: rinse the green cup on the counter <<Instruction,InformationOnObjectDetails>>
+DRIVER: Hello <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: Please provide directions <<RequestForInstruction>>
+COMMANDER: Hio..We need to make a sandwich. First we need to slice the bread to get 2 slices. <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: other one <<Instruction>>
-DRIVER: <observe>
+DRIVER: ok <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: <pickup Cup>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Cup on any DiningTable.
+Goal: Clean all the Mugs.
 COMMANDER: <observe>
-DRIVER: Hey, what Im I doing today <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: You will be putting all the cups on a dining table <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Okay <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Mug>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: Where is the dining table <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: Hello! What shall I be doing today? <<Greetings/Salutations,RequestForInstruction>>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

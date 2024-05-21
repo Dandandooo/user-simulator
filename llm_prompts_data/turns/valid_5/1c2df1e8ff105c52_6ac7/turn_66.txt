@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,62 +28,79 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Bowls.
+Goal: Prepare coffee in a clean mug.
+COMMANDER: First, clean the mug <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hell <<Greetings/Salutations>>
+DRIVER: ok <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: Hello <<Greetings/Salutations>>
+DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup SaltShaker>
+DRIVER: <toggle off Microwave>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <open Microwave>
+COMMANDER: Mug is in the bin to the right of the  fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup PepperShaker>
+DRIVER: <close Microwave>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup Spoon>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <pickup Mug>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Apple in any Fridge.
+Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: What can I do today? <<RequestForInstruction>>
-COMMANDER: Could you please help me placing all the apples in the fridge <<Instruction>>
-DRIVER: <observe>
-COMMANDER: there should be one in the microwave <<InformationOnObjectDetails>>
+DRIVER: what do ya need? <<RequestForInstruction>>
+COMMANDER: I would like some toast! <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
 
 Example :
-Goal: Make a salad.
-
+Goal: Put all TissueBox on one SideTable.
+COMMANDER: <observe>
+DRIVER: What is my task? <<RequestForInstruction>>
 COMMANDER response:
-Greetings/Salutations
+Instruction
 
 Example :
-Goal: Clean all the Plates.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: Could you help me clean all the plates? <<Instruction>>
+DRIVER: How can I help? <<RequestForInstruction>>
+COMMANDER: please make me a coffe <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: You should be able to find one on the shelf in the corner <<InformationOnObjectDetails>>
-DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Plate>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: Where can I find a mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Boil Potato.
+Goal: Serve 1 slice(s) of Tomato in a Bowl.
+COMMANDER: can you slice and serve a tomoato for me please? <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: First Task? <<RequestForInstruction>>
+DRIVER: yes, how many slices would you like? <<Affirm,RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: just the one please <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 Instruction
 

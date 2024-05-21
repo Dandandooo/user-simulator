@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,77 +28,65 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Water the plant.
+Goal: Put all Pen on any Desk.
 COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
+DRIVER: Hello! What shall I   be doing today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Prepare breakfast.
 COMMANDER: <observe>
-DRIVER: What can I do today <<RequestForInstruction>>
-COMMANDER: Take some water in a container from the sink and pour into the plant. <<Instruction>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: we're gonna make some breakfast <<Instruction>>
+DRIVER: <observe>
+COMMANDER: let's start with coffee <<Instruction>>
+DRIVER: <observe>
+COMMANDER: there's a mug in the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: where is the container? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: You can use the bowl at the center table <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <open Fridge>
 COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: <pickup Mug>
 COMMANDER: <observe>
-DRIVER: <pickup Bowl>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <close Fridge>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a sandwich.
+Goal: Serve 1 slice(s) of Tomato on a Plate.
 COMMANDER: <observe>
-DRIVER: Hello <<Greetings/Salutations>>
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: lets make toast. <<Instruction>>
+DRIVER: Hi <<Greetings/Salutations>>
+COMMANDER: hello <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What are we doing today? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: okay. <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: where is the bread and knife, please? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: slice 2 pieces of bread <<Instruction>>
+DRIVER: What's today's task <<RequestForInstruction>>
+COMMANDER: we need 1 slice of tomato on a plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Make a salad.
+COMMANDER: we need to first slice a tomato <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
 DRIVER: <pickup Knife>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Clean all the Mugs.
-COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Clean all the Cloths.
-COMMANDER: <observe>
-DRIVER: Hi! What can I do? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: wash the cloth near the sink pls <<Instruction>>
-DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Cloth>
+COMMANDER: tomato is by the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
+Goal: Prepare breakfast.
 COMMANDER: <observe>
-DRIVER: What tasks should I do today <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: what can i do today <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 

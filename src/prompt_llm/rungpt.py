@@ -3,7 +3,7 @@ import os
 import sys
 
 from src.prompt_llm.gpt4_entire import run_gpt
-from src.prompt_llm.gpt4_entire_eval import conf_matrix, metric_string
+from src.prompt_llm.gpt4_entire_eval import conf_matrix, metric_string, all_matrix
 
 if not os.path.exists("llm_prompt_sessions/gpt4_valid/temp"):
     os.mkdir("llm_prompt_sessions/gpt4_valid/temp")
@@ -17,19 +17,35 @@ if len(sys.argv) > 2:
 else:
     destpath = "llm_prompt_sessions/gpt4_valid/temp/"
 
-for i, folder in enumerate(sorted(os.listdir(datapath))):
+for i, folder in enumerate(sorted(os.listdir(datapath)), start=1):
     # Todo: run with 0, 2, and 5 examples
-    if os.path.exists(destpath + folder + "_result.json"):
+    if os.path.exists(os.path.join(destpath, folder + "_result.json")) or True:
         print("Skipping", folder, f"({i}/{len(os.listdir(datapath))})")
         continue
     print("Running", folder, f"({i}/{len(os.listdir(datapath))})")
     run_gpt(os.path.join(datapath, folder))
 
-    with open(f"{destpath}{folder}_score.txt", "w") as f:
+    with open(os.path.join(destpath, f"{folder}_score.txt"), "w") as f:
         f.write(metric_string())
-    os.rename("gpt4_result.json", f"{destpath}{folder}_result.json")
+    os.rename("gpt4_result.json", os.path.join(destpath, f"{folder}_result.json"))
 
 overall = np.zeros((2, 2))
+alls = np.zeros((3, 2))
+speaks = np.zeros((2, 2))
+observes = np.zeros((2, 2))
+actions = np.zeros((2, 2))
 for folder in sorted(os.listdir(datapath)):
-    overall += conf_matrix(f"{destpath}{folder}_result.json")
-print(overall)
+    try:
+        overall += conf_matrix(os.path.join(destpath, f"{folder}_result.json"))
+        alls += all_matrix(os.path.join(destpath, f"{folder}_result.json"))
+        speaks += conf_matrix(os.path.join(destpath, f"{folder}_result.json"), prev="speak")
+        observes += conf_matrix(os.path.join(destpath, f"{folder}_result.json"), prev="observe")
+        actions += conf_matrix(os.path.join(destpath, f"{folder}_result.json"), prev="action")
+    except FileNotFoundError:
+        # print("Skipping", folder)
+        continue
+print("Overall Confusion Matrix:", overall, sep="\n")
+print("Entire Confusion Matrix:", alls, sep="\n")
+print("Speak Confusion Matrix:", speaks, sep="\n")
+print("Observe Confusion Matrix:", observes, sep="\n")
+print("Action Confusion Matrix:", actions, sep="\n")

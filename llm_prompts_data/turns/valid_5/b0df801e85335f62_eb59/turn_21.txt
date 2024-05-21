@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,89 +28,69 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Water the plant.
-COMMANDER: <observe>
-DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: Water the plant <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Sure.  What would you like me to put the water in? <<Acknowledge,AlternateQuestions>>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER response:
-Acknowledge
-
-Example :
-Goal: Prepare breakfast.
+Goal: Make a salad.
 COMMANDER: <observe>
 DRIVER: how can I help? <<RequestForInstruction>>
-COMMANDER: please cut the lettuce in the middle with a knife <<Instruction>>
+COMMANDER: please make a salad <<Instruction>>
 DRIVER: <observe>
-COMMANDER: the knife should be next to it <<InformationOnObjectDetails>>
+COMMANDER: i would like lettuce tomato and 2 slices of potato with it <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where do I find the thing I need? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: the lettuce should be in the black bin <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: the tomato is in the cabinet below the coffee machine <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: how can i help you? <<RequestForInstruction>>
-COMMANDER: Hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Tomato>
-COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: What should I do today? <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 
 Example :
 Goal: Boil Potato.
-COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
-COMMANDER: hello <<Greetings/Salutations>>
+COMMANDER: Hello! <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What is my task <<RequestForInstruction>>
-COMMANDER: lets boil a potato <<Instruction>>
+DRIVER: what shall I do today <<RequestForInstruction>>
+COMMANDER: The task is to "Boil a potaoto in water" please <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup Pot>
+DRIVER: <open Fridge>
 COMMANDER: <observe>
 DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: where can i find potatoe <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
+Goal: Put all Watch on one Tables.
 COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what is my task please <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Apple>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: 2x cook a slice of potato slice it using a knife <<Instruction>>
+DRIVER: what shall I do today? <<RequestForInstruction>>
+COMMANDER: put all Watch on one Tables <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: Hello. What is my first task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,64 +28,73 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all PepperShaker in any Cabinet.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: Hello. What should we do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: put 2 pepper shakers inside ay cabinet <<Instruction>>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: Today we will water the plant. <<Instruction>>
 DRIVER: <observe>
-COMMANDER: one is inside the microwave, take it. <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: and place it inside cabinet <<Instruction>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Okay <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: I can see plant <<InformationOther>>
+COMMANDER: <observe>
+DRIVER: How shall I carry water? <<RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <open Microwave>
-COMMANDER: <observe>
-DRIVER: <pickup PepperShaker>
+DRIVER: <pickup Bowl>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 4 slice(s) of Tomato on a Plate.
+Goal: Put all TissueBox on one CoffeeTable.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: hi how can i help <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all Watch on one Furniture.
-COMMANDER: <observe>
-DRIVER: what shall I do today? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Prepare breakfast.
-COMMANDER: <observe>
-DRIVER: hello what is task <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: whats my task <<RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: hi, please prepare coffee in a clean mug <<Greetings/Salutations,Instruction>>
+COMMANDER: you need to put tissue box on coffee table <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup Mug>
+DRIVER: <pickup TissueBox>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <putdown CoffeeMachine>
+DRIVER: <putdown CoffeeTable>
+COMMANDER: <observe>
+DRIVER: now? <<RequestForInstruction>>
+COMMANDER response:
+Acknowledge
+
+Example :
+Goal: Put all RemoteControl on one ArmChair.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Cook 1 slice(s) of Potato and serve in a Bowl.
+COMMANDER: <observe>
+DRIVER: what do i do today <<RequestForInstruction>>
+COMMANDER: slice potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: potato on the table <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: along with knife <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Cook 1 slice(s) of Potato and serve on a Plate.
-
+Goal: Serve 2 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: What can I do for you today? <<RequestForInstruction>>
 COMMANDER response:
-Greetings/Salutations
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

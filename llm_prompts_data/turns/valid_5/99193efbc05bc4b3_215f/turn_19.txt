@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,25 +28,42 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all Bread in any Fridge.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: Hi, how can I help today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: please put the bread in the fridge <<Instruction>>
+DRIVER: <move>
+COMMANDER: hi, you need to make a salad <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: first make a slice of lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all RemoteControl on one Dresser.
-COMMANDER: hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: what can i do for you today <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+Goal: Serve 3 slice(s) of Lettuce in a Bowl.
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: today we need to find and move remote controls <<Instruction>>
+COMMANDER: can you please slice a lettuce and place 3 pieces of it into a clean bowl <<Instruction>>
+DRIVER: <observe>
+COMMANDER: there is a lettuce and a knife on the table <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: hello, how can i help? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Please serve one slice of tomato on a plate <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
@@ -54,26 +71,36 @@ COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Make a salad.
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Make a salad.
-
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what can I do? <<RequestForInstruction>>
+COMMANDER: Please put a slice of tomato on a clean plate. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: where is the tomato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: On the kitchen shelf <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Newspaper on one SideTable.
-COMMANDER: <observe>
-DRIVER: Hello <<Greetings/Salutations>>
-COMMANDER: Hi! We need to find three different newspapers and put them on a single side table. <<Greetings/Salutations,Instruction>>
+Goal: Prepare breakfast.
+COMMANDER: prepare coffee <<Instruction>>
+DRIVER: <observe>
+COMMANDER: clean mug <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What can I help with? <<RequestForInstruction>>
+DRIVER: Sure <<Acknowledge>>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER response:

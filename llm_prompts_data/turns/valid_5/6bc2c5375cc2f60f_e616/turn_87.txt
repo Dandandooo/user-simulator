@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,63 +28,62 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
+Goal: Cook 5 slice(s) of Potato and serve on a Plate.
+COMMANDER: <observe>
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER: Cook five slice of potato and serve it on the clean plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: sure, where can I find the potato and knife please? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
 Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: what shall I do today? <<RequestForInstruction>>
-COMMANDER: make a salad. <<Instruction>>
+DRIVER: what can i do today <<RequestForInstruction>>
+COMMANDER: Hi!  The directions say make a salad, but it starts out with slicing the lettuce using a knife <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
-COMMANDER: we need a slice of tomato <<Instruction>>
+COMMANDER: <observe>
+DRIVER: <pickup ButterKnife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a salad.
+
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Make a salad.
+COMMANDER: make a salad <<Instruction>>
 DRIVER: <observe>
-COMMANDER: the tomato is on the island <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: the knife is in the fridge <<InformationOnObjectDetails>>
+COMMANDER: <observe>
+DRIVER: k <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: lettuce on the counter <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare breakfast.
-COMMANDER: <observe>
-DRIVER: what do I do? <<RequestForInstruction>>
-COMMANDER: making coffee <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Water the plant.
-COMMANDER: <observe>
-DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: mug is near coffee maker <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: fill it with water <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Clean all the Cloths.
-COMMANDER: <observe>
-DRIVER: what should i do <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <pickup Cloth>
-COMMANDER: please rinse cloth <<Instruction>>
-DRIVER: <observe>
-COMMANDER: try not to pick up toilet paper, it is a glitch <<OtherInterfaceComment>>
+Goal: Clean all the Bowls.
+COMMANDER: Hello! <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Make a plate of toast.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: make a plate of toast please <<Instruction>>
+DRIVER: Hello...What is my first task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: You need to clean the bowl. <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what can I do today? <<RequestForInstruction>>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: k <<Acknowledge>>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER response:

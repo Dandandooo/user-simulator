@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -30,78 +30,72 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 Example :
 Goal: Make a sandwich.
 COMMANDER: <observe>
-DRIVER: what do i do <<RequestForInstruction>>
-COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: Hello,you need to make a sandwich <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
-COMMANDER: lets make sandwich <<Instruction>>
-DRIVER: <observe>
-COMMANDER: slice a bread using a knife <<Instruction>>
-DRIVER: <observe>
-COMMANDER: knife is left to stove <<InformationOnObjectDetails>>
+COMMANDER: yOU NEED TO TOAST 2 PCS OF BREAD <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: where is bresd <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
+Goal: Put all Drinkware on any DiningTable.
 COMMANDER: <observe>
-DRIVER: Hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What do we do today? <<RequestForInstruction>>
-COMMANDER: make 2 pieces of potato <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Clean all the Cloths.
-COMMANDER: <observe>
-DRIVER: how can i help you? <<RequestForInstruction>>
-COMMANDER: please clean all the cloths <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <toggle on Faucet>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: <observe>
-DRIVER: Are there any other cloths? <<RequestOtherInfo>>
-COMMANDER: thats all of them <<Acknowledge>>
-DRIVER: <observe>
-COMMANDER response:
-FeedbackPositive
-
-Example :
-Goal: Put all Book on any Furniture.
-COMMANDER: <observe>
-DRIVER: hello how may i help <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Cook 1 slice(s) of Potato and serve on a Plate.
-COMMANDER: Cook 1 slice of Potato and serve on a Plate <<Instruction>>
+Goal: Put all Watch on one Chairs.
+COMMANDER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: watch needs to be on chair <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Where can I find the watch? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Put all RemoteControl on one Chairs.
+COMMANDER: <observe>
+DRIVER: what shall i do? <<RequestForInstruction>>
+COMMANDER: There are 2 remotes <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: You need to put them both on a single chair <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: knife is in fridge <<InformationOnObjectDetails>>
+COMMANDER: One is on coffee table <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: plates on the table <<InformationOnObjectDetails>>
+COMMANDER: Actually it looks like they are both on the coffee table - one on top and one on bottom <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: potato near mictowave <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: microwave <<InformationOnObjectDetails>>
+DRIVER: <pickup RemoteControl>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all Apple in any Cabinet.
+COMMANDER: <observe>
+DRIVER: hello how can I help? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Can you place all the apples in any of the cabinets for me please <<Instruction>>
+DRIVER: <observe>
+COMMANDER: The first apple is on the island counter <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails

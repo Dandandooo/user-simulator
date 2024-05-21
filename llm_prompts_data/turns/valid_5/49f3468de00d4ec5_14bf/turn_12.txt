@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,77 +28,63 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all Cup in one Cabinet.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: first, we need to find the cup <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-OBSERVE
+Goal: Put all Fork in any Drawer.
 
-Example :
-Goal: Put all Watch on any ArmChair.
-COMMANDER: <observe>
-DRIVER: how can I help <<RequestForInstruction>>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Prepare breakfast.
-COMMANDER: <observe>
-DRIVER: what do you need? <<RequestForInstruction>>
-COMMANDER: I need you to prepare breakfast. I need coffee in a clean mug <<Instruction>>
-DRIVER: <observe>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Make a plate of toast.
-COMMANDER: 1 slice toast <<Instruction>>
-DRIVER: <observe>
-COMMANDER: bread is in fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: knife is in the cabinet above coffee maker <<InformationOnObjectDetails>>
+Goal: Clean all the Cloths.
+COMMANDER: grab the purple object in the tub <<Instruction,InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: ok <<Acknowledge>>
+DRIVER: What task do I do today? <<RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER: <observe>
-DRIVER: <pickup Fork>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
+DRIVER: <pickup Cloth>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Clean all the Pots.
+
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a salad.
-COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: make a sale <<Instruction>>
-DRIVER: <observe>
-COMMANDER: salad <<Instruction>>
-DRIVER: <observe>
-COMMANDER: slice lettuce first <<Instruction>>
+Goal: Water the plant.
+COMMANDER: water the plant <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: ok <<Acknowledge>>
-COMMANDER: lettuce by the toaster <<InformationOnObjectDetails>>
+DRIVER: hello how may i help you with <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: where is the water <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: get some vessel and fill it with water from the wash basin <<Instruction>>
+DRIVER: <observe>
+COMMANDER: and water the plant <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: knife <<InformationOnObjectDetails>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
+
+Example :
+Goal: Clean all the Cups.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: Today we will clean all of the cups. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what should i do next <<RequestForInstruction>>
+COMMANDER response:
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

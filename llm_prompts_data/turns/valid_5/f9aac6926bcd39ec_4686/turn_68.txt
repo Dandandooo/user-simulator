@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,71 +28,75 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
+Goal: Put all RemoteControl on one ArmChair.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER response:
+Greetings/Salutations
+
+Example :
 Goal: Serve 1 slice(s) of Lettuce in a Bowl.
 COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: Can you slice some lettuce with a knife <<Instruction>>
-DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: the lettuce is in the cabinet above and to the right of the stove top <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
+DRIVER: <open Fridge>
 COMMANDER: <observe>
 DRIVER: <pickup Lettuce>
 COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
 DRIVER: <move>
-COMMANDER: and the knife is in the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all RemoteControl on any Sofa.
+Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
+COMMANDER: can you see this emssage? <<MiscOther>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hi, how can I help today? <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: yes <<Affirm>>
+COMMANDER: <observe>
+DRIVER: what should I do? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <move>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
-COMMANDER: <observe>
-DRIVER: Hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What do we do today? <<RequestForInstruction>>
-COMMANDER: make 2 pieces of potato <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
 Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: how can i help today? <<RequestForInstruction>>
+DRIVER: hello <<Greetings/Salutations>>
 COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: i'd lke my plant watered <<Instruction>>
+DRIVER: what can I do? <<RequestForInstruction>>
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
+COMMANDER: pls water the plant with the containter from the sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: okay <<Acknowledge>>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Boil Potato.
+Goal: Serve 1 slice(s) of Tomato on a Plate.
 COMMANDER: <observe>
-DRIVER: Hello. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: I have the robot commands. Do you also? <<OtherInterfaceComment>>
-COMMANDER: <observe>
-DRIVER: Hello? <<Greetings/Salutations>>
-COMMANDER: boil the potato by cooking it in water <<Instruction>>
+DRIVER: <move>
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Where is the potato? <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: Hello <<Greetings/Salutations>>
+COMMANDER: today you need to slice a tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: What's our first task? <<RequestForInstruction>>
 COMMANDER response:
 InformationOnObjectDetails
 

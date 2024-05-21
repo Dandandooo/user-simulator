@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,20 +28,25 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a salad.
-COMMANDER: Hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: Make a salad <<Instruction>>
-DRIVER: <observe>
-COMMANDER: Make a slice of lettuce <<Instruction>>
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: What is your bidding? <<RequestForInstruction>>
+COMMANDER: can you please make coffee in a clean mug? <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hi there <<Greetings/Salutations>>
+DRIVER: of course <<Acknowledge>>
 COMMANDER: <observe>
 DRIVER: <move>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Clean all the Dishwares.
 COMMANDER: <observe>
-DRIVER: where is the knife? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: lettuce is in the sink <<InformationOnObjectDetails>>
+DRIVER: what do i do <<RequestForInstruction>>
+COMMANDER: go and wash the dishes in the sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: easy task <<InformationOther>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
@@ -49,38 +54,27 @@ COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Make a salad.
-COMMANDER: hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Make a salad.
+Goal: Serve 1 slice(s) of Tomato in a Bowl.
 COMMANDER: <observe>
-DRIVER: hi, what can i do for you <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: hie <<Greetings/Salutations>>
 COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Serve 1 slice(s) of Tomato in a Bowl.
+Goal: Put all Fork in any Sink.
 COMMANDER: <observe>
-DRIVER: hello task plz <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: First make a slice of tomato <<Instruction>>
+DRIVER: how may i assist you <<RequestForInstruction>>
+COMMANDER: Hi, so we're putting all the forks in the sink <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: there are 4 forks total <<InformationOther>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: ok i get right on that <<Acknowledge,Acknowledge>>
 COMMANDER: <observe>
-DRIVER: <pickup Tomato>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: Tomato is on the round table <<InformationOnObjectDetails>>
+DRIVER: could you tell me where i can find the first fork? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: the first is located in the cabinet above the toaster <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <move>
@@ -88,19 +82,15 @@ COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Cook 3 slice(s) of Potato and serve in a Bowl.
+Goal: Prepare breakfast.
 COMMANDER: <observe>
 DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what should I do today? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: potato to boil <<Instruction>>
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <move>
+DRIVER: what should i do today <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: ? <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 

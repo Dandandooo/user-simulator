@@ -1,5 +1,5 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from peft import LoraConfig, get_peft_model
+from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
 from openai import AzureOpenAI
 
 from tqdm import tqdm
@@ -71,9 +71,11 @@ class BaseLM:
         correct_speak = 0
         incorrect_speak = 0
 
+        # Returns a lazy generator
         data = self.answer_dataset(dataset_name)
 
-        for _, folder in tqdm(data):
+        print("Getting metrics for dataset")
+        for _, folder in tqdm(data, total=len(self.data[dataset_name])):
             for result in folder:
                 answer, response = result["answer"], result["response"]
                 if answer == "OBSERVE":
@@ -132,18 +134,19 @@ class GPT4LM(BaseLM):
 
 # To work with huggingface models
 class HugLM(BaseLM):
-    def __init__(self, model_name="google/gemma-2b"):
+    def __init__(self, model_name="google/gemma-1.1-2b-it", **model_kwargs):
         super().__init__()
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
             device_map="auto",
+            **model_kwargs
         )
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left", truncation_side="left")
 
     @lru_cache
     def answer(self, prompt: str) -> str:
-        tokenized = self.tokenizer(prompt, return_tensors="pt")
+        tokenized = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
         result = self.model.generate(tokenized["input_ids"], max_length=1000)
         decoded: str = self.tokenizer.decode(result[0], skip_special_tokens=True)
         return decoded
@@ -151,10 +154,9 @@ class HugLM(BaseLM):
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
-    def __init__(self, model_name="google/gemma-2b"):
-        # TODO change model to use the bitsandbytes integration (CUDA ONLY)
-        super().__init__(model_name)
-        self.model.gradient_checkpointing_enable()
+    def __init__(self, model_name="google/gemma-1.1-2b-it"):
+        super().__init__(model_name, load_in_8bit=True, gradient_checkpointing=True, use_cache=True)
+
         self.model.enable_input_require_grads()
 
         self.lora_config = LoraConfig(
@@ -167,6 +169,8 @@ class LoraLM(HugLM):
         )
 
         self.peft_model = get_peft_model(self.model, self.lora_config)
+
+        # TODO: write trainer for lora
 
         # self.trainer = Trainer(
         #     model=self.peft_model,

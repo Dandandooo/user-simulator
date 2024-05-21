@@ -1,6 +1,6 @@
-Imagine you are an embodied agent in a simulated world. Your purpose is to instruct a robot to do tasks for you by telling
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, named DRIVER, to do tasks for you by telling
 it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when you should
-be giving instructions to the robot based on turn history with the robot. If there is nothing to do or say, you should
+be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you should
 just observe.
 
 Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
@@ -28,59 +28,63 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all Watch on one Dresser.
+Goal: Prepare breakfast.
 COMMANDER: <observe>
-DRIVER: hi. what should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: put all watches on one dresser <<Instruction>>
+DRIVER: what can we do today <<RequestForInstruction>>
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
+COMMANDER: We need to prepare coffee in  a clean mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: the mug does not have coffee <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: help me get the mug <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
-COMMANDER: <observe>
-DRIVER: how can I help? <<RequestForInstruction>>
-COMMANDER: Cook 2 slice(s) of Potato and serve in a Bowl <<Instruction>>
+Goal: Clean all the Cloths.
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: where can i find teh potatoes and the knife, please <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Make a salad.
-COMMANDER: <observe>
-DRIVER: Hi. <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What am I doing today, please? <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Make a salad.
+Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: hi what can i get you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: hello I need a salad made with two slices of tomato and a slice of cooked potato <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <move>
-COMMANDER: <observe>
-DRIVER: sure, where can i find the knife? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+DRIVER: hello how can I help you? <<Greetings/Salutations,RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: <move>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
 
 Example :
-Goal: Put all TissueBox on one CoffeeTable.
-COMMANDER: Hi <<Greetings/Salutations>>
+Goal: Put all Watch on one Sofa.
+COMMANDER: <observe>
+DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: good day <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: put all watch on one sofa <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Okay.  Can you direct me to the first watch? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+COMMANDER: first watch is on the black side table right to the sofa with the laptop <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: how can i help? <<RequestForInstruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: task? <<RequestForInstruction>>
+COMMANDER response:
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
