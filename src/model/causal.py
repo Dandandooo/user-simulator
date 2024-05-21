@@ -1,16 +1,11 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
-from openai import AzureOpenAI
 
 from tqdm import tqdm
 from functools import lru_cache
 import os
 import re
 import json
-
-# import bitsandbytes
-
-# from src.data.dataclass import TeachData
 
 import torch
 import numpy as np
@@ -112,33 +107,6 @@ class BaseLM:
         }
 
 
-class GPT4LM(BaseLM):
-    def __init__(self, api_key=os.getenv("AZURE_OPENAI_KEY_4"),
-                 azure_endpoint="https://uiuc-convai-sweden.openai.azure.com/", role="user"):
-        super().__init__()
-        self.client = AzureOpenAI(
-            azure_endpoint=azure_endpoint,
-            api_key=api_key,
-            api_version="2024-02-15-preview"
-        )
-
-        self.role = role
-
-    @lru_cache
-    def answer(self, prompt: str) -> str:
-        completion = self.client.chat.completions.create(
-            model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
-            messages=[{"role": self.role, "content": prompt}],
-            temperature=0.7,
-            max_tokens=1024,
-            top_p=0.95,
-            frequency_penalty=0,
-            presence_penalty=0,
-            stop=None
-        )
-        return completion.choices[0].message.content
-
-
 # To work with huggingface models
 class HugLM(BaseLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it", load_in_8bit=True, **model_kwargs):
@@ -197,6 +165,7 @@ class LoraLM(HugLM):
             param.requires_grad = False
             if param.ndim == 1:
                 param.data = param.data.to(torch.float32)
+
 
 if __name__ == "__main__":
     model = LoraLM()
