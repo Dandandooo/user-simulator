@@ -43,9 +43,9 @@ class LLMDataset:
 
 class BaseLM:
     def __init__(self):
-        self.test_folder = "llm_prompts_data/turns/valid/"
+        # self.test_folder = "llm_prompts_data/turns/valid/"
         self.data = LLMDataset()
-        self.data.add("test", self.test_folder)
+        # self.data.add("test", self.test_folder)
 
     @lru_cache  # Memoizing to reduce cost
     def answer(self, prompt: str) -> str:
@@ -61,13 +61,14 @@ class BaseLM:
             }
 
     def answer_dataset(self, dataset_name: str) -> dict:
-        for file_id, folder in self.data[dataset_name].items():
+        print(f'Answering "{dataset_name}" dataset')
+        for file_id, folder in tqdm(self.data[dataset_name].items()):
             yield file_id, list(self.answer_folder(folder))
 
     def save_answers(self, dataset_name: str, dest_folder: str):
-        for file_id, folder in self.answer_dataset(dataset_name):
+        for file_id, answered_folder in self.answer_dataset(dataset_name):
             with open(f"{dest_folder}/{file_id}_result.json", "w") as f:
-                json.dump(folder, f)
+                json.dump(answered_folder, f)
 
     def tp_etc(self, dataset_name: str) -> tuple[int, int, int, int, int, int]:
         true_observed = 0
