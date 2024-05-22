@@ -175,7 +175,7 @@ class HugLM(BaseLM):
                 result = self.model.generate(**tokenized)
         else:
             result = self.model.generate(**tokenized)
-        decoded: str = self.tokenizer.batch_decode(result, clean_up_tokenization_spaces=True, skip_special_tokens=True)
+        decoded = self.tokenizer.batch_decode(result, clean_up_tokenization_spaces=True, skip_special_tokens=True)
         return decoded
 
     def answer_folder(self, folder: list[tuple[str, str]]) -> list[dict[str, str]]:
@@ -202,7 +202,9 @@ class LoraLM(HugLM):
             lora_dropout=0.1,
             bias='none',
             task_type="CAUSAL_LM",
+            use_rslora=True,  # Huggingface said "shown to work better"
         )
+
 
         self.peft_model = get_peft_model(self.model, self.lora_config)
 
