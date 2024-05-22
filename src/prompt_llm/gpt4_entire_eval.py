@@ -108,6 +108,36 @@ def calc_score(results_filename="gpt4_result.json", prev=None) -> tuple[int, int
     return true_observed, false_observed, true_speak, false_speak, correct_speak, incorrect_speak
 
 
+# baseline is when the user speaks only when spoken to by the robot
+def calc_baseline(results_filename="gpt4_result.json", prev=None, matrix=False) -> tuple[int, int, int, int] or np.array:
+    true_observed = 0
+    false_observed = 0
+    true_speak = 0
+    false_speak = 0
+
+    results = load(open(results_filename, "r"))
+
+    for result in results:
+        prevtype = get_last_turn_type(result["prompt"])
+        if prev is not None and prevtype != prev:
+            continue
+        answer = result["answer"]
+        if answer == "OBSERVE":
+            if prevtype != "speak":
+                true_observed += 1
+            else:
+                false_speak += 1
+        else:
+            if prevtype != "speak":
+                false_observed += 1
+            else:
+                true_speak += 1
+
+    if matrix:
+        return np.array([[true_observed, false_speak], [false_observed, true_speak]])
+    return true_observed, false_observed, true_speak, false_speak
+
+
 def conf_matrix(filename="gpt4_result.json", prev=None) -> np.array:
     true_observed, false_observed, true_speak, false_speak, _, _ = calc_score(filename, prev)
     return np.array([[true_observed, false_speak], [false_observed, true_speak]])

@@ -1,5 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
+from openai import AzureOpenAI
+
 
 from tqdm import tqdm
 from functools import lru_cache
@@ -47,7 +49,7 @@ class BaseLM:
         raise NotImplementedError
 
     def answer_folder(self, folder: list[tuple[str, str]]) -> list[dict[str, str]]:
-        for prompt, answer in folder:
+        for prompt, answer in tqdm(folder):
             result = self.answer(prompt)
             yield {
                 "prompt": prompt,
@@ -57,7 +59,8 @@ class BaseLM:
 
     def answer_dataset(self, dataset_name: str) -> dict:
         print(f'Answering "{dataset_name}" dataset')
-        for file_id, folder in tqdm(self.data[dataset_name].items()):
+        for i, (file_id, folder) in enumerate(self.data[dataset_name].items()):
+            print(f"Answering {file_id} ({i + 1}/{len(self.data[dataset_name])})")
             yield file_id, list(self.answer_folder(folder))
 
     def save_answers(self, dataset_name: str, dest_folder: str):
@@ -107,34 +110,89 @@ class BaseLM:
         }
 
 
+class GPT4LM(BaseLM):
+    def __init__(self, api_key=os.getenv("AZURE_OPENAI_KEY_4"),
+                 azure_endpoint="https://uiuc-convai-sweden.openai.azure.com/", role="user"):
+        super().__init__()
+        self.client = AzureOpenAI(
+            azure_endpoint=azure_endpoint,
+            api_key=api_key,
+            api_version="2024-02-15-preview"
+        )
+
+        self.role = role
+
+    @lru_cache
+    def answer(self, prompt: str) -> str:
+        completion = self.client.chat.completions.create(
+            model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
+            messages=[{"role": self.role, "content": prompt}],
+            temperature=0.7,
+            max_tokens=1024,
+            top_p=0.95,
+            frequency_penalty=0,
+            presence_penalty=0,
+            stop=None
+        )
+        return completion.choices[0].message.content
+
+
 # To work with huggingface models
 class HugLM(BaseLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it", load_in_4bit=True, load_in_8bit=False, **model_kwargs):
         super().__init__()
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding=True, padding_side="left", use_fast=True)
+        self.tokenizer.pad_token = self.tokenizer.eos_token
+        self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
+
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
             device_map="auto",
             load_in_4bit=load_in_4bit,
             load_in_8bit=load_in_8bit,
+            pad_token_id=self.tokenizer.pad_token_id,
+            bos_token_id=self.tokenizer.bos_token_id,
+            eos_token_id=self.tokenizer.eos_token_id,
+            use_cache=True
+
             **model_kwargs
         )
 
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        if "cuda" in self.model.device:
+            print("Using BetterTransformer for CUDA")
+            self.model.to_bettertransformer()
 
         print(f"Running {model_name} on {self.model.device}")
 
     @lru_cache
-    def answer(self, prompt: str) -> str:
-        tokenized = self.tokenizer(f'{self.tokenizer.bos_token}prompt{self.tokenizer.eos_token}', return_tensors="pt").to(self.model.device)
-        result = self.model.generate(tokenized["input_ids"], max_length=1000, attention_mask=tokenized["attention_mask"])
-        decoded: str = self.tokenizer.decode(result[0], skip_special_tokens=True)
+    def answer(self, prompt: str or list[str]) -> list[str]:
+        if isinstance(prompt, str):
+            prompt = [prompt]
+        # tokenized = self.tokenizer.apply_chat_template([])
+        tokenized = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+        if "cuda" in self.model.device:
+            with torch.backends.cuda.sdp_kernel(enable_flash=True, enable_math=False, enable_mem_efficient=False):
+                result = self.model.generate(**tokenized)
+        else:
+            result = self.model.generate(**tokenized)
+        decoded: str = self.tokenizer.batch_decode(result, clean_up_tokenization_spaces=True, skip_special_tokens=True)
         return decoded
+
+    def answer_folder(self, folder: list[tuple[str, str]]) -> list[dict[str, str]]:
+        prompts = [prompt for prompt, _ in folder]
+
+        for response, (prompt, answer) in zip(self.answer(prompts), folder):
+            yield {
+                "prompt": prompt,
+                "answer": answer,
+                "response": response
+            }
 
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it"):
-        super().__init__(model_name, load_in_8bit=True, gradient_checkpointing=True, use_cache=True)
+        super().__init__(model_name, load_in_8bit=False, load_in_4bit=True, gradient_checkpointing=True, use_cache=True)
 
         self.model.enable_input_require_grads()
 

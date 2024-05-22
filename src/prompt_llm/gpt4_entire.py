@@ -14,7 +14,7 @@ role = "system"
 digits = re.compile(r"\d+")
 
 
-def run_gpt(folder="llm_prompts_data/turns/entire"):
+def run_gpt(folder="llm_prompts_data/turns/entire", system=False):
     prompts = []
     answers = []
 
@@ -24,12 +24,19 @@ def run_gpt(folder="llm_prompts_data/turns/entire"):
         else:
             prompts.append(open(os.path.join(folder, filename), "r").read())
 
-    message_texts = [{"role": "user", "content": prompt} for prompt in prompts]
+    # !!! I didn't know what "role" did when I started, but it seems that splitting to system
+    # and user will increase performance
+    if system:
+        message_texts = [[{"role": "system", "content": prompt[:prompt.rfind("Goal:")]},
+                          {"role": "user", "content": prompt[prompt.rfind("Goal:"):]}]
+                         for prompt in prompts]
+    else:
+        message_texts = [[{"role": "user", "content": prompt}] for prompt in prompts]
     responses = []
     for text in tqdm(message_texts):
         completion = client.chat.completions.create(
             model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
-            messages=[text],
+            messages=text,
             temperature=0.7,
             max_tokens=1024,
             top_p=0.95,
