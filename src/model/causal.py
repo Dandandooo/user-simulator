@@ -109,20 +109,23 @@ class BaseLM:
 
 # To work with huggingface models
 class HugLM(BaseLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it", load_in_8bit=True, **model_kwargs):
+    def __init__(self, model_name="google/gemma-1.1-2b-it", load_in_4bit=True, load_in_8bit=False, **model_kwargs):
         super().__init__()
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
             device_map="auto",
+            load_in_4bit=load_in_4bit,
             load_in_8bit=load_in_8bit,
             **model_kwargs
         )
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
+        print(f"Running {model_name} on {self.model.device}")
+
     @lru_cache
     def answer(self, prompt: str) -> str:
-        tokenized = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+        tokenized = self.tokenizer(f'{self.tokenizer.bos_token}prompt{self.tokenizer.eos_token}', return_tensors="pt").to(self.model.device)
         result = self.model.generate(tokenized["input_ids"], max_length=1000, attention_mask=tokenized["attention_mask"])
         decoded: str = self.tokenizer.decode(result[0], skip_special_tokens=True)
         return decoded
