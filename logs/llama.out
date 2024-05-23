@@ -1,0 +1,33 @@
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Running unsloth/llama-3-8b-bnb-4bit on cuda:1
+Answering "zero" dataset
+Answering a2517febe5770439_0513 (1/181)
+Answering 796ec8e55ea8653e_fc35 (2/181)
+Traceback (most recent call last):
+  File "/projects/bckf/dphilipov/teach-recreate/src/prompt_llm/runllama.py", line 11, in <module>
+    llama3.save_answers("zero", "llm_prompt_sessions/llama_no-train/zero_no_move/")
+  File "/projects/bckf/dphilipov/teach-recreate/src/model/causal.py", line 73, in save_answers
+    for file_id, answered_folder in self.answer_dataset(dataset_name):
+  File "/projects/bckf/dphilipov/teach-recreate/src/model/causal.py", line 69, in answer_dataset
+    responses.append((file_id, list(self.answer_folder(folder))))
+  File "/projects/bckf/dphilipov/teach-recreate/src/model/causal.py", line 178, in answer_folder
+    } for response, (prompt, answer) in zip(self.answer(prompts), folder)]
+  File "/projects/bckf/dphilipov/teach-recreate/src/model/causal.py", line 168, in answer
+    result = self.model.generate(**tokenized)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/generation/utils.py", line 1575, in generate
+    result = self._sample(
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/generation/utils.py", line 2697, in _sample
+    outputs = self(
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/accelerate/hooks.py", line 166, in new_forward
+    output = module._old_forward(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/models/llama/modeling_llama.py", line 1216, in forward
+    logits = logits.float()
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 63.29 GiB. GPU 3 has a total capacity of 44.35 GiB of which 2.20 GiB is free. Including non-PyTorch memory, this process has 42.14 GiB memory in use. Of the allocated memory 41.63 GiB is allocated by PyTorch, and 199.27 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

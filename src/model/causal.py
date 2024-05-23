@@ -26,15 +26,19 @@ class LLMDataset:
     def __contains__(self, key):
         return key in self.data
 
-    def add(self, dataset_name, directory, prompt_regex=r"turn_\d+\.txt", answer_regex=r"turn_\d+_answer\.txt"):
+    def add(self, dataset_name, directory, prompt_regex=r".*turn_\d+\.txt", answer_regex=r".*turn_\d+_answer\.txt"):
         prompt_re = re.compile(prompt_regex)
         answer_re = re.compile(answer_regex)
+
+        op = lambda e: open(e).read()
 
         if dataset_name not in self.data:
             self.data[dataset_name] = {}
         for folder in os.listdir(directory):
-            prompts = filter(prompt_re.match, os.listdir(directory + folder))
-            answers = filter(answer_re.match, os.listdir(directory + folder))
+            folder_files = os.listdir(os.path.join(directory, folder))
+            folder_files = [os.path.join(directory, folder, name) for name in folder_files]
+            prompts = list(map(op, filter(prompt_re.match, folder_files)))
+            answers = list(map(op, filter(answer_re.match, folder_files)))
             self.data[dataset_name][folder] = list(zip(prompts, answers))
 
 
@@ -49,19 +53,23 @@ class BaseLM:
         raise NotImplementedError
 
     def answer_folder(self, folder: list[tuple[str, str]]) -> list[dict[str, str]]:
+        responses = []
         for prompt, answer in tqdm(folder):
             result = self.answer(prompt)
-            yield {
+            responses.append({
                 "prompt": prompt,
                 "answer": answer,
                 "response": result
-            }
+            })
+        return responses
 
-    def answer_dataset(self, dataset_name: str) -> dict:
+    def answer_dataset(self, dataset_name: str) -> list[tuple[str, list[dict]]]:
         print(f'Answering "{dataset_name}" dataset')
+        responses = []
         for i, (file_id, folder) in enumerate(self.data[dataset_name].items()):
             print(f"Answering {file_id} ({i + 1}/{len(self.data[dataset_name])})")
-            yield file_id, list(self.answer_folder(folder))
+            responses.append((file_id, list(self.answer_folder(folder))))
+        return responses
 
     def save_answers(self, dataset_name: str, dest_folder: str):
         for file_id, answered_folder in self.answer_dataset(dataset_name):
@@ -119,11 +127,6 @@ class GPT4LM(BaseLM):
             api_key=api_key,
             api_version="2024-02-15-preview"
         )
-
-        self.role = role
-
-    @lru_cache
-    def answer(self, prompt: str) -> str:
         completion = self.client.chat.completions.create(
             model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
             messages=[{"role": self.role, "content": prompt}],
@@ -139,55 +142,41 @@ class GPT4LM(BaseLM):
 
 # To work with huggingface models
 class HugLM(BaseLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it", load_in_4bit=True, load_in_8bit=False, **model_kwargs):
+    def __init__(self, model_name="google/gemma-1.1-2b-it", **model_kwargs):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding=True, padding_side="left", use_fast=True)
         self.tokenizer.pad_token = self.tokenizer.eos_token
-        self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
 
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
             device_map="auto",
-            load_in_4bit=load_in_4bit,
-            load_in_8bit=load_in_8bit,
             pad_token_id=self.tokenizer.pad_token_id,
             bos_token_id=self.tokenizer.bos_token_id,
             eos_token_id=self.tokenizer.eos_token_id,
-            use_cache=True
-
+            use_cache=True,
+            attn_implementation="flash_attention_2",
             **model_kwargs
         )
 
-        if "cuda" in self.model.device:
-            print("Using BetterTransformer for CUDA")
-            self.model.to_bettertransformer()
-
         print(f"Running {model_name} on {self.model.device}")
 
-    @lru_cache
-    def answer(self, prompt: str or list[str]) -> list[str]:
-        if isinstance(prompt, str):
-            prompt = [prompt]
-        # tokenized = self.tokenizer.apply_chat_template([])
-        tokenized = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-        if "cuda" in self.model.device:
+    def answer(self, prompt: str) -> str:
+        tokenized = self.tokenizer(prompt, padding=True, return_tensors="pt").to(self.model.device)
+        if "cuda" in str(self.model.device):
             with torch.backends.cuda.sdp_kernel(enable_flash=True, enable_math=False, enable_mem_efficient=False):
                 result = self.model.generate(**tokenized)
         else:
             result = self.model.generate(**tokenized)
-        decoded = self.tokenizer.batch_decode(result, clean_up_tokenization_spaces=True, skip_special_tokens=True)
+        decoded = self.tokenizer.decode(result[0], skip_special_tokens=True)
         return decoded
 
-    def answer_folder(self, folder: list[tuple[str, str]]) -> list[dict[str, str]]:
-        prompts = [prompt for prompt, _ in folder]
-
-        for response, (prompt, answer) in zip(self.answer(prompts), folder):
-            yield {
-                "prompt": prompt,
-                "answer": answer,
-                "response": response
-            }
-
+    def answer_folder_many(self, folder: list[tuple[str, str]]) -> list[dict[str, str]]:
+        prompts: list[str] = [prompt for prompt, _ in folder]
+        return [{
+            "prompt": prompt,
+            "answer": answer,
+            "response": response,
+            } for response, (prompt, answer) in zip(self.answer(prompts), folder)]
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):

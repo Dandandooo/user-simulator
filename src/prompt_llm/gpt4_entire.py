@@ -1,5 +1,5 @@
-import os, sys, json, re
-from openai import AzureOpenAI
+import os, sys, json, re, time
+from openai import AzureOpenAI, RateLimitError
 from tqdm import tqdm
 
 client = AzureOpenAI(
@@ -34,17 +34,22 @@ def run_gpt(folder="llm_prompts_data/turns/entire", system=False):
         message_texts = [[{"role": "user", "content": prompt}] for prompt in prompts]
     responses = []
     for text in tqdm(message_texts):
-        completion = client.chat.completions.create(
-            model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
-            messages=text,
-            temperature=0.7,
-            max_tokens=1024,
-            top_p=0.95,
-            frequency_penalty=0,
-            presence_penalty=0,
-            stop=None
-        )
-        responses.append(completion.choices[0].message.content)
+        while True:
+            try:
+                completion = client.chat.completions.create(
+                        model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
+                        messages=text,
+                        temperature=0.7,
+                        max_tokens=1024,
+                        top_p=0.95,
+                        frequency_penalty=0,
+                        presence_penalty=0,
+                        stop=None
+                        )
+                responses.append(completion.choices[0].message.content)
+                break
+            except RateLimitError:
+                time.sleep(1)
 
     results = [{
             "prompt": prompt,
