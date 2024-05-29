@@ -1,10 +1,15 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModel, TFAutoModel, FlaxAutoModel
+from transformers import AutoTokenizer
+from transformers import Trainer, TrainingArguments
+from transformers import DataCollatorForLanguageModeling
+from trl import SFTTrainer
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
 from openai import AzureOpenAI
+import ollama
 
+from functools import cache
 
 from tqdm import tqdm
-from functools import lru_cache
 import os
 import re
 import json
@@ -44,11 +49,8 @@ class LLMDataset:
 
 class BaseLM:
     def __init__(self):
-        # self.test_folder = "llm_prompts_data/turns/valid/"
         self.data = LLMDataset()
-        # self.data.add("test", self.test_folder)
 
-    @lru_cache  # Memoizing to reduce cost
     def answer(self, prompt: str) -> str:
         raise NotImplementedError
 
@@ -127,6 +129,11 @@ class GPT4LM(BaseLM):
             api_key=api_key,
             api_version="2024-02-15-preview"
         )
+
+        self.role = "user"
+
+    @cache
+    def answer(self, prompt: str) -> str:
         completion = self.client.chat.completions.create(
             model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
             messages=[{"role": self.role, "content": prompt}],
@@ -140,36 +147,53 @@ class GPT4LM(BaseLM):
         return completion.choices[0].message.content
 
 
+class OllamaLM(BaseLM):
+    def __init__(self, model_name="gemma:instruct"):
+        super().__init__()
+        self.model_name = model_name
+
+    def answer(self, prompt: str) -> str:
+        return ollama.generate(prompt, model_name=self.model_name)
+
+
 # To work with huggingface models
 class HugLM(BaseLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it", **model_kwargs):
+    def __init__(self, model_name="google/gemma-1.1-2b-it", backend="torch", **model_kwargs):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding=True, padding_side="left", use_fast=True)
-        self.tokenizer.pad_token = self.tokenizer.eos_token
+        self.tokenizer.add_special_tokens({"pad_token": "<pad>"})
+        # self.tokenizer.pad_token = self.tokenizer.eos_token
 
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            device_map="auto",
-            pad_token_id=self.tokenizer.pad_token_id,
-            bos_token_id=self.tokenizer.bos_token_id,
-            eos_token_id=self.tokenizer.eos_token_id,
-            use_cache=True,
-            attn_implementation="flash_attention_2",
+        # Autoconfig does not map devices correctly
+        config = {
+            "device_map": "auto",
+            "use_cache": True,
+            "attn_implementation": "flash_attention_2",
             **model_kwargs
-        )
+        }
+
+        # todo: try adding some Seq2SeqLM models because GPT4 said it fits better
+        match backend:
+            case "torch" | "pt":
+                self.model = AutoModel.from_pretrained(model_name, **config)
+            case "tensorflow" | "tf":
+                self.model = TFAutoModel.from_pretrained(model_name, **config)
+            case "flax" | "jax":
+                self.model = FlaxAutoModel.from_pretrained(model_name, **config)
+            case _:
+                raise ValueError(f"Backend {backend} not supported")
 
         print(f"Running {model_name} on {self.model.device}")
 
+    @cache
     def answer(self, prompt: str) -> str:
         tokenized = self.tokenizer(prompt, padding=True, return_tensors="pt").to(self.model.device)
-        if "cuda" in str(self.model.device):
-            with torch.backends.cuda.sdp_kernel(enable_flash=True, enable_math=False, enable_mem_efficient=False):
-                result = self.model.generate(**tokenized)
-        else:
-            result = self.model.generate(**tokenized)
+        result = self.model.generate(**tokenized)
         decoded = self.tokenizer.decode(result[0], skip_special_tokens=True)
         return decoded
 
+    # This is an alternative to "answer_folder" that batches up the prompts towards the LLM.
+    # Be careful with max memory you can allocate to the model, as this can cause problems.
     def answer_folder_many(self, folder: list[tuple[str, str]]) -> list[dict[str, str]]:
         prompts: list[str] = [prompt for prompt, _ in folder]
         return [{
@@ -177,6 +201,7 @@ class HugLM(BaseLM):
             "answer": answer,
             "response": response,
             } for response, (prompt, answer) in zip(self.answer(prompts), folder)]
+
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
@@ -194,29 +219,36 @@ class LoraLM(HugLM):
             use_rslora=True,  # Huggingface said "shown to work better"
         )
 
-
         self.peft_model = get_peft_model(self.model, self.lora_config)
 
         # TODO: write trainer for lora
 
-        # self.trainer = Trainer(
-        #     model=self.peft_model,
-        #     args=TrainingArguments(
-        #         output_dir="results",
-        #         overwrite_output_dir=True,
-        #         num_train_epochs=1,
-        #         per_device_train_batch_size=1,
-        #         save_steps=1,
-        #         save_total_limit=2,
-        #     ),
-        #     data_collator=DataCollatorForLanguageModeling(tokenizer=self.data.tokenizer, mlm=False),
-        # )
+        self.trainer = Trainer(
+            model=self.peft_model,
+            args=TrainingArguments(
+                output_dir="results",
+                overwrite_output_dir=True,
+                num_train_epochs=1,
+                per_device_train_batch_size=1,
+                save_steps=1,
+                save_total_limit=2,
+            ),
+            data_collator=DataCollatorForLanguageModeling(tokenizer=self.data.tokenizer, mlm=False),
+        )
+
+        self.freeze()
 
     def freeze(self):
         for param in self.model.parameters():
             param.requires_grad = False
             if param.ndim == 1:
                 param.data = param.data.to(torch.float32)
+
+    def train(self, dataset_name: str, epochs: int = 1):
+        self.peft_model.train()
+        # self.trainer.train()
+
+
 
 
 if __name__ == "__main__":

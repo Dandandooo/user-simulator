@@ -43,6 +43,27 @@ das_options = [
         "OTHER"
     ]
 
+commander_das = [
+    ("Instruction", 11019, .994),
+    ("InformationOnObjectDetails", 6946, .994),
+    ("InformationOther", 1148, .8876),
+    ("FeedbackPositive", 2745, .9712),
+    ("FeedbackNegative", 46, .9565),
+    ("Affirm", 460, .7826),
+    ("Deny", 161, .7292),
+    ("Greetings/Salutations", 2565, .4401),
+    ("MiscOther", 607, .5222),
+    ("OtherInterfaceComment", 486, .6009),
+    ('Acknowledge', 7421, .2138),
+    ('AlternateQuestions', 127, .2765),
+    ('Confirm', 726, .2575),
+    ('NotifyFailure', 408, .0368),
+    ('RequestForInstruction', 4043, .007),
+    ('RequestForObjectLocationAndOtherDetails', 2010, 0.003),
+    ('RequestMore', 503, .002),
+    ('RequestOtherInfo', 675, .0075),
+]
+
 
 def das_index(response) -> int:
     if response in das_options:
@@ -52,7 +73,7 @@ def das_index(response) -> int:
 
 def das_confusion(results_filename="gpt4_result.json", prev=None) -> np.array:
 
-    confusion_matrix = np.zeros((len(das_options), len(das_options)))
+    confusion_matrix = np.zeros((len(das_options), len(das_options)), dtype=int)
 
     results = load(open(results_filename, "r"))
 
@@ -62,18 +83,43 @@ def das_confusion(results_filename="gpt4_result.json", prev=None) -> np.array:
         answer, response = result["answer"], result["response"]
         confusion_matrix[das_index(answer), das_index(response)] += 1
 
-    return confusion_matrix
+    return confusion_matrix.astype(int)
 
 
 def das_stats(das_matrix: np.array):
-    for i, das in enumerate(das_options[:-1]):
+    total_count = 0
+    total_score = 0
+    for das, count, freq in commander_das:
+        i = das_options.index(das)
         tp = das_matrix[i, i]
-        fp = das_matrix[i].sum() - tp
-        fn = das_matrix[:, i].sum() - tp
+        fp = das_matrix[i, 1:].sum() - tp
+        fn = das_matrix[1:, i].sum() - tp
 
         fscore = 2 * tp / (2 * tp + fp + fn) if tp != 0 else 0
 
+        total_score += fscore * (count * freq)
+        total_count += count * freq
+
         print(f"{das} fscore: {fscore:.2%}")
+    print(f"Average fscore: {total_score / total_count:.2%}")
+
+
+def baseline_das(filename="gpt4_result.json", prev=None) -> np.array:
+    confusion_matrix = np.zeros((len(das_options), len(das_options)), dtype=int)
+
+    results = load(open(filename, "r"))
+
+    for result in results:
+        prevtype = get_last_turn_type(result["prompt"])
+        if prev is not None and prevtype != prev:
+            continue
+        answer = result["answer"]
+        if prevtype == "speak":
+            confusion_matrix[das_index(answer), das_index("Instruction")] += 1  # Instruction is majority class
+        else:
+            confusion_matrix[das_index(answer), das_index("OBSERVE")] += 1
+
+    return confusion_matrix.astype(int)
 
 
 def calc_score(results_filename="gpt4_result.json", prev=None) -> tuple[int, int, int, int, int, int]:
