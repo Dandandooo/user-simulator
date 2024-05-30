@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account="bckf-delta-gpu"
-#SBATCH --job-name="llama3 train"
+#SBATCH --job-name="llama3 eval"
 #SBATCH --output="/projects/bckf/dphilipov/teach-recreate/logs/llama.out"
 
 #SBATCH --partition="gpuA40x4"
@@ -13,7 +13,7 @@
 #SBATCH --gpu-bind=closest
 
 #SBATCH --exclusive
-#SBATCH -t 16:00:00
+#SBATCH -t 24:00:00
 
 # Run training script
 /projects/bckf/dphilipov/teach-recreate/llama.bash

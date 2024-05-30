@@ -1,7 +1,6 @@
 from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM
 from transformers import AutoTokenizer
-from transformers import Trainer, TrainingArguments
-from transformers import DataCollatorForLanguageModeling
+from transformers import TrainingArguments
 from trl import SFTTrainer
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
 from openai import AzureOpenAI
@@ -162,6 +161,7 @@ class HugLM(BaseLM):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding=True, padding_side="left", use_fast=True)
         self.tokenizer.add_special_tokens({"pad_token": "<pad>"})
+
         # self.tokenizer.pad_token = self.tokenizer.eos_token
 
         # Autoconfig does not map devices correctly
@@ -169,6 +169,7 @@ class HugLM(BaseLM):
             "device_map": "auto",
             "use_cache": True,
             "attn_implementation": "flash_attention_2",
+            "load_in_4bit": True,
             **model_kwargs
         }
 
@@ -182,6 +183,9 @@ class HugLM(BaseLM):
                 self.model = FlaxAutoModelForCausalLM.from_pretrained(model_name, **config)
             case _:
                 raise ValueError(f"Backend {backend} not supported")
+
+        # to account for pad token
+        self.model.resize_token_embeddings(len(self.tokenizer))
 
         print(f"Running {model_name} on {self.model.device}")
 
@@ -206,7 +210,7 @@ class HugLM(BaseLM):
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it"):
-        super().__init__(model_name, load_in_8bit=False, load_in_4bit=True, gradient_checkpointing=True, use_cache=True)
+        super().__init__(model_name, load_in_4bit=True, gradient_checkpointing=True)
 
         self.model.enable_input_require_grads()
 
@@ -223,17 +227,13 @@ class LoraLM(HugLM):
 
         # TODO: write trainer for lora
 
-        self.trainer = Trainer(
-            model=self.peft_model,
-            args=TrainingArguments(
-                output_dir="results",
-                overwrite_output_dir=True,
-                num_train_epochs=1,
-                per_device_train_batch_size=1,
-                save_steps=1,
-                save_total_limit=2,
-            ),
-            data_collator=DataCollatorForLanguageModeling(tokenizer=self.data.tokenizer, mlm=False),
+        self.training_args = TrainingArguments(
+            output_dir=f"llm_prompt_sessions/{model_name.split('/')[-1]}/temp",
+            overwrite_output_dir=True,
+            num_train_epochs=1,
+            per_device_train_batch_size=2,
+            save_steps=1,
+            save_total_limit=2,
         )
 
         self.freeze()
@@ -244,9 +244,21 @@ class LoraLM(HugLM):
             if param.ndim == 1:
                 param.data = param.data.to(torch.float32)
 
-    def train(self, dataset_name: str, epochs: int = 1):
+    def train(self, train_dataset_name: str = "train", val_dataset_name: str = "valid_unseen", eval_dataset_name: str = "valid_seen", ):
         self.peft_model.train()
         # self.trainer.train()
+
+        trainer = SFTTrainer(
+            model=self.peft_model,
+            train_dataset=self.data[train_dataset_name],
+            eval_dataset=self.data[eval_dataset_name],
+            tokenizer=self.tokenizer,
+            # max_seq_length=
+            peft_config=self.lora_config,
+            args=self.training_args,
+        )
+
+
 
 
 

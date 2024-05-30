@@ -1,7 +1,7 @@
-from src.model.causal import HugLM
+from src.model.llms import HugLM
 
-# model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
-model_name = "unsloth/llama-3-8b-bnb-4bit"
+model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
+# model_name = "unsloth/llama-3-8b-bnb-4bit"
 
 llama3 = HugLM(model_name)
 
