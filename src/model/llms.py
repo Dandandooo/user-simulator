@@ -1,4 +1,4 @@
-from transformers import AutoModel, TFAutoModel, FlaxAutoModel
+from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM
 from transformers import AutoTokenizer
 from transformers import Trainer, TrainingArguments
 from transformers import DataCollatorForLanguageModeling
@@ -153,7 +153,7 @@ class OllamaLM(BaseLM):
         self.model_name = model_name
 
     def answer(self, prompt: str) -> str:
-        return ollama.generate(prompt, model_name=self.model_name)
+        return ollama.generate(prompt=prompt, model=self.model_name)
 
 
 # To work with huggingface models
@@ -175,11 +175,11 @@ class HugLM(BaseLM):
         # todo: try adding some Seq2SeqLM models because GPT4 said it fits better
         match backend:
             case "torch" | "pt":
-                self.model = AutoModel.from_pretrained(model_name, **config)
+                self.model = AutoModelForCausalLM.from_pretrained(model_name, **config)
             case "tensorflow" | "tf":
-                self.model = TFAutoModel.from_pretrained(model_name, **config)
+                self.model = TFAutoModelForCausalLM.from_pretrained(model_name, **config)
             case "flax" | "jax":
-                self.model = FlaxAutoModel.from_pretrained(model_name, **config)
+                self.model = FlaxAutoModelForCausalLM.from_pretrained(model_name, **config)
             case _:
                 raise ValueError(f"Backend {backend} not supported")
 
