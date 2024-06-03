@@ -167,6 +167,7 @@ class HugLM(BaseLM):
             "device_map": "auto",
             "use_cache": True,
             "attn_implementation": "flash_attention_2",
+            "cache_dir": ".cache",
             **model_kwargs
         }
 
@@ -255,7 +256,6 @@ class LoraLM(HugLM):
         self.model.print_trainable_parameters()
 
         # self.freeze()
-
 
     def freeze(self):
         for param in self.model.parameters():
