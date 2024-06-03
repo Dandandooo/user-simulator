@@ -209,7 +209,7 @@ class HugLM(BaseLM):
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it", save_name=None, resume=False):
-        self.save_name = model_name.split('/')[-1] if save_name is None else save_name
+        save_name = model_name.split('/')[-1] if save_name is None else save_name
 
         self.lora_config = LoraConfig(
             r=16,
