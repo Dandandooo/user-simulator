@@ -167,7 +167,6 @@ class HugLM(BaseLM):
             "device_map": "auto",
             "use_cache": True,
             "attn_implementation": "flash_attention_2",
-            "load_in_4bit": True,
             **model_kwargs
         }
 
@@ -179,6 +178,8 @@ class HugLM(BaseLM):
                 self.model = TFAutoModelForCausalLM.from_pretrained(model_name, **config)
             case "flax" | "jax":
                 self.model = FlaxAutoModelForCausalLM.from_pretrained(model_name, **config)
+            case "peft":
+                self.model = AutoPeftModelForCausalLM.from_pretrained(model_name, **config)
             case _:
                 raise ValueError(f"Backend {backend} not supported")
 
@@ -207,10 +208,8 @@ class HugLM(BaseLM):
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it"):
-        super().__init__(model_name, quantization_config=BitsAndBytesConfig(load_in_4bit=True), gradient_checkpointing=True)
-
-        self.model.enable_input_require_grads()
+    def __init__(self, model_name="google/gemma-1.1-2b-it", save_name=None, resume=False):
+        self.save_name = model_name.split('/')[-1] if save_name is None else save_name
 
         self.lora_config = LoraConfig(
             r=16,
@@ -221,12 +220,31 @@ class LoraLM(HugLM):
             use_rslora=True,  # Huggingface said "shown to work better"
         )
 
-        self.peft_model = get_peft_model(self.model, self.lora_config)
+        extra_config = {
+            "model_name": model_name,
+            "quantization_config": BitsAndBytesConfig(load_in_4bit=True),
+            "gradient_checkpointing": True,
+        }
 
-        # TODO: write trainer for lora
+        if os.path.exists(os.path.join("llm_models", save_name)):
+            if resume:
+                extra_config["backend"] = "peft"
+                extra_config["model_name"] = save_name
+            else:
+                raise FileExistsError(f"Model {save_name} already exists. You chose not to resume training.")
+
+        super().__init__(
+            **extra_config
+        )
+
+        if not resume:
+            self.model = get_peft_model(self.model, self.lora_config)
+
+        if not os.path.exists(os.path.join("llm_training_sessions", model_name.split('/')[-1])):
+            os.mkdir(f"llm_training_sessions/{model_name.split('/')[-1]}")
 
         self.training_args = TrainingArguments(
-            output_dir=f"llm_prompt_sessions/{model_name.split('/')[-1]}/temp",
+            output_dir=f"llm_training_sessions/{model_name.split('/')[-1]}/temp",
             overwrite_output_dir=True,
             num_train_epochs=1,
             per_device_train_batch_size=2,
@@ -238,6 +256,7 @@ class LoraLM(HugLM):
 
         # self.freeze()
 
+
     def freeze(self):
         for param in self.model.parameters():
             param.requires_grad = False
@@ -245,10 +264,10 @@ class LoraLM(HugLM):
                 param.data = param.data.to(torch.float32)
 
     def train(self, train_dataset_name: str = "train", val_dataset_name: str = "valid_unseen", eval_dataset_name: str = "valid_seen", ):
-        self.peft_model.train()
+        self.model.train()
 
         trainer = SFTTrainer(
-            model=self.peft_model,
+            model=self.model,
             train_dataset=self.data[train_dataset_name],
             eval_dataset=self.data[eval_dataset_name],
             tokenizer=self.tokenizer,
@@ -261,4 +280,4 @@ class LoraLM(HugLM):
 
 if __name__ == "__main__":
     model = LoraLM()
-    model.peft_model.print_trainable_parameters()
+    model.model.print_trainable_parameters()
