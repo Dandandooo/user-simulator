@@ -1,8 +1,8 @@
 from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM
 from transformers import AutoTokenizer
-from transformers import TrainingArguments
+from transformers import TrainingArguments, BitsAndBytesConfig
 from trl import SFTTrainer
-from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM
+from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
 from openai import AzureOpenAI
 import ollama
 
@@ -162,8 +162,6 @@ class HugLM(BaseLM):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding=True, padding_side="left", use_fast=True)
         self.tokenizer.add_special_tokens({"pad_token": "<pad>"})
 
-        # self.tokenizer.pad_token = self.tokenizer.eos_token
-
         # Autoconfig does not map devices correctly
         config = {
             "device_map": "auto",
@@ -210,7 +208,7 @@ class HugLM(BaseLM):
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it"):
-        super().__init__(model_name, load_in_4bit=True, gradient_checkpointing=True)
+        super().__init__(model_name, quantization_config=BitsAndBytesConfig(load_in_4bit=True), gradient_checkpointing=True)
 
         self.model.enable_input_require_grads()
 
@@ -236,7 +234,9 @@ class LoraLM(HugLM):
             save_total_limit=2,
         )
 
-        self.freeze()
+        self.model.print_trainable_parameters()
+
+        # self.freeze()
 
     def freeze(self):
         for param in self.model.parameters():
@@ -246,7 +246,6 @@ class LoraLM(HugLM):
 
     def train(self, train_dataset_name: str = "train", val_dataset_name: str = "valid_unseen", eval_dataset_name: str = "valid_seen", ):
         self.peft_model.train()
-        # self.trainer.train()
 
         trainer = SFTTrainer(
             model=self.peft_model,
@@ -258,10 +257,7 @@ class LoraLM(HugLM):
             args=self.training_args,
         )
 
-
-
-
-
+        trainer.train()
 
 if __name__ == "__main__":
     model = LoraLM()
