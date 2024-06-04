@@ -192,7 +192,7 @@ class HugLM(BaseLM):
     @cache
     def answer(self, prompt: str) -> str:
         tokenized = self.tokenizer(prompt, padding=True, return_tensors="pt").to(self.model.device)
-        result = self.model.generate(**tokenized)
+        result = self.model.generate(**tokenized, temperature=0.7, top_p=0.95)
         decoded = self.tokenizer.decode(result[0], skip_special_tokens=True)
         return decoded
 
@@ -224,7 +224,6 @@ class LoraLM(HugLM):
         extra_config = {
             "model_name": model_name,
             "quantization_config": BitsAndBytesConfig(load_in_4bit=True),
-            "gradient_checkpointing": True,
         }
 
         if os.path.exists(os.path.join("llm_models", save_name)):
@@ -277,6 +276,7 @@ class LoraLM(HugLM):
         )
 
         trainer.train()
+
 
 if __name__ == "__main__":
     model = LoraLM()
