@@ -2,6 +2,12 @@ from json import load
 import numpy as np
 import sys
 import re
+import os
+
+
+def get_task(prompt: str) -> str:
+    goal_re = re.compile(r"(?<=\n\n\n)Goal: (?:(?!COMMANDER response:).)+", re.MULTILINE + re.DOTALL)
+    return goal_re.search(prompt).group().strip() + "\nCOMMANDER response:"
 
 
 # Returns the type of the last robot turn
@@ -210,6 +216,26 @@ def metric_string(filename="gpt4_result.json") -> str:
     to_ret += str(np.array([[true_observed, false_speak], [false_observed, true_speak]]))
 
     return to_ret
+
+
+def calc_folder(folder_path:str) -> dict:
+    true_observed = false_observed = true_speak = false_speak = correct_speak = incorrect_speak = 0
+    for filename in os.listdir(folder_path):
+        if ".json" not in filename:
+            continue
+        to, fo, ts, fs, cs, ic = calc_score(os.path.join(folder_path, filename))
+        true_observed += to
+        false_observed += fo
+        true_speak += ts
+        false_speak += fs
+        correct_speak += cs
+        incorrect_speak += ic
+
+    return {
+        "f-score": 2 * true_speak / (2 * true_speak + false_speak + false_observed),
+        "confusion": np.array([[true_observed, false_speak], [false_observed, true_speak]]),
+        "speak_acc": correct_speak / (correct_speak + incorrect_speak),
+    }
 
 
 if __name__ == "__main__":

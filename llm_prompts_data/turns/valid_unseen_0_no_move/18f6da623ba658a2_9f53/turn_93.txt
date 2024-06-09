@@ -1,0 +1,223 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Cook 1 slice(s) of Potato and serve in a Bowl.
+COMMANDER: <observe>
+DRIVER: what is my task today <<RequestForInstruction>>
+COMMANDER: slice potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: potato inpot on counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: knife by coffemaker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: ?? <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: in sink also <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: slice and cook in microwave <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: i an not see potato <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: get potato out of sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Egg>
+COMMANDER: you past it <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: not a potato <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where have i passed it <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: in the pot on the counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: i said from the beginning <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: on the right <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: place pot on other side then get close and grab potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Floor>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: good <<FeedbackPositive>>
+DRIVER: <observe>
+COMMANDER: slice then cook in microwave <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: ii cook how many pieces <<RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: 1 slice <<Instruction>>
+DRIVER: <observe>
+COMMANDER: use bowl in the cabinet above the toaster <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Microwave>
+COMMANDER: <observe>
+DRIVER: i need to use the pan <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: where is it <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: quickly please <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: above the toaster <<Instruction>>
+DRIVER: <observe>
+COMMANDER: chill <<Instruction>>
+DRIVER: <observe>
+COMMANDER: dont rush <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: pay attention and you will see i told you 3 times <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: and dont rush when you know there is a lag with the system <<OtherInterfaceComment,Instruction>>
+DRIVER: <observe>
+COMMANDER: grab the bowl <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok....tell me whwere the pan is <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: place 1 slice of cook potato then your done <<Instruction>>
+DRIVER: <observe>
+COMMANDER: place in the microwave what u mean pan <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: i need the pan to cook that piece of potato <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: you slowing us down <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: no you dont cook in the microwAVE <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <close Microwave>
+COMMANDER: <observe>
+DRIVER: <toggle on Microwave>
+COMMANDER: <observe>
+DRIVER: <toggle off Microwave>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: now place in a bowl <<Instruction>>
+DRIVER: <observe>
+COMMANDER: place potato in bowl <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: i can not pick the potto piece in the microwave so i need to use the pan to cook the potato slice <<NotifyFailure>>
+COMMANDER: <observe>
+DRIVER: do you get mre <<Confirm>>
+COMMANDER: its already cook <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: \and please be helpful <<MiscOther>>
+COMMANDER: why are you trying to cook it again' <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: yes... its alredy cooked but it cant pick it out of the microwave <<NotifyFailure>>
+COMMANDER: and you already mess that up with the rushing <<FeedbackNegative>>
+DRIVER: <observe>
+COMMANDER: move around then <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: you are not helpful <<MiscOther>>
+COMMANDER: im goin to end if you aint go try <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: you are actively harmful <<MiscOther>>
+COMMANDER: you are complaining instead of working <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the pan <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: then you want to say i aint helpful well i guess thats up to the reviewer not you <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: and i gave you help but yu chose to do your own thing <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the pan <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: grab out of microwave <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: move to the right <<Instruction>>
+DRIVER: <observe>
+COMMANDER: tilt u[ <<Instruction>>
+DRIVER: <observe>
+COMMANDER: up <<Instruction>>
+DRIVER: <observe>
+COMMANDER: try to grab instead of standing there <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: you can understand that i am having trouble picking up the potato piec from the microwve <<NotifyFailure>>
+COMMANDER: tilt up <<Instruction>>
+DRIVER: <observe>
+COMMANDER: move back a little and try <<Instruction>>
+DRIVER: <observe>
+COMMANDER: i see it <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: and it grab able <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: <observe>
+DRIVER: <pickup SaltShaker>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: jus try like i said <<Instruction>>
+DRIVER: <observe>
+COMMANDER response:

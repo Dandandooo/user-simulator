@@ -1,0 +1,175 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Put all Fork in any Sink.
+
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a plate of toast.
+COMMANDER: <observe>
+DRIVER: hello how can i help today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Cook 3 slice(s) of Potato and serve in a Bowl.
+COMMANDER: Please slice the potato in the sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: There is also a knife in the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Potato>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: Please cook 3 slices of potato on the stove <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: wheres the pan? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: Hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: What's the task <<RequestForInstruction>>
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: please get the mug in the fridge and clean it <<Instruction>>
+DRIVER: <observe>
+COMMANDER: then make coffee <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all RemoteControl on one Ottoman.
+COMMANDER: <observe>
+DRIVER: anyone there? <<RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Put all Book on any Bed.
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: hey <<Greetings/Salutations>>
+COMMANDER: Would you like your task? <<Confirm>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: yeees <<Affirm>>
+COMMANDER: Please put the book on to the bed. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the book <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: Book is on the table. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: Pick up book and put it on the bed please. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: Are you able to operate the robot? <<Confirm>>
+DRIVER: <observe>
+COMMANDER: Please respond. <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: i am trying <<Acknowledge>>
+COMMANDER: I'm sorry. There is also a book on the desk if that works better. <<NotifyFailure,RequestOtherInfo>>
+DRIVER: <observe>
+COMMANDER: Can you pick up the book? Use the hand command. <<Confirm,OtherInterfaceComment>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Book>
+COMMANDER: Good job. <<FeedbackPositive>>
+DRIVER: <observe>
+COMMANDER: Now please place it on the bed <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Bed>
+COMMANDER: Can you pick the book back up and place it on the bed? <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: That is the table, the bed is blue <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: its a bed <<RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <pickup Book>
+COMMANDER: I apologize the view I have it appears to be a table. The bed with the blue comforter is the one you want. <<Acknowledge,InformationOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Bed>
+COMMANDER: <observe>
+DRIVER: <pickup Book>
+COMMANDER: Are you able to move the robot? <<Confirm>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: yeah <<Affirm>>
+COMMANDER: It seems to be moving very slow. Perhaps your connection is bad? <<OtherInterfaceComment>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Bed>
+COMMANDER: <observe>
+DRIVER: connection is slow <<OtherInterfaceComment>>
+COMMANDER: <observe>
+DRIVER: already done <<Acknowledge>>
+COMMANDER: Please put the other book on the bed too <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Book>
+COMMANDER: <observe>
+DRIVER: <putdown Bed>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: Good job. Can you pick  up the first book and try to place it in a different spot on the same blue bed <<FeedbackPositive,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: okay <<Acknowledge>>
+COMMANDER response:

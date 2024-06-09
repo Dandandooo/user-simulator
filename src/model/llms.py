@@ -1,12 +1,11 @@
-from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM
+from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM, pipeline
 from transformers import AutoTokenizer
 from transformers import TrainingArguments, BitsAndBytesConfig
 from trl import SFTTrainer
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
 from openai import AzureOpenAI
 import ollama
-
-from functools import cache
+from datasets import Dataset, load_dataset
 
 from tqdm import tqdm
 import os
@@ -16,10 +15,13 @@ import json
 import torch
 import numpy as np
 
+from src.prompt_llm.gpt4_entire_eval import get_last_turn_type, calc_score
+
 
 class LLMDataset:
     def __init__(self):
-        self.data = {}
+        self.data: dict[str, Dataset] = {}
+        self.locations = {}
 
     def __getitem__(self, key):
         return self.data[key]
@@ -30,6 +32,10 @@ class LLMDataset:
     def __contains__(self, key):
         return key in self.data
 
+    def load(self, dataset_name):
+        data = load_dataset(f"Dandandooo/user-sim/{dataset_name}")
+        self.data[dataset_name] = data
+
     def add(self, dataset_name, directory, prompt_regex=r".*turn_\d+\.txt", answer_regex=r".*turn_\d+_answer\.txt"):
         prompt_re = re.compile(prompt_regex)
         answer_re = re.compile(answer_regex)
@@ -38,12 +44,16 @@ class LLMDataset:
 
         if dataset_name not in self.data:
             self.data[dataset_name] = {}
-        for folder in os.listdir(directory):
+            self.locations[dataset_name] = None
+        for folder in tqdm(os.listdir(directory)):
             folder_files = os.listdir(os.path.join(directory, folder))
             folder_files = [os.path.join(directory, folder, name) for name in folder_files]
             prompts = list(map(op, filter(prompt_re.match, folder_files)))
             answers = list(map(op, filter(answer_re.match, folder_files)))
             self.data[dataset_name][folder] = list(zip(prompts, answers))
+
+    def where(self, dataset_name):
+        return self.locations[dataset_name]
 
 
 class BaseLM:
@@ -66,16 +76,22 @@ class BaseLM:
 
     def answer_dataset(self, dataset_name: str) -> list[tuple[str, list[dict]]]:
         print(f'Answering "{dataset_name}" dataset')
-        responses = []
+        where_stored = self.data.where(dataset_name)
         for i, (file_id, folder) in enumerate(self.data[dataset_name].items()):
+            if where_stored is not None and (file := open(os.path.join(where_stored, f"{file_id}_result.json"), "r")).read():
+                yield file_id, json.load(file)
+                continue
             print(f"Answering {file_id} ({i + 1}/{len(self.data[dataset_name])})")
-            responses.append((file_id, list(self.answer_folder(folder))))
-        return responses
+            yield file_id, list(self.answer_folder(folder))
 
     def save_answers(self, dataset_name: str, dest_folder: str):
+        if not os.path.exists(dest_folder):
+            os.mkdir(dest_folder)
+        self.data.locations[dataset_name] = dest_folder
         for file_id, answered_folder in self.answer_dataset(dataset_name):
             with open(os.path.join(dest_folder, f"{file_id}_result.json"), "w") as f:
                 json.dump(answered_folder, f)
+            print("Saved", file_id)
 
     def tp_etc(self, dataset_name: str) -> tuple[int, int, int, int, int, int]:
         true_observed = 0
@@ -92,13 +108,13 @@ class BaseLM:
         for _, folder in tqdm(data, total=len(self.data[dataset_name])):
             for result in folder:
                 answer, response = result["answer"], result["response"]
-                if answer == "OBSERVE":
-                    if response == "OBSERVE":
+                if "OBSERVE" in answer:
+                    if "OBSERVE" in response:
                         true_observed += 1
                     else:
                         false_speak += 1
                 else:
-                    if response == "OBSERVE":
+                    if "OBSERVE" in response:
                         false_observed += 1
                     else:
                         true_speak += 1
@@ -131,7 +147,6 @@ class GPT4LM(BaseLM):
 
         self.role = "user"
 
-    @cache
     def answer(self, prompt: str) -> str:
         completion = self.client.chat.completions.create(
             model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
@@ -150,9 +165,22 @@ class OllamaLM(BaseLM):
     def __init__(self, model_name="gemma:instruct"):
         super().__init__()
         self.model_name = model_name
+        ollama.pull(model_name)
 
     def answer(self, prompt: str) -> str:
-        return ollama.generate(prompt=prompt, model=self.model_name)
+        return ollama.generate(prompt=prompt, model=self.model_name)['response']
+
+
+class HugPipeline(BaseLM):
+    def __init__(self, model_name="google/gemma-1.1-2b-it", task="text-generation"):
+        super().__init__()
+        self.model_name = model_name
+        self.task = task
+
+        self.pipeline = pipeline(task, model=model_name)
+
+    def answer(self, prompt: str) -> str:
+        return self.pipeline(prompt)[0]['generated_text']
 
 
 # To work with huggingface models
@@ -160,13 +188,13 @@ class HugLM(BaseLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it", backend="torch", **model_kwargs):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding=True, padding_side="left", use_fast=True)
-        self.tokenizer.add_special_tokens({"pad_token": "<pad>"})
+        # self.tokenizer.add_special_tokens({"pad_token": "<pad>"})
 
         # Autoconfig does not map devices correctly
         config = {
             "device_map": "auto",
             "use_cache": True,
-            "attn_implementation": "flash_attention_2",
+            # "attn_implementation": "flash_attention_2",
             "cache_dir": ".cache",
             **model_kwargs
         }
@@ -185,15 +213,14 @@ class HugLM(BaseLM):
                 raise ValueError(f"Backend {backend} not supported")
 
         # to account for pad token
-        self.model.resize_token_embeddings(len(self.tokenizer))
+        # self.model.resize_token_embeddings(len(self.tokenizer))
 
         print(f"Running {model_name} on {self.model.device}")
 
-    @cache
     def answer(self, prompt: str) -> str:
         tokenized = self.tokenizer(prompt, padding=True, return_tensors="pt").to(self.model.device)
-        result = self.model.generate(**tokenized, temperature=0.7, top_p=0.95)
-        decoded = self.tokenizer.decode(result[0], skip_special_tokens=True)
+        result = self.model.generate(**tokenized, max_new_tokens=32)
+        decoded = self.tokenizer.decode(result[0], skip_special_tokens=True).removeprefix(prompt).strip()
         return decoded
 
     # This is an alternative to "answer_folder" that batches up the prompts towards the LLM.

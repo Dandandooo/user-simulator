@@ -1,0 +1,261 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: hi...waht can i do today <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Hello. <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: Today, you are preparing breakfast. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: First thing we need to do is prepare coffee in a clean mug. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: You can find the mug in the pan of water to the left of the stove. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <pour Sink>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle off CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: done next <<Acknowledge>>
+COMMANDER: Okay. <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: Next you need to make a plate of 1 slice of toast. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off CoffeeMachine>
+COMMANDER: You will have to slice the bread. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the knife <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: You can find the bread in the cabinet to the right of the microwave <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: or there on the counter. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown Toaster>
+COMMANDER: <observe>
+DRIVER: done next <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <toggle off Toaster>
+COMMANDER: You will need to rinse the plate that is on the counter next to the toaster <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: done next <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: Okay, <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: Next you need to cook 2 slices of potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the potato please <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: I amshowing that the toast is not on the plate. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: the potato is in the microwave <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: <observe>
+DRIVER: <toggle off Microwave>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: You may have to move the plate to another spot on the counter. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Microwave>
+COMMANDER: <observe>
+DRIVER: <pickup Apple>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <close Microwave>
+COMMANDER: <observe>
+DRIVER: <toggle on Microwave>
+COMMANDER: <observe>
+DRIVER: <toggle off Microwave>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: We will complete the other tasks and then go back to the toast. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <close Microwave>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <slice Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: <observe>
+DRIVER: how many slices of potato <<RequestOtherInfo>>
+COMMANDER: Two, plesae. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: <observe>
+DRIVER: done next <<Acknowledge>>
+COMMANDER: Okay. <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: how many slices of toast? <<RequestOtherInfo>>
+COMMANDER: Next you need to put one apple slice on the plate. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Apple>
+COMMANDER: It says only one slice of toast <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Apple>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: <observe>
+DRIVER: apple done? <<Confirm>>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: next? <<RequestMore>>
+COMMANDER: Okay. <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: You need to put the plate on the countertop. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+COMMANDER: <observe>
+DRIVER: <move>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: done next? <<Acknowledge>>
+COMMANDER: Okay. <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: I am not sure. <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: It says to serve all items on a clean plate. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what is remaining <<RequestMore>>
+COMMANDER: Then at the end it says all breakfast items need to be on the countertop. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: then there is a dirty plate somewhere <<InformationOther>>
+COMMANDER: Okay, Let me look. <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: It is showing only the one plate <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: is the clean plate checked? <<Confirm>>
+COMMANDER: The clean plate should have been checked with the toast task. but it was not. <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: try refreshing by pressing progress check? <<OtherInterfaceComment>>
+COMMANDER: Okay. <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER response:

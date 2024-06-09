@@ -1,0 +1,239 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: how can i help? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: First, make lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup SoapBottle>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: .lettuce is already made <<Acknowledge>>
+COMMANDER: Lettuce is in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: i dont understand <<MiscOther>>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: i have lettuce <<Acknowledge>>
+COMMANDER: Slice lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what should i do with it? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: Knife is in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: whereok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup CreditCard>
+COMMANDER: <observe>
+DRIVER: <putdown Fridge>
+COMMANDER: <observe>
+DRIVER: i dont see a knife in the fridge <<NotifyFailure>>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: it was hidden up high <<InformationOther>>
+COMMANDER: <observe>
+DRIVER: i have a knife now <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <slice Lettuce>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: <observe>
+DRIVER: <slice Apple>
+COMMANDER: <observe>
+DRIVER: lettuce is now sliced <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: what else can i do <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+COMMANDER: Slice the tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: <observe>
+DRIVER: that is sliced <<Acknowledge>>
+COMMANDER: Next, slice the potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: where is a potato?> <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: Potato is in the drawer to the left of the stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: there is one here <<InformationOther>>
+COMMANDER: <observe>
+DRIVER: in the fridge <<InformationOther>>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: does it need to be cooked? <<Confirm>>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: potato is sliced <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: as you requested <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: what else can i do? <<RequestForInstruction>>
+COMMANDER: Yes, cook two potato slices <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: how many? <<RequestOtherInfo>>
+COMMANDER: Then place everything on  aplte <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Pan>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Pan>
+COMMANDER: <observe>
+DRIVER: <pickup Pan>
+COMMANDER: a plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: <observe>
+DRIVER: <putdown Floor>
+COMMANDER: <observe>
+DRIVER: how many slices? <<RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <pickup Pan>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Pan>
+COMMANDER: <observe>
+DRIVER: nothing fits on stove <<NotifyFailure>>
+COMMANDER: <observe>
+DRIVER: no pans will fit <<NotifyFailure>>
+COMMANDER: <observe>
+DRIVER: <putdown StoveBurner>
+COMMANDER: <observe>
+DRIVER: <pickup Pan>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Pan>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Pan>
+COMMANDER: <observe>
+DRIVER: please anser <<MiscOther>>
+COMMANDER: <observe>
+DRIVER: how many slices of potato? <<RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+COMMANDER: Two <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: there are 2 on the plate <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: thank you <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: what else can i do? <<RequestForInstruction>>
+COMMANDER response:

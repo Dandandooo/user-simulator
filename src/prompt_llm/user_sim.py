@@ -30,7 +30,6 @@ class TurnMaker:
         self.entire_file = kwargs["entire_file"]
         self.no_obs = kwargs["no_obs"]
         self.split_dataset = kwargs["split_dataset"]
-        self.train = kwargs["train"]
         self.entire_dataset = kwargs["entire_dataset"]
         self.no_move = kwargs["no_move"]
 
@@ -97,10 +96,13 @@ class TurnMaker:
 
         self.example_source: list[dict] = train_source + valid_unseen_source
 
-        if self.train:
-            self.task_source: list[dict] = train_source + valid_unseen_source
-        else:
-            self.task_source: list[dict] = valid_seen_source
+        match kwargs["split"]:
+            case "train":
+                self.task_source: list[dict] = train_source
+            case "valid":
+                self.task_source: list[dict] = valid_unseen_source
+            case "test":
+                self.task_source: list[dict] = valid_seen_source
 
         self.tasks: list[dict] = self.example_source + self.task_source
 
@@ -337,11 +339,11 @@ class TurnMaker:
 @click.option("--gen_response", "-r", is_flag=True, help="Whether to generate a response to the prompt in addition to the dialogue act")
 # TODO setup running with images
 # TODO consider visual features (don't have them yet; nl-ified)
-# TODO add flag on standard (random) vs cheating (don't make the only example have the same answer as the examples)
 @click.option("--cheat", "-c", is_flag=True, help="Whether to cheat and make the only example have the same answer as the examples")
 @click.option("--no_obs", is_flag=True, help="Whether to omit observes in the examples provided, but not the task")
 @click.option("--entire_file", "-e", is_flag=True, help="Whether to generate prompts for an entire game file")
 @click.option("--split_dataset", is_flag=True, help="Whether to split the dataset")
+@click.option("--split", default="test", help="Which dataset to split")
 @click.option("--train", is_flag=True, help="Whether to generate prompts for the training set, not the entire dataset")
 @click.option("--entire_dataset", is_flag=True, help="Whether to generate prompts for the entire dataset. Save path should be a folder for this one.")
 @click.option("--no_move", is_flag=True, help="Whether to not remove the move actions")
