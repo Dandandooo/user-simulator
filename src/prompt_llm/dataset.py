@@ -28,12 +28,13 @@ class LLMData:
                 if prompt_re.match(file):
                     prompt = open(os.path.join(directory, folder, file)).read()
                     answer = open(os.path.join(directory, folder, file.replace(".txt", "_answer.txt"))).read()
-                    task = get_task(prompt)
-                    instructions = prompt.removesuffix(task).strip()
-                    yield {"game_id": folder, "prompt": prompt, "answer": answer, "task": task, "instructions": instructions}
+                    # task = get_task(prompt)
+                    # instructions = prompt.removesuffix(task).strip()
+                    yield {"game_id": folder, "prompt": prompt, "answer": answer}
 
 
 if __name__ == "__main__":
+    print("Creating dataset '0'...")
     LLMData.create_dataset(
         "0",
         "llm_prompts_data/turns/train_0",
@@ -42,6 +43,7 @@ if __name__ == "__main__":
         upload=True,
     )
 
+    print("Creating dataset '0_no_move'...")
     LLMData.create_dataset(
         "0_no_move",
         "llm_prompts_data/turns/train_0_no_move",
@@ -50,6 +52,7 @@ if __name__ == "__main__":
         upload=True,
     )
 
+    print("Creating dataset '5'...")
     LLMData.create_dataset(
         "5",
         "llm_prompts_data/turns/train_5",
@@ -58,6 +61,7 @@ if __name__ == "__main__":
         upload=True,
     )
 
+    print("Creating dataset '5_no_move'...")
     LLMData.create_dataset(
         "5_no_move",
         "llm_prompts_data/turns/train_5_no_move",

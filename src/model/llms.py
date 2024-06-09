@@ -1,7 +1,6 @@
 from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM, pipeline
-from transformers import AutoTokenizer
-from transformers import TrainingArguments, BitsAndBytesConfig
-from trl import SFTTrainer
+from transformers import AutoTokenizer, BitsAndBytesConfig
+from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
 from openai import AzureOpenAI
 import ollama
@@ -63,35 +62,33 @@ class BaseLM:
     def answer(self, prompt: str) -> str:
         raise NotImplementedError
 
-    def answer_folder(self, folder: list[tuple[str, str]]) -> list[dict[str, str]]:
-        responses = []
-        for prompt, answer in tqdm(folder):
-            result = self.answer(prompt)
-            responses.append({
-                "prompt": prompt,
-                "answer": answer,
-                "response": result
-            })
-        return responses
-
-    def answer_dataset(self, dataset_name: str) -> list[tuple[str, list[dict]]]:
+    def answer_dataset(self, dataset_name: str, dataset_split: str = "test", destfile: str = None) -> list[tuple[str, list[dict]]]:
         print(f'Answering "{dataset_name}" dataset')
-        where_stored = self.data.where(dataset_name)
-        for i, (file_id, folder) in enumerate(self.data[dataset_name].items()):
-            if where_stored is not None and (file := open(os.path.join(where_stored, f"{file_id}_result.json"), "r")).read():
-                yield file_id, json.load(file)
-                continue
-            print(f"Answering {file_id} ({i + 1}/{len(self.data[dataset_name])})")
-            yield file_id, list(self.answer_folder(folder))
+        if destfile is not None:
+            answered = json.load(open(destfile, "r"))
+            answered_prompts = {result["prompt"]: result["response"] for result in answered}
 
-    def save_answers(self, dataset_name: str, dest_folder: str):
-        if not os.path.exists(dest_folder):
-            os.mkdir(dest_folder)
-        self.data.locations[dataset_name] = dest_folder
-        for file_id, answered_folder in self.answer_dataset(dataset_name):
-            with open(os.path.join(dest_folder, f"{file_id}_result.json"), "w") as f:
-                json.dump(answered_folder, f)
-            print("Saved", file_id)
+        for i, turn in enumerate(self.data[dataset_name].split()[dataset_split]):
+            file_id, prompt, answer = turn.values()
+            if destfile is not None and prompt in answered_prompts:
+                yield file_id, prompt, answered_prompts[prompt]
+                continue
+            response = self.answer(prompt)
+            yield file_id, prompt, answer, response
+
+    def save_answers(self, dataset_name: str, dataset_split: str, destfile: str):
+        responses = []
+        try:
+            for i, (file_id, prompt, answer, response) in enumerate(self.answer_dataset(dataset_name, dataset_split)):
+                responses.append({"file_id": file_id, "prompt": prompt, "answer": answer, "response": response})
+        except KeyboardInterrupt:
+            print(f'Execution Stopped!!!')
+        except Exception as e:
+            print(f'Error: {e}')
+        finally:
+            with open(destfile, "w") as f:
+                json.dump(responses, f, indent=4)
+            print(f'Answers saved to {destfile}')
 
     def tp_etc(self, dataset_name: str) -> tuple[int, int, int, int, int, int]:
         true_observed = 0
@@ -194,7 +191,7 @@ class HugLM(BaseLM):
         config = {
             "device_map": "auto",
             "use_cache": True,
-            # "attn_implementation": "flash_attention_2",
+            "attn_implementation": "flash_attention_2",
             "cache_dir": ".cache",
             **model_kwargs
         }
@@ -236,8 +233,9 @@ class HugLM(BaseLM):
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it", save_name=None, resume=False):
-        save_name = model_name.split('/')[-1] if save_name is None else save_name
+    def __init__(self, model_name="google/gemma-1.1-2b-it", dataset_name="0_no_move", resume=False):
+        save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
+        save_model = f"Dandandooo/user-sim-{model_name.split('/')[-1]}-{dataset_name}"
 
         self.lora_config = LoraConfig(
             r=16,
@@ -253,56 +251,31 @@ class LoraLM(HugLM):
             "quantization_config": BitsAndBytesConfig(load_in_4bit=True),
         }
 
-        if os.path.exists(os.path.join("llm_models", save_name)):
-            if resume:
-                extra_config["backend"] = "peft"
-                extra_config["model_name"] = save_name
-            else:
-                raise FileExistsError(f"Model {save_name} already exists. You chose not to resume training.")
+        super().__init__(**extra_config)
 
-        super().__init__(
-            **extra_config
+        self.args = SFTConfig(
+            output_dir=save_name,
+            resume_from_checkpoint=save_model if resume else None,
+            torch_compile=True,
+            push_to_hub=True,
+            push_to_hub_model_id=save_model,
         )
 
-        if not resume:
-            self.model = get_peft_model(self.model, self.lora_config)
-
-        if not os.path.exists(os.path.join("llm_training_sessions", model_name.split('/')[-1])):
-            os.mkdir(f"llm_training_sessions/{model_name.split('/')[-1]}")
-
-        self.training_args = TrainingArguments(
-            output_dir=f"llm_training_sessions/{model_name.split('/')[-1]}/temp",
-            overwrite_output_dir=True,
-            num_train_epochs=1,
-            per_device_train_batch_size=2,
-            save_steps=1,
-            save_total_limit=2,
-        )
-
-        self.model.print_trainable_parameters()
-
-        # self.freeze()
-
-    def freeze(self):
-        for param in self.model.parameters():
-            param.requires_grad = False
-            if param.ndim == 1:
-                param.data = param.data.to(torch.float32)
-
-    def train(self, train_dataset_name: str = "train", val_dataset_name: str = "valid_unseen", eval_dataset_name: str = "valid_seen", ):
-        self.model.train()
-
-        trainer = SFTTrainer(
+        self.trainer = SFTTrainer(
             model=self.model,
-            train_dataset=self.data[train_dataset_name],
-            eval_dataset=self.data[eval_dataset_name],
+            train_dataset=self.data[dataset_name].split()["train"],
+            eval_dataset=self.data[dataset_name].split()["validation"],
             tokenizer=self.tokenizer,
-            # max_seq_length=
             peft_config=self.lora_config,
-            args=self.training_args,
+            formatting_func=lambda x: {"prompt": x["prompt"], "completion": x["answer"]},
+            args=self.args,
         )
 
-        trainer.train()
+        print(f"Initialized trainer for LoRA fine-tuning on {model_name} with dataset {dataset_name}")
+
+    def train(self):
+        self.model.train()
+        self.trainer.train()
 
 
 if __name__ == "__main__":
