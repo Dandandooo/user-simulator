@@ -242,6 +242,8 @@ class LoraLM(HugLM):
             push_to_hub_model_id=save_model,
         )
 
+        self.data.load(f"Dandandooo/user-sim/{dataset_name}")
+
         self.trainer = SFTTrainer(
             model=self.model,
             train_dataset=self.data[dataset_name].split()["train"],
