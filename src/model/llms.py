@@ -2,9 +2,10 @@ from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoM
 from transformers import AutoTokenizer, BitsAndBytesConfig
 from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
-from openai import AzureOpenAI
+from openai import AzureOpenAI, RateLimitError
 import ollama
 from datasets import Dataset, load_dataset
+import time
 
 from tqdm import tqdm
 import os
@@ -32,27 +33,7 @@ class LLMDataset:
         return key in self.data
 
     def load(self, dataset_name):
-        data = load_dataset(f"Dandandooo/user-sim/{dataset_name}")
-        self.data[dataset_name] = data
-
-    def add(self, dataset_name, directory, prompt_regex=r".*turn_\d+\.txt", answer_regex=r".*turn_\d+_answer\.txt"):
-        prompt_re = re.compile(prompt_regex)
-        answer_re = re.compile(answer_regex)
-
-        op = lambda e: open(e).read()
-
-        if dataset_name not in self.data:
-            self.data[dataset_name] = {}
-            self.locations[dataset_name] = None
-        for folder in tqdm(os.listdir(directory)):
-            folder_files = os.listdir(os.path.join(directory, folder))
-            folder_files = [os.path.join(directory, folder, name) for name in folder_files]
-            prompts = list(map(op, filter(prompt_re.match, folder_files)))
-            answers = list(map(op, filter(answer_re.match, folder_files)))
-            self.data[dataset_name][folder] = list(zip(prompts, answers))
-
-    def where(self, dataset_name):
-        return self.locations[dataset_name]
+        self.data[dataset_name] = load_dataset(f"Dandandooo/user-sim/{dataset_name}")
 
 
 class BaseLM:
@@ -145,17 +126,21 @@ class GPT4LM(BaseLM):
         self.role = "user"
 
     def answer(self, prompt: str) -> str:
-        completion = self.client.chat.completions.create(
-            model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
-            messages=[{"role": self.role, "content": prompt}],
-            temperature=0.7,
-            max_tokens=1024,
-            top_p=0.95,
-            frequency_penalty=0,
-            presence_penalty=0,
-            stop=None
-        )
-        return completion.choices[0].message.content
+        while True:
+            try:
+                completion = self.client.chat.completions.create(
+                    model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
+                    messages=[{"role": self.role, "content": prompt}],
+                    temperature=0.7,
+                    max_tokens=1024,
+                    top_p=0.95,
+                    frequency_penalty=0,
+                    presence_penalty=0,
+                    stop=None
+                )
+                return completion.choices[0].message.content
+            except RateLimitError:
+                time.sleep(1)
 
 
 class OllamaLM(BaseLM):
@@ -185,7 +170,6 @@ class HugLM(BaseLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it", backend="torch", **model_kwargs):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding=True, padding_side="left", use_fast=True)
-        # self.tokenizer.add_special_tokens({"pad_token": "<pad>"})
 
         # Autoconfig does not map devices correctly
         config = {
@@ -208,9 +192,6 @@ class HugLM(BaseLM):
                 self.model = AutoPeftModelForCausalLM.from_pretrained(model_name, **config)
             case _:
                 raise ValueError(f"Backend {backend} not supported")
-
-        # to account for pad token
-        # self.model.resize_token_embeddings(len(self.tokenizer))
 
         print(f"Running {model_name} on {self.model.device}")
 
