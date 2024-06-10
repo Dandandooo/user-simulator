@@ -4,7 +4,7 @@ from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
 from openai import AzureOpenAI, RateLimitError
 import ollama
-from datasets import Dataset, load_dataset
+from datasets import DatasetDict, load_dataset
 import time
 
 from tqdm import tqdm
@@ -20,7 +20,7 @@ from src.prompt_llm.gpt4_entire_eval import get_last_turn_type, calc_score
 
 class LLMDataset:
     def __init__(self):
-        self.data: dict[str, Dataset] = {}
+        self.data: dict[str, DatasetDict] = {}
         self.locations = {}
 
     def __getitem__(self, key):
@@ -49,7 +49,7 @@ class BaseLM:
             answered = json.load(open(destfile, "r"))
             answered_prompts = {result["prompt"]: result["response"] for result in answered}
 
-        for i, turn in enumerate(self.data[dataset_name].split()[dataset_split]):
+        for i, turn in enumerate(self.data[dataset_name][dataset_split]):
             file_id, prompt, answer = turn.values()
             if destfile is not None and prompt in answered_prompts:
                 yield file_id, prompt, answered_prompts[prompt]
@@ -175,10 +175,12 @@ class HugLM(BaseLM):
         config = {
             "device_map": "auto",
             "use_cache": True,
-            # "attn_implementation": "flash_attention_2",
             "cache_dir": ".cache",
             **model_kwargs
         }
+
+        if torch.cuda.is_available():
+            config["attn_implementation"] = "flash_attention_2"
 
         # todo: try adding some Seq2SeqLM models because GPT4 said it fits better
         match backend:
