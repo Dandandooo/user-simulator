@@ -203,16 +203,6 @@ class HugLM(BaseLM):
         decoded = self.tokenizer.decode(result[0], skip_special_tokens=True).removeprefix(prompt).strip()
         return decoded
 
-    # This is an alternative to "answer_folder" that batches up the prompts towards the LLM.
-    # Be careful with max memory you can allocate to the model, as this can cause problems.
-    def answer_folder_many(self, folder: list[tuple[str, str]]) -> list[dict[str, str]]:
-        prompts: list[str] = [prompt for prompt, _ in folder]
-        return [{
-            "prompt": prompt,
-            "answer": answer,
-            "response": response,
-            } for response, (prompt, answer) in zip(self.answer(prompts), folder)]
-
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
