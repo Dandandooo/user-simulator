@@ -4,7 +4,7 @@ from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
 from openai import AzureOpenAI, RateLimitError
 import ollama
-from datasets import DatasetDict, load_dataset
+from datasets import Dataset, DatasetDict, load_dataset
 import time
 
 from tqdm import tqdm
@@ -236,13 +236,16 @@ class LoraLM(HugLM):
 
         self.data.load(dataset_name)
 
+        def format_func(data: Dataset):
+            return [f"### Question: {data['question'][i]}\n ### Answer: {data['answer'][i]}" for i in range(len(data))]
+
         self.trainer = SFTTrainer(
             model=self.model,
             train_dataset=self.data[dataset_name]["train"],
             eval_dataset=self.data[dataset_name]["validation"],
             tokenizer=self.tokenizer,
             peft_config=self.lora_config,
-            formatting_func=lambda x: {"prompt": x["prompt"], "completion": x["answer"]},
+            formatting_func=format_func,
             args=self.args,
         )
 
