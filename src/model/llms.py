@@ -33,7 +33,7 @@ class LLMDataset:
         return key in self.data
 
     def load(self, dataset_name):
-        self.data[dataset_name] = load_dataset(f"Dandandooo/user-sim/{dataset_name}")
+        self.data[dataset_name] = load_dataset(f"Dandandooo/user-sim", dataset_name)
 
 
 class BaseLM:
@@ -175,7 +175,7 @@ class HugLM(BaseLM):
         config = {
             "device_map": "auto",
             "use_cache": True,
-            "attn_implementation": "flash_attention_2",
+            # "attn_implementation": "flash_attention_2",
             "cache_dir": ".cache",
             **model_kwargs
         }
@@ -242,7 +242,7 @@ class LoraLM(HugLM):
             push_to_hub_model_id=save_model,
         )
 
-        self.data.load(f"Dandandooo/user-sim/{dataset_name}")
+        self.data.load(dataset_name)
 
         self.trainer = SFTTrainer(
             model=self.model,
