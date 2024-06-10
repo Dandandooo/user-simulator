@@ -248,8 +248,8 @@ class LoraLM(HugLM):
 
         self.trainer = SFTTrainer(
             model=self.model,
-            train_dataset=self.data[dataset_name].split()["train"],
-            eval_dataset=self.data[dataset_name].split()["validation"],
+            train_dataset=self.data[dataset_name]["train"],
+            eval_dataset=self.data[dataset_name]["validation"],
             tokenizer=self.tokenizer,
             peft_config=self.lora_config,
             formatting_func=lambda x: {"prompt": x["prompt"], "completion": x["answer"]},
