@@ -13,7 +13,7 @@
 #SBATCH --gpu-bind=closest
 
 #SBATCH --exclusive
-#SBATCH -t 16:00:00
+#SBATCH -t 48:00:00
 
 # Run training script
 /projects/bckf/dphilipov/teach-recreate/llama.bash
