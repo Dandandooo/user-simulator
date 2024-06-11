@@ -236,14 +236,13 @@ class LoraLM(HugLM):
             torch_compile=True,
             push_to_hub=True,
             hub_model_id=save_model,
-            packing=True,
             max_seq_length=self.model.config.max_position_embeddings,
         )
 
         self.data.load(dataset_name)
 
         def format_func(data: Dataset):
-            return [f"### Instruction: {data['prompt'][i]}\n ### Response: {data['answer'][i]}" for i in range(len(data))]
+            return [f"### Instruction: {item['prompt']}\n ### Response: {item['answer']}" for item in data]
 
         self.trainer = SFTTrainer(
             model=self.model,
