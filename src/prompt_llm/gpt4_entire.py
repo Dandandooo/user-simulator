@@ -14,7 +14,7 @@ role = "system"
 digits = re.compile(r"\d+")
 
 
-def run_gpt(folder="llm_prompts_data/turns/entire", system=False):
+def run_gpt(folder="llm_prompts_data/turns/entire", system=True):
     prompts = []
     answers = []
 

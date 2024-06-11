@@ -1,6 +1,7 @@
 from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM, pipeline
 from transformers import AutoTokenizer, BitsAndBytesConfig
 from trl import SFTTrainer, SFTConfig
+from trl.trainer import ConstantLengthDataset
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
 from openai import AzureOpenAI, RateLimitError
 import ollama
@@ -125,12 +126,15 @@ class GPT4LM(BaseLM):
 
         self.role = "user"
 
-    def answer(self, prompt: str) -> str:
+    def answer(self, user_prompt: str, system_prompt: str = None) -> str:
+        messages = [{"role": "user", "content": user_prompt}]
+        if system_prompt is not None:
+            messages = [{"role": "system", "content": system_prompt}, *messages]
         while True:
             try:
                 completion = self.client.chat.completions.create(
                     model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
-                    messages=[{"role": self.role, "content": prompt}],
+                    messages=messages,
                     temperature=0.7,
                     max_tokens=1024,
                     top_p=0.95,
@@ -208,7 +212,7 @@ class HugLM(BaseLM):
 class LoraLM(HugLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it", dataset_name="0_no_move", resume=False):
         save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
-        save_model = f"Dandandooo/user-sim-{model_name.split('/')[-1]}-{dataset_name}"
+        save_model = f"Dandandooo/user-sim--{model_name.split('/')[-1]}--{dataset_name}"
 
         self.lora_config = LoraConfig(
             r=16,
@@ -231,8 +235,9 @@ class LoraLM(HugLM):
             resume_from_checkpoint=save_model if resume else None,
             torch_compile=True,
             push_to_hub=True,
-            push_to_hub_model_id=save_model,
+            hub_model_id=save_model,
             packing=True,
+            max_seq_length=self.model.config.max_position_embeddings,
         )
 
         self.data.load(dataset_name)
