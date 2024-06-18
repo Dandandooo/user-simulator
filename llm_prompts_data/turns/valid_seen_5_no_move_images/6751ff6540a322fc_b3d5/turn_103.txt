@@ -1,0 +1,438 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Cook 5 slice(s) of Potato and serve on a Plate.
+COMMANDER: <observe>
+DRIVER: hello <<Greetings/Salutations>>
+<time 43.91407227516174>
+COMMANDER: Cok a potato on the pan <<Instruction>>
+DRIVER: <observe>
+<time 133.36076307296753>
+COMMANDER: Cook* <<Instruction>>
+DRIVER: <observe>
+<time 138.25800800323486>
+COMMANDER: <observe>
+DRIVER: where is the potato <<RequestForObjectLocationAndOtherDetails>>
+<time 215.63192653656006>
+COMMANDER: It's already on the pan, just turn on the stove <<InformationOnObjectDetails,Instruction>>
+DRIVER: <observe>
+<time 219.62064456939697>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: Hi what to do today? <<Greetings/Salutations,RequestForInstruction>>
+<time 173.18151760101318>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+<time 55.034754037857056>
+COMMANDER: <observe>
+DRIVER: what's the task <<RequestForInstruction>>
+<time 64.68646836280823>
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+<time 67.07393741607666>
+COMMANDER: make 2 cups coffee plz <<Instruction>>
+DRIVER: <observe>
+<time 70.91391277313232>
+COMMANDER: <observe>
+DRIVER: where is the cup <<RequestForObjectLocationAndOtherDetails>>
+<time 86.80804872512817>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: What should I do today> <<RequestForInstruction>>
+<time 39.44997429847717>
+COMMANDER: <observe>
+DRIVER: hello? <<Greetings/Salutations>>
+<time 88.54915928840637>
+COMMANDER: Make a slice of tomato <<Instruction>>
+DRIVER: <observe>
+<time 112.15680193901062>
+COMMANDER: <observe>
+DRIVER: <pickup Vase>
+<time 146.84844398498535>
+COMMANDER: <observe>
+DRIVER: <putdown Stool>
+<time 154.24587059020996>
+COMMANDER: <observe>
+DRIVER: <pickup ButterKnife>
+<time 163.27493906021118>
+COMMANDER: The tomato is to the right of the brown shelf <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 165.38867568969727>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: hello <<Greetings/Salutations>>
+<time 14.946851015090942>
+COMMANDER: <observe>
+DRIVER: what shoud I do <<RequestForInstruction>>
+<time 19.489063501358032>
+COMMANDER: take the bread from the table behind you <<Instruction>>
+DRIVER: <observe>
+<time 70.66628360748291>
+COMMANDER: behind <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 109.47728395462036>
+COMMANDER: wait <<Instruction>>
+DRIVER: <observe>
+<time 121.4086606502533>
+COMMANDER response:
+Instruction
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: hello, what is my task today? <<Greetings/Salutations,RequestForInstruction>>
+<time 23.50224280357361>
+COMMANDER: Hello! We are going to prepare breakfast. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+<time 33.523505210876465>
+COMMANDER: First, a cup of coffee please <<Instruction>>
+DRIVER: <observe>
+<time 40.550925731658936>
+COMMANDER: tHE MUG IS IN THE TRASHCAN BEHIND YOU <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 55.75311636924744>
+COMMANDER: <observe>
+DRIVER: coffee mug <<RequestForObjectLocationAndOtherDetails>>
+<time 57.257102489471436>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 70.93485140800476>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 75.21168303489685>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 77.3434624671936>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+<time 84.93703126907349>
+COMMANDER: <observe>
+DRIVER: <toggle off CoffeeMachine>
+<time 89.41377782821655>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+<time 91.46842789649963>
+COMMANDER: Great. Everything needs to be placed on the dining table when completed. <<FeedbackPositive,Instruction>>
+DRIVER: <observe>
+<time 93.62404704093933>
+COMMANDER: <observe>
+DRIVER: one coffee <<RequestOtherInfo>>
+<time 95.02786135673523>
+COMMANDER: Yes please <<Affirm>>
+DRIVER: <observe>
+<time 100.18333697319031>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 100.65218186378479>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 103.56173539161682>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 112.08901023864746>
+COMMANDER: <observe>
+DRIVER: did it complete? <<Confirm>>
+<time 119.87225389480591>
+COMMANDER: Yup! <<Affirm>>
+DRIVER: <observe>
+<time 124.48836302757263>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 125.12263488769531>
+COMMANDER: <observe>
+DRIVER: next plz <<RequestMore>>
+<time 133.7286069393158>
+COMMANDER: Next place make a sandwich <<Instruction>>
+DRIVER: <observe>
+<time 135.0415906906128>
+COMMANDER: kNIFE IS IN THE FRIDGE <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 143.6040177345276>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 151.2915165424347>
+COMMANDER: Ugh... so sorry about the CAPS <<MiscOther>>
+DRIVER: <observe>
+<time 151.6264100074768>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 164.05373001098633>
+COMMANDER: Bread needs to be toasted <<Instruction>>
+DRIVER: <observe>
+<time 168.72216391563416>
+COMMANDER: <observe>
+DRIVER: its cool it woke me up lol <<MiscOther>>
+<time 172.41427397727966>
+COMMANDER: <observe>
+DRIVER: <pickup ButterKnife>
+<time 176.67287516593933>
+COMMANDER: lol <<MiscOther>>
+DRIVER: <observe>
+<time 177.02670693397522>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+<time 180.02947616577148>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 182.19604754447937>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 184.3847460746765>
+COMMANDER: <observe>
+DRIVER: <putdown Toaster>
+<time 187.1058909893036>
+COMMANDER: <observe>
+DRIVER: <toggle on Toaster>
+<time 192.02685117721558>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 194.66345763206482>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 196.830064535141>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 199.11236691474915>
+COMMANDER: <observe>
+DRIVER: <putdown Toaster>
+<time 201.51523208618164>
+COMMANDER: Nice work. You will also need 1 slice of lettuce <<FeedbackPositive,Instruction>>
+DRIVER: <observe>
+<time 203.43771934509277>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 203.98269867897034>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 213.1835594177246>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 221.18735194206238>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 231.07966589927673>
+COMMANDER: Also, the sandwich needs to be on a plate, which is in the fridge <<Instruction>>
+DRIVER: <observe>
+<time 238.3272831439972>
+COMMANDER: <observe>
+DRIVER: <pickup ButterKnife>
+<time 239.28828692436218>
+COMMANDER: <observe>
+DRIVER: <slice Lettuce>
+<time 242.07171964645386>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 244.6869740486145>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 247.5730435848236>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 250.98987483978271>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+<time 257.33900451660156>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+<time 259.94818925857544>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+<time 263.9038109779358>
+COMMANDER: ta-da! <<MiscOther>>
+DRIVER: <observe>
+<time 266.44436144828796>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 268.42711210250854>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 271.0106427669525>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+<time 273.74858117103577>
+COMMANDER: Great job :-) <<FeedbackPositive>>
+DRIVER: <observe>
+<time 276.4072816371918>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 276.6653392314911>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+<time 279.3070902824402>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 283.8483693599701>
+COMMANDER: A slice of lettuce is all that's missing <<Instruction>>
+DRIVER: <observe>
+<time 298.47185039520264>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 312.2322359085083>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 314.57379937171936>
+COMMANDER: That might be too big a slice of lettuce <<Instruction>>
+DRIVER: <observe>
+<time 320.4874505996704>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 331.68730878829956>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 334.11271953582764>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 347.0637378692627>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 349.60981965065>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+<time 354.0141181945801>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 357.2913098335266>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 384.1500389575958>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 387.1173424720764>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 389.77692699432373>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 392.90012884140015>
+COMMANDER: Try a smaller slice of lettuce <<Instruction>>
+DRIVER: <observe>
+<time 395.08600521087646>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 395.487761259079>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 400.8575122356415>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 417.30829071998596>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 420.98841881752014>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+<time 423.66888666152954>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 427.6588740348816>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+<time 433.94740319252014>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 437.1996765136719>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 448.604731798172>
+COMMANDER: <observe>
+DRIVER: <pickup ButterKnife>
+<time 451.0223343372345>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+<time 454.4096474647522>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 456.9246542453766>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 459.7538514137268>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 463.3930015563965>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 466.5489892959595>
+COMMANDER: Its a bit annoying because you have to try and find the right size pieces to fit <<Instruction>>
+DRIVER: <observe>
+<time 469.93762946128845>
+COMMANDER: <observe>
+DRIVER: <putdown Toaster>
+<time 477.463458776474>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+<time 480.1895525455475>
+COMMANDER: <observe>
+DRIVER: <putdown Plate>
+<time 489.88905143737793>
+COMMANDER: Nice work! <<FeedbackPositive>>
+DRIVER: <observe>
+<time 492.46851110458374>
+COMMANDER: <observe>
+DRIVER: yes <<Affirm>>
+<time 495.9797456264496>
+COMMANDER: <observe>
+DRIVER: yes <<Affirm>>
+<time 496.8576776981354>
+COMMANDER: <observe>
+DRIVER: yes <<Affirm>>
+<time 497.63322138786316>
+COMMANDER: TASK IS COMPLETE!!!!!!!! <<Acknowledge>>
+DRIVER: <observe>
+<time 497.76522493362427>
+COMMANDER: <observe>
+DRIVER: final <<Acknowledge>>
+<time 498.88981008529663>
+COMMANDER: <observe>
+DRIVER: finally <<Acknowledge>>
+<time 501.93214178085327>
+COMMANDER: lol, great efforts homes! <<FeedbackPositive>>
+DRIVER: <observe>
+<time 507.1941747665405>
+COMMANDER response:

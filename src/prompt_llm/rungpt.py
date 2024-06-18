@@ -17,6 +17,9 @@ if len(sys.argv) > 2:
 else:
     destpath = "llm_prompt_sessions/gpt4_valid/temp/"
 
+if not os.path.exists(destpath):
+    os.mkdir(destpath)
+
 for i, folder in enumerate(sorted(os.listdir(datapath)), start=1):
     # Todo: run with 0, 2, and 5 examples
     if os.path.exists(os.path.join(destpath, folder + "_result.json")):

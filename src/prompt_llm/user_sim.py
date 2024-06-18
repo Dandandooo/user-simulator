@@ -3,7 +3,6 @@ import json
 import random
 import os
 import shutil
-import sys
 
 from tqdm import tqdm
 
@@ -32,6 +31,7 @@ class TurnMaker:
         self.split_dataset = kwargs["split_dataset"]
         self.entire_dataset = kwargs["entire_dataset"]
         self.no_move = kwargs["no_move"]
+        self.image_stamps = kwargs["image_stamps"]
 
         if self.nl_ify:
             self.das = {
@@ -143,6 +143,8 @@ class TurnMaker:
                     return to_ret
             if not (("observe" in driver_action.lower()) and self.no_obs):
                 to_ret += f"{self.driver_name}: {driver_action}{f' <<{driver_das}>>' if self.include_das and driver_das else ''}"
+        if self.image_stamps:
+            to_ret += f"\n<time {turn['timestamp']}>"
         return to_ret
 
     def get_rand_turns(self, task: dict, get_last=True, length=None) -> list[dict]:
@@ -347,6 +349,7 @@ class TurnMaker:
 @click.option("--train", is_flag=True, help="Whether to generate prompts for the training set, not the entire dataset")
 @click.option("--entire_dataset", is_flag=True, help="Whether to generate prompts for the entire dataset. Save path should be a folder for this one.")
 @click.option("--no_move", is_flag=True, help="Whether to not remove the move actions")
+@click.option("--image_stamps", is_flag=True, help="Whether to use image time stamps")
 def main(**kwargs):
     tm = TurnMaker(**kwargs)
     if kwargs["entire_dataset"]:

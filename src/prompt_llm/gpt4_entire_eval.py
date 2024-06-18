@@ -173,7 +173,7 @@ def calc_baseline(results_filename="gpt4_result.json", prev=None, matrix=False) 
         prevtype = get_last_turn_type(result["prompt"])
         if prev is not None and prevtype != prev:
             continue
-        answer = result["answer"]
+        answer = result["answer"].splitlines()[0].strip()
         if answer == "OBSERVE":
             if prevtype != "speak":
                 true_observed += 1

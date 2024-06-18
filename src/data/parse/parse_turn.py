@@ -8,9 +8,6 @@ folders = [
     "teach-dataset/games/valid_unseen",
 ]
 
-# TODO download images dataset
-
-# TODO work on paper!
 
 def convert_dialogue(dialogue_action: dict) -> dict:
     agent = dialogue_action['da_metadata']['agent'].upper()
@@ -28,6 +25,7 @@ def convert_dialogue(dialogue_action: dict) -> dict:
     }
     return action
 
+
 def convert_generic(generic_action: dict, action: str) -> dict:
     agent = {0: "COMMANDER", 1: "DRIVER"}[generic_action['agent_id']]
     act = {
@@ -37,9 +35,11 @@ def convert_generic(generic_action: dict, action: str) -> dict:
         "COMMANDER" if agent == "DRIVER" else "DRIVER": {
             'action': '<observe>',
         },
-        'turn_action': action
+        'turn_action': action,
+        'timestamp': generic_action['time_start']
     }
     return act
+
 
 # Pass in action without the < > tags
 def convert_object(object_action: dict, action: str) -> dict:
@@ -53,9 +53,11 @@ def convert_object(object_action: dict, action: str) -> dict:
         "COMMANDER" if agent == "DRIVER" else "DRIVER": {
             'action': '<observe>',
         },
-        'turn_action': action
+        'turn_action': action,
+        'timestamp': object_action['time_start']
     }
     return act
+
 
 def parse_game(filename: str) -> dict:
     file = json.load(open(filename, 'r'))

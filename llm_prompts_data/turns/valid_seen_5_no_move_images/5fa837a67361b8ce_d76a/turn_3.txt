@@ -1,0 +1,150 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Boil Potato.
+COMMANDER: <observe>
+DRIVER: Hello <<Greetings/Salutations>>
+<time 115.03152799606323>
+COMMANDER: <observe>
+DRIVER: Task? <<RequestForInstruction>>
+<time 119.76805520057678>
+COMMANDER: boil the potato by cooking it in water <<Instruction>>
+DRIVER: <observe>
+<time 139.90631127357483>
+COMMANDER: grab a potato. <<Instruction>>
+DRIVER: <observe>
+<time 148.40449380874634>
+COMMANDER: potato is on the middle table <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 178.21897435188293>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a plate of toast.
+COMMANDER: <observe>
+DRIVER: what is my task <<RequestForInstruction>>
+<time 29.563010692596436>
+COMMANDER: Hi. We are goning to make some toast <<Instruction>>
+DRIVER: <observe>
+<time 47.890204668045044>
+COMMANDER: The knife and bread are on the counter to the left of the stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 78.57787489891052>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+<time 85.39943218231201>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all Newspaper on one Dresser.
+COMMANDER: <observe>
+DRIVER: task <<RequestForInstruction>>
+<time 70.86286282539368>
+COMMANDER: find a newspaper <<Instruction>>
+DRIVER: <observe>
+<time 89.1124837398529>
+COMMANDER: on the sofa <<Instruction>>
+DRIVER: <observe>
+<time 128.1718475818634>
+COMMANDER: <observe>
+DRIVER: <pickup Newspaper>
+<time 132.00278162956238>
+COMMANDER: put on dresser <<Instruction>>
+DRIVER: <observe>
+<time 141.13064527511597>
+COMMANDER: <observe>
+DRIVER: what is adresser <<RequestOtherInfo>>
+<time 168.21256065368652>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Put all RemoteControl on any Tables.
+COMMANDER: <observe>
+DRIVER: what shall I do today? <<RequestForInstruction>>
+<time 84.98753452301025>
+COMMANDER: The remote controls need to be put onto a table. <<Instruction>>
+DRIVER: <observe>
+<time 136.62630701065063>
+COMMANDER: <observe>
+DRIVER: where is the remote? <<RequestForObjectLocationAndOtherDetails>>
+<time 162.61487340927124>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: hi what is my first task? <<Greetings/Salutations,RequestForInstruction>>
+<time 14.694911241531372>
+COMMANDER: We need to prepare coffee in a clean mug <<Instruction>>
+DRIVER: <observe>
+<time 39.06516098976135>
+COMMANDER: <observe>
+DRIVER: okay where is the mug <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+<time 61.73428225517273>
+COMMANDER: Mug is in the bottom cabinet of coffee maker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 127.76752805709839>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+<time 230.10967254638672>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 236.016282081604>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+<time 254.48222422599792>
+COMMANDER: clean the mug <<Instruction>>
+DRIVER: <observe>
+<time 262.8484830856323>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 284.8086094856262>
+COMMANDER response:
+OBSERVE
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Put all Mug in one Cabinet.
+COMMANDER: <observe>
+DRIVER: how can i help today <<RequestForInstruction>>
+<time 76.08517789840698>
+COMMANDER: please could you put my mug away into the cabinet <<Instruction>>
+DRIVER: <observe>
+<time 84.87857246398926>
+COMMANDER: <observe>
+DRIVER: sure, where is the mug <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+<time 102.21743392944336>
+COMMANDER response:

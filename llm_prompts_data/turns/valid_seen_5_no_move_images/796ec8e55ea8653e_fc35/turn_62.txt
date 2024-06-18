@@ -1,0 +1,342 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Serve 2 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+<time 29.155583143234253>
+COMMANDER: slice tomato <<Instruction>>
+DRIVER: <observe>
+<time 94.10222887992859>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+<time 123.3695456981659>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+<time 132.833575963974>
+COMMANDER: it is in the drawyer <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 149.10973834991455>
+COMMANDER: under the stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 151.79544806480408>
+COMMANDER: to the left <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 157.63328742980957>
+COMMANDER: on the bottom <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 161.00773286819458>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: hi, how can i help? <<Greetings/Salutations,RequestForInstruction>>
+<time 14.093603372573853>
+COMMANDER: water my plant please <<Instruction>>
+DRIVER: <observe>
+<time 22.0704505443573>
+COMMANDER: <observe>
+DRIVER: sure <<Acknowledge>>
+<time 27.66969919204712>
+COMMANDER: <observe>
+DRIVER: is there a cup? <<Confirm>>
+<time 64.29390406608582>
+COMMANDER: check to the elft of stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 80.90390992164612>
+COMMANDER: left <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 84.4049060344696>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: First task? <<RequestForInstruction>>
+<time 47.75974202156067>
+COMMANDER: Hi. Please water the plant. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+<time 55.67414450645447>
+COMMANDER: By the sink. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 82.74085521697998>
+COMMANDER: <observe>
+DRIVER: where is the bowl to water it? <<RequestForObjectLocationAndOtherDetails>>
+<time 145.58753514289856>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 151.9909155368805>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 155.73117589950562>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: what do i do <<RequestForInstruction>>
+<time 73.94984006881714>
+COMMANDER: Hello, first, slice the bread <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+<time 78.23844790458679>
+COMMANDER: Bread and knife are in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 101.89867544174194>
+COMMANDER: <observe>
+DRIVER: knife?? <<RequestForObjectLocationAndOtherDetails>>
+<time 105.45932245254517>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 137.70894289016724>
+COMMANDER: In the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 158.32269930839539>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+<time 226.7799985408783>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+<time 233.20005249977112>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Clean all the Cloths.
+COMMANDER: <observe>
+DRIVER: whats first? <<RequestForInstruction>>
+<time 37.363553285598755>
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+<time 84.47834467887878>
+COMMANDER: we need to clean a dirty cloth <<Instruction>>
+DRIVER: <observe>
+<time 92.82178378105164>
+COMMANDER: <observe>
+DRIVER: where is the cloth? <<RequestForObjectLocationAndOtherDetails>>
+<time 108.9793803691864>
+COMMANDER response:
+InformationOnObjectDetails
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Prepare breakfast.
+COMMANDER: we need to prepare cofee first please <<Instruction>>
+DRIVER: <observe>
+<time 88.49508857727051>
+COMMANDER: in a mug <<Instruction>>
+DRIVER: <observe>
+<time 90.76775527000427>
+COMMANDER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
+<time 91.07868194580078>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+<time 95.06777572631836>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 109.15776991844177>
+COMMANDER: by the stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 109.69112133979797>
+COMMANDER: there is one <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 111.27197170257568>
+COMMANDER: it may be dirty though <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 121.9218418598175>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+<time 126.31488990783691>
+COMMANDER: please wash if necessary <<Instruction>>
+DRIVER: <observe>
+<time 131.6093237400055>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 136.5262200832367>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+<time 139.5091097354889>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 142.06744146347046>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 145.70277547836304>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 149.1313054561615>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 151.53254532814026>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+<time 154.8170986175537>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+<time 158.46128296852112>
+COMMANDER: the coffee maker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 159.97532296180725>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+<time 162.50270175933838>
+COMMANDER: is on the table <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 163.51624536514282>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 166.89194297790527>
+COMMANDER: <observe>
+DRIVER: <pour Sink>
+<time 170.0848045349121>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+<time 188.00164675712585>
+COMMANDER: <observe>
+DRIVER: <toggle off CoffeeMachine>
+<time 207.27881050109863>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+<time 210.63150691986084>
+COMMANDER: <observe>
+DRIVER: ok. Coffee has been made <<Acknowledge>>
+<time 219.35360169410706>
+COMMANDER: thanks <<FeedbackPositive>>
+DRIVER: <observe>
+<time 224.29246830940247>
+COMMANDER: please get the lettuce and potato <<Instruction>>
+DRIVER: <observe>
+<time 230.47543001174927>
+COMMANDER: from the fridge <<Instruction>>
+DRIVER: <observe>
+<time 234.46683597564697>
+COMMANDER: we need those <<Instruction>>
+DRIVER: <observe>
+<time 248.0324637889862>
+COMMANDER: the lettuce can go to the table <<Instruction>>
+DRIVER: <observe>
+<time 260.91631412506104>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+<time 261.2095477581024>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 266.38828110694885>
+COMMANDER: the potato can go to the stove <<Instruction>>
+DRIVER: <observe>
+<time 266.8705139160156>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+<time 270.5196433067322>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 285.0399558544159>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+<time 297.80867075920105>
+COMMANDER: place the potato in the pan please <<Instruction>>
+DRIVER: <observe>
+<time 305.0179696083069>
+COMMANDER: <observe>
+DRIVER: <putdown Pan>
+<time 311.4092779159546>
+COMMANDER: and then turn on the burner <<Instruction>>
+DRIVER: <observe>
+<time 312.3022949695587>
+COMMANDER: <observe>
+DRIVER: <toggle off StoveKnob>
+<time 319.06122064590454>
+COMMANDER: <observe>
+DRIVER: <toggle on StoveKnob>
+<time 322.58009099960327>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+<time 329.97623586654663>
+COMMANDER: now take the cooked potato to the table pelase <<Instruction>>
+DRIVER: <observe>
+<time 331.3742115497589>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 350.89427733421326>
+COMMANDER: now please get the tomato by the fridge <<Instruction>>
+DRIVER: <observe>
+<time 352.2077419757843>
+COMMANDER: on the left <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 357.63938069343567>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+<time 376.07689452171326>
+COMMANDER: and take it to the table <<Instruction>>
+DRIVER: <observe>
+<time 381.2780797481537>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 390.0479636192322>
+COMMANDER: please slice all <<Instruction>>
+DRIVER: <observe>
+<time 393.39228224754333>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 394.19073390960693>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+<time 397.6542763710022>
+COMMANDER: <observe>
+DRIVER: <slice Potato>
+<time 400.67907333374023>
+COMMANDER: <observe>
+DRIVER: <slice Lettuce>
+<time 404.511022567749>
+COMMANDER: now 1 of each slice on the plate <<Instruction>>
+DRIVER: <observe>
+<time 417.19751477241516>
+COMMANDER: please <<MiscOther>>
+DRIVER: <observe>
+<time 418.5257239341736>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 419.5282006263733>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 423.5538446903229>
+COMMANDER: we need 4 in total <<Instruction>>
+DRIVER: <observe>
+<time 448.77505826950073>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 449.4664695262909>
+COMMANDER response:

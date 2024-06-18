@@ -1,0 +1,211 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Put all AlarmClock on any Bed.
+COMMANDER: <observe>
+DRIVER: how can i help you? <<RequestForInstruction>>
+<time 19.509170293807983>
+COMMANDER: can you put the alarm on my bed please <<Instruction>>
+DRIVER: <observe>
+<time 27.571065187454224>
+COMMANDER: it is on the set of drawers by the window <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 51.17206025123596>
+COMMANDER: <observe>
+DRIVER: <pickup AlarmClock>
+<time 59.94086790084839>
+COMMANDER: <observe>
+DRIVER: <putdown Bed>
+<time 69.68887972831726>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Water the plant.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+<time 137.49002718925476>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+<time 146.4335639476776>
+COMMANDER: our goal today is to water the plant <<Instruction>>
+DRIVER: <observe>
+<time 153.4372386932373>
+COMMANDER: <observe>
+DRIVER: what should i do? <<RequestForInstruction>>
+<time 154.15662670135498>
+COMMANDER: <observe>
+DRIVER: okay <<Acknowledge>>
+<time 164.91928505897522>
+COMMANDER: if you go to the sink do you see a cup or a bowl or anything <<Instruction>>
+DRIVER: <observe>
+<time 174.53660416603088>
+COMMANDER: ooh behind the statue <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 210.5848593711853>
+COMMANDER: on the counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 215.99703788757324>
+COMMANDER: there's a cup there <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 219.7184693813324>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all Newspaper on any Sofa.
+
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: find the mug on the table behind the wok <<Instruction>>
+DRIVER: <observe>
+<time 57.680315017700195>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+<time 57.748348236083984>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 70.67952537536621>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: Hi, what are my directions? <<Greetings/Salutations,RequestForInstruction>>
+<time 20.3583242893219>
+COMMANDER: can you make me a sandwich please <<Instruction>>
+DRIVER: <observe>
+<time 27.121204614639282>
+COMMANDER: 2slices of toast and 2 slices of tomato <<Instruction>>
+DRIVER: <observe>
+<time 35.20733094215393>
+COMMANDER: <observe>
+DRIVER: <pickup ButterKnife>
+<time 45.07873725891113>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+<time 52.83886504173279>
+COMMANDER response:
+OBSERVE
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Put all SaltShaker in one Cabinet.
+COMMANDER: <observe>
+DRIVER: what do I need to do? <<RequestForInstruction>>
+<time 71.79370665550232>
+COMMANDER: the saltshaker needs to be put into a single cabinet <<Instruction>>
+DRIVER: <observe>
+<time 86.48526453971863>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+<time 112.46682286262512>
+COMMANDER: <observe>
+DRIVER: Is any cabinet fine? <<RequestOtherInfo>>
+<time 153.31472730636597>
+COMMANDER: i think so <<InformationOther>>
+DRIVER: <observe>
+<time 168.05473017692566>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 169.53336787223816>
+COMMANDER: <observe>
+DRIVER: <open Drawer>
+<time 175.3034040927887>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+<time 179.5367305278778>
+COMMANDER: <observe>
+DRIVER: <putdown Drawer>
+<time 183.49931120872498>
+COMMANDER: <observe>
+DRIVER: <close Drawer>
+<time 186.65311360359192>
+COMMANDER: <observe>
+DRIVER: anything else? <<RequestForInstruction>>
+<time 197.1812674999237>
+COMMANDER: was that a drawer you put it in? <<Confirm>>
+DRIVER: <observe>
+<time 204.75697016716003>
+COMMANDER: try a cabinet and not a drawer please <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 219.7152078151703>
+COMMANDER: <observe>
+DRIVER: yes <<Affirm>>
+<time 221.16919493675232>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+<time 223.98269510269165>
+COMMANDER: <observe>
+DRIVER: <open Drawer>
+<time 233.44523167610168>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+<time 237.82851243019104>
+COMMANDER: <observe>
+DRIVER: <close Drawer>
+<time 240.2720775604248>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+<time 267.3338580131531>
+COMMANDER: <observe>
+DRIVER: <putdown Cabinet>
+<time 271.9364001750946>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+<time 283.7949254512787>
+COMMANDER: <observe>
+DRIVER: all set? <<Confirm>>
+<time 289.5992274284363>
+COMMANDER: no, says it needs a single cabinet <<InformationOther>>
+DRIVER: <observe>
+<time 301.57244896888733>
+COMMANDER: maybe because that one has two doors? <<InformationOther>>
+DRIVER: <observe>
+<time 308.45479941368103>
+COMMANDER: <observe>
+DRIVER: ok, I'll try the others <<Acknowledge>>
+<time 312.860985994339>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+<time 315.645409822464>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+<time 320.4690821170807>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+<time 324.8354961872101>
+COMMANDER response:

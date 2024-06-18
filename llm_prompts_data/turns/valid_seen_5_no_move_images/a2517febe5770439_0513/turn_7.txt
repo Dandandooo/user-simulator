@@ -1,0 +1,159 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: hello what can i do today <<Greetings/Salutations,RequestForInstruction>>
+<time 52.37822437286377>
+COMMANDER: <observe>
+DRIVER: anyone there <<Confirm>>
+<time 99.788649559021>
+COMMANDER: make a salad. <<Instruction>>
+DRIVER: <observe>
+<time 104.62319684028625>
+COMMANDER: <observe>
+DRIVER: what are the steps <<RequestMore>>
+<time 120.09261107444763>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 127.3294038772583>
+COMMANDER: using the lettuce, the lettuce needs to be sliced <<Instruction>>
+DRIVER: <observe>
+<time 134.63693833351135>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+<time 144.9252450466156>
+COMMANDER: <observe>
+DRIVER: <slice Potato>
+<time 148.15435576438904>
+COMMANDER: <observe>
+DRIVER: <slice Lettuce>
+<time 163.60626029968262>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: First task? <<RequestForInstruction>>
+<time 46.93052387237549>
+COMMANDER: Hello. First let's retrieve the lettuce from the fridge and slice it. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+<time 115.75822329521179>
+COMMANDER: The knife is on the 2nd shelf of the book shelf behind you. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 138.01660346984863>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 156.6956696510315>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+<time 178.0248990058899>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 193.44513082504272>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 197.18569350242615>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: Good day! <<Greetings/Salutations>>
+DRIVER: <observe>
+<time 18.534610271453857>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+<time 18.545522451400757>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+<time 26.269511461257935>
+COMMANDER: <observe>
+DRIVER: what should i do today <<RequestForInstruction>>
+<time 34.9909245967865>
+COMMANDER: <observe>
+DRIVER: ? <<Confirm>>
+<time 36.44328474998474>
+COMMANDER: we need to make a salad <<Instruction>>
+DRIVER: <observe>
+<time 45.65044641494751>
+COMMANDER: Find a knife <<Instruction>>
+DRIVER: <observe>
+<time 50.83411884307861>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a plate of toast.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+<time 21.93780255317688>
+COMMANDER: <observe>
+DRIVER: Hello. What is my first task? <<Greetings/Salutations,RequestForInstruction>>
+<time 22.88660430908203>
+COMMANDER: make one slice of toast <<Instruction>>
+DRIVER: <observe>
+<time 32.172250270843506>
+COMMANDER response:
+InformationOnObjectDetails
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Put all Pillow on any Sofa.
+COMMANDER: please can you put the pillow in the sofa <<Instruction>>
+DRIVER: <observe>
+<time 25.670873641967773>
+COMMANDER: <observe>
+DRIVER: where is the pillow? <<RequestForObjectLocationAndOtherDetails>>
+<time 36.32040882110596>
+COMMANDER: one is by the shelf <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 46.44459390640259>
+COMMANDER: one is on the desk <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 55.45242953300476>
+COMMANDER: <observe>
+DRIVER: <pickup Pillow>
+<time 82.919686794281>
+COMMANDER: <observe>
+DRIVER: <putdown Sofa>
+<time 96.89644837379456>
+COMMANDER: <observe>
+DRIVER: <pickup Pillow>
+<time 128.0697956085205>
+COMMANDER response:

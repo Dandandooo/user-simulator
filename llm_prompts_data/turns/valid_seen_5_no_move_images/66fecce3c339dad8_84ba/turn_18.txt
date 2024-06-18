@@ -1,0 +1,158 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Put all SaltShaker on any DiningTable.
+COMMANDER: <observe>
+DRIVER: Hi what are my directions? <<Greetings/Salutations,RequestForInstruction>>
+<time 24.90302848815918>
+COMMANDER: i need some salt shakers set up on the dining table <<Instruction>>
+DRIVER: <observe>
+<time 42.39561605453491>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+<time 61.799009799957275>
+COMMANDER: one should be next to the coffee machine <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 63.012221336364746>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Water the plant.
+COMMANDER: Hello, I am here! <<Greetings/Salutations>>
+DRIVER: <observe>
+<time 56.41421389579773>
+COMMANDER response:
+RequestForInstruction
+
+Example :
+Goal: Serve 1 slice(s) of Tomato in a Bowl.
+
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Cook 3 slice(s) of Potato and serve on a Plate.
+COMMANDER: <observe>
+DRIVER: how can I help <<RequestForInstruction>>
+<time 44.49702501296997>
+COMMANDER: I want you to cook three slices of potato for me <<Instruction>>
+DRIVER: <observe>
+<time 66.5416407585144>
+COMMANDER: <observe>
+DRIVER: Where can I find the knife <<RequestForObjectLocationAndOtherDetails>>
+<time 131.6391417980194>
+COMMANDER: look for the knife in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 139.1574912071228>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+<time 148.61074209213257>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 153.59839367866516>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+<time 157.566960811615>
+COMMANDER: <observe>
+DRIVER: <slice Potato>
+<time 164.44215774536133>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 173.10150456428528>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Serve 2 slice(s) of Tomato on a Plate.
+
+COMMANDER response:
+Greetings/Salutations
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Clean all the Pots.
+COMMANDER: <observe>
+DRIVER: Hello, what shall I   be ing today? <<Greetings/Salutations,RequestForInstruction>>
+<time 46.28824067115784>
+COMMANDER: <observe>
+DRIVER: *doing <<RequestForInstruction>>
+<time 53.26736903190613>
+COMMANDER: Please clean the dirty pot. <<Instruction>>
+DRIVER: <observe>
+<time 53.60588026046753>
+COMMANDER: <observe>
+DRIVER: Which one shall I   clean? <<RequestForInstruction>>
+<time 76.08571195602417>
+COMMANDER: <observe>
+DRIVER: The one from the table or the stove? <<AlternateQuestions>>
+<time 87.76729893684387>
+COMMANDER: It is on the counter beside the coffee pot <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 116.03399562835693>
+COMMANDER: coffee maker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 125.5663652420044>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+<time 152.36602139472961>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 174.78881072998047>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+<time 179.84111714363098>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 185.10677814483643>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 187.28471207618713>
+COMMANDER: <observe>
+DRIVER: <pickup Apple>
+<time 190.54961347579956>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 197.01180505752563>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+<time 199.90010142326355>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 202.29333400726318>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+<time 205.164204120636>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+<time 217.8096969127655>
+COMMANDER response:

@@ -1,0 +1,159 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: what should i do? <<RequestForInstruction>>
+<time 14.472457647323608>
+COMMANDER: <observe>
+DRIVER: <pickup Spatula>
+<time 43.339192628860474>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+<time 46.897626638412476>
+COMMANDER: hello two toast please <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+<time 51.3872447013855>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 52.0365993976593>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+<time 58.367637157440186>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all Fork in any Sink.
+COMMANDER: <observe>
+DRIVER: how may i help? <<RequestForInstruction>>
+<time 49.98701357841492>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: Hello, what is my task? <<Greetings/Salutations,RequestForInstruction>>
+<time 136.7729935646057>
+COMMANDER: make a slice of lettuce <<Instruction>>
+DRIVER: <observe>
+<time 159.0920569896698>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 171.24185967445374>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 205.81157660484314>
+COMMANDER: <observe>
+DRIVER: where is knife please <<RequestForObjectLocationAndOtherDetails>>
+<time 209.89834260940552>
+COMMANDER response:
+Acknowledge
+
+Example :
+Goal: Put all Newspaper on one SideTable.
+COMMANDER: <observe>
+DRIVER: Hello <<Greetings/Salutations>>
+<time 17.93008303642273>
+COMMANDER: Hi! We need to find three different newspapers and put them on a single side table. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+<time 28.12336015701294>
+COMMANDER: <observe>
+DRIVER: What can I help with? <<RequestForInstruction>>
+<time 30.210877895355225>
+COMMANDER: there is one on the couch <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 42.60543608665466>
+COMMANDER: <observe>
+DRIVER: <pickup Newspaper>
+<time 43.231290102005005>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Cook 2 slice(s) of Potato and serve on a Plate.
+COMMANDER: <observe>
+DRIVER: how can I help you? <<RequestForInstruction>>
+<time 105.57980346679688>
+COMMANDER response:
+Instruction
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Put all DishSponge in any Sink.
+COMMANDER: <observe>
+DRIVER: hello. How can I help? <<Greetings/Salutations,RequestForInstruction>>
+<time 12.930315494537354>
+COMMANDER: could you please place all the dish sponges in the sink <<Instruction>>
+DRIVER: <observe>
+<time 17.81756353378296>
+COMMANDER: there is one on the counter near the bread and tomato <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 35.546876192092896>
+COMMANDER: and a second on the stool by the counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 48.61597299575806>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+<time 64.45176482200623>
+COMMANDER: <observe>
+DRIVER: <pickup Apple>
+<time 71.10250043869019>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 73.18202686309814>
+COMMANDER: <observe>
+DRIVER: <pickup Statue>
+<time 74.92155432701111>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 76.79610824584961>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+<time 79.43588876724243>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 81.98574471473694>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 84.46542382240295>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 86.65003681182861>
+COMMANDER: <observe>
+DRIVER: <pickup DishSponge>
+<time 102.32321190834045>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+<time 110.29626107215881>
+COMMANDER response:

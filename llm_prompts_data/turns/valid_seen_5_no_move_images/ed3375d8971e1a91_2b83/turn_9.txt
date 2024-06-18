@@ -1,0 +1,174 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Clean all the Cloths.
+COMMANDER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
+<time 18.610546350479126>
+COMMANDER: please clean the cloth <<Instruction>>
+DRIVER: <observe>
+<time 35.04946303367615>
+COMMANDER: <observe>
+DRIVER: Okay <<Acknowledge>>
+<time 51.51033020019531>
+COMMANDER: <observe>
+DRIVER: <pickup SprayBottle>
+<time 63.19035243988037>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Cook 1 slice(s) of Potato and serve on a Plate.
+COMMANDER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
+<time 94.40575838088989>
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+<time 101.85055685043335>
+COMMANDER: cook 1 slice of potato <<Instruction>>
+DRIVER: <observe>
+<time 111.41691088676453>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+<time 123.53357791900635>
+COMMANDER: <observe>
+DRIVER: Where is it? <<RequestForObjectLocationAndOtherDetails>>
+<time 130.9885971546173>
+COMMANDER: potato is near the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 135.25816798210144>
+COMMANDER: <observe>
+DRIVER: <pickup Apple>
+<time 138.07344031333923>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 141.6987166404724>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: hi, what should i do today <<Greetings/Salutations,RequestForInstruction>>
+<time 19.991506814956665>
+COMMANDER: <observe>
+DRIVER: ? <<MiscOther>>
+<time 21.818273305892944>
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+<time 35.68369674682617>
+COMMANDER: slice a potato <<Instruction>>
+DRIVER: <observe>
+<time 45.43724012374878>
+COMMANDER: <observe>
+DRIVER: knife please? <<RequestForObjectLocationAndOtherDetails>>
+<time 63.70459008216858>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: how may I help you today? <<RequestForInstruction>>
+<time 19.365488052368164>
+COMMANDER: i need my plant watered <<Instruction>>
+DRIVER: <observe>
+<time 22.58757519721985>
+COMMANDER: <observe>
+DRIVER: sure thing, I found a pot with water <<Acknowledge,Acknowledge>>
+<time 47.112494230270386>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+<time 50.64397644996643>
+COMMANDER: great, that will work <<FeedbackPositive,InformationOther>>
+DRIVER: <observe>
+<time 54.18433618545532>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: what can i do today <<RequestForInstruction>>
+<time 37.5429482460022>
+COMMANDER: Hi! Can you make a salad please? <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+<time 46.98600125312805>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+<time 63.575828313827515>
+COMMANDER: There is a knife in the sink. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 69.32802963256836>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 85.1819212436676>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 88.77073860168457>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+<time 93.56801795959473>
+COMMANDER response:
+Instruction
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Put all Watch on any ArmChair.
+COMMANDER: <observe>
+DRIVER: how can I help <<RequestForInstruction>>
+<time 11.148859977722168>
+COMMANDER: there is a watch on the sofa. please place it on an armchair. There is another watch that needs to be put onto the same armchair <<InformationOnObjectDetails,Instruction>>
+DRIVER: <observe>
+<time 93.08261132240295>
+COMMANDER: <observe>
+DRIVER: <pickup Watch>
+<time 113.14867448806763>
+COMMANDER: <observe>
+DRIVER: <putdown ArmChair>
+<time 120.07138109207153>
+COMMANDER: <observe>
+DRIVER: <pickup Watch>
+<time 122.61382937431335>
+COMMANDER: <observe>
+DRIVER: <putdown ArmChair>
+<time 125.47442865371704>
+COMMANDER: <observe>
+DRIVER: is that all <<Confirm>>
+<time 129.54248356819153>
+COMMANDER: there is another watch behind the television <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 137.46274065971375>
+COMMANDER: <observe>
+DRIVER: <pickup Watch>
+<time 151.5449230670929>
+COMMANDER response:

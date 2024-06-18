@@ -1,0 +1,162 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Clean all the Cloths.
+COMMANDER: <observe>
+DRIVER: How can I help? <<RequestForInstruction>>
+<time 16.574021816253662>
+COMMANDER: please can you rinse the dirty cloth in teh water? <<Instruction>>
+DRIVER: <observe>
+<time 33.2568473815918>
+COMMANDER: it is by the bathtub <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 54.821447134017944>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all Spatula in any Cabinet.
+COMMANDER: <observe>
+DRIVER: whats first? <<RequestForInstruction>>
+<time 14.324953556060791>
+COMMANDER: Hi. We need to grab the spatula behind you on the counter to the right of the fridge first <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+<time 52.61439871788025>
+COMMANDER: Hello? <<Greetings/Salutations>>
+DRIVER: <observe>
+<time 114.40957379341125>
+COMMANDER: Are you still there? <<Confirm>>
+DRIVER: <observe>
+<time 172.94360494613647>
+COMMANDER: <observe>
+DRIVER: yes <<Affirm>>
+<time 189.52279996871948>
+COMMANDER: Just checking) <<InformationOther>>
+DRIVER: <observe>
+<time 205.8813247680664>
+COMMANDER: <observe>
+DRIVER: <pickup Spatula>
+<time 211.67271375656128>
+COMMANDER: <observe>
+DRIVER: next <<RequestForInstruction>>
+<time 217.9393105506897>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all Watch on one Ottoman.
+COMMANDER: could you put the watch onto the single ottoman <<Instruction>>
+DRIVER: <observe>
+<time 190.3476116657257>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all Fork in any Sink.
+COMMANDER: <observe>
+DRIVER: how may i help? <<RequestForInstruction>>
+<time 49.98701357841492>
+COMMANDER: So we need to put all the forks in the sinks <<Instruction>>
+DRIVER: <observe>
+<time 61.46299362182617>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+<time 83.96637845039368>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+<time 87.2804765701294>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 90.12154746055603>
+COMMANDER: <observe>
+DRIVER: <pickup SaltShaker>
+<time 93.57426571846008>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 97.30320858955383>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 101.76608490943909>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+<time 104.33821725845337>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+<time 22.87294912338257>
+COMMANDER: <observe>
+DRIVER: what should I do? <<RequestForInstruction>>
+<time 38.709197998046875>
+COMMANDER: make a slice of tomato <<Instruction>>
+DRIVER: <observe>
+<time 51.35877275466919>
+COMMANDER: tomato is on the stool beside the stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 66.48141574859619>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+<time 82.87448334693909>
+COMMANDER: knife is inside the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 90.77601671218872>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+<time 96.52175116539001>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+<time 100.1670503616333>
+COMMANDER: place a slice of it onto a plate <<Instruction>>
+DRIVER: <observe>
+<time 108.66781616210938>
+COMMANDER response:
+InformationOnObjectDetails
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Clean all the Plates.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+<time 53.90059161186218>
+COMMANDER: wash 2 dirty plates <<Instruction>>
+DRIVER: <observe>
+<time 56.509246826171875>
+COMMANDER: <observe>
+DRIVER: what should i do today' <<RequestForInstruction>>
+<time 63.04638338088989>
+COMMANDER: one is on white round table <<InformationOnObjectDetails>>
+DRIVER: <observe>
+<time 65.59568428993225>
+COMMANDER response:
