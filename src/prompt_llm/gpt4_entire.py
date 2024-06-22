@@ -60,7 +60,7 @@ def run_gpt(folder="llm_prompts_data/turns/entire", system=True):
     json.dump(results, open("gpt4_result.json", 'w'), indent=4)
 
 
-def parse_images(content: str, folder_name: str, targetobject=True, debug=True):
+def parse_images(content: str, folder_name: str, targetobject=True, debug=False):
     timestamp_re = re.compile(r"<time (?P<timestamp>[1-9.]+)>")
     split_content = timestamp_re.split(content)
     timestamps = timestamp_re.finditer(content)
@@ -69,13 +69,6 @@ def parse_images(content: str, folder_name: str, targetobject=True, debug=True):
 
     message_content = []
     for content, time_regex in it.zip_longest(split_content, timestamps):
-        message_content.append({
-            "type": "text",
-            "text": content,
-        })
-
-        if time_regex is None:
-            break
 
         timestamp = time_regex.group("timestamp")
 
@@ -133,6 +126,11 @@ def parse_images(content: str, folder_name: str, targetobject=True, debug=True):
                     "url": f"data:image/jpeg;base64,{base64.b64encode(targetobject_encoded).decode('utf-8')}",
                 },
             })
+
+        message_content.append({
+            "type": "text",
+            "text": content,
+        })
 
     return message_content
 

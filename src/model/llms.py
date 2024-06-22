@@ -177,7 +177,7 @@ class HugLM(BaseLM):
 
         # Autoconfig does not map devices correctly
         config = {
-            "device_map": "auto",
+            # "device_map": "auto",
             "use_cache": True,
             "cache_dir": ".cache",
             **model_kwargs
@@ -212,7 +212,7 @@ class HugLM(BaseLM):
 class LoraLM(HugLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it", dataset_name="0_no_move", resume=False):
         save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
-        save_model = f"Dandandooo/user-sim--{model_name.split('/')[-1]}--{dataset_name}"
+        save_model = f"Dandandooo/user-sim__{model_name.split('/')[-1]}__{dataset_name}"
 
         self.lora_config = LoraConfig(
             r=16,
@@ -225,7 +225,7 @@ class LoraLM(HugLM):
 
         extra_config = {
             "model_name": model_name,
-            "quantization_config": BitsAndBytesConfig(load_in_4bit=True),
+            # "quantization_config": BitsAndBytesConfig(load_in_4bit=True),
         }
 
         super().__init__(**extra_config)
@@ -240,9 +240,9 @@ class LoraLM(HugLM):
         )
 
         self.data.load(dataset_name)
-
+        
         def format_func(data: Dataset):
-            return [f"### Instruction: {item['prompt']}\n ### Response: {item['answer']}" for item in data]
+            return [f"### Instruction: {data['prompt'][i]}\n ### Response: {data['answer'][i]}" for i in range(len(data))]
 
         self.trainer = SFTTrainer(
             model=self.model,
