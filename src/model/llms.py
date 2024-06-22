@@ -177,7 +177,7 @@ class HugLM(BaseLM):
 
         # Autoconfig does not map devices correctly
         config = {
-            # "device_map": "auto",
+            "device_map": "auto",
             "use_cache": True,
             "cache_dir": ".cache",
             **model_kwargs
@@ -225,10 +225,19 @@ class LoraLM(HugLM):
 
         extra_config = {
             "model_name": model_name,
-            # "quantization_config": BitsAndBytesConfig(load_in_4bit=True),
+            "torch_dtype": "bfloat16",
         }
 
+        # To avoid the annoying warning
+        if "bnb" not in model_name:
+            extra_config["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
+
         super().__init__(**extra_config)
+
+        sft_extras = {}
+
+        if torch.backends.mps.is_available():
+            sft_extras["use_mps_device"] = True
 
         self.args = SFTConfig(
             output_dir=save_name,
