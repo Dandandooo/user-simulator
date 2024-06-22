@@ -210,7 +210,7 @@ class HugLM(BaseLM):
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it", dataset_name="0_no_move", resume=False):
+    def __init__(self, model_name="google/gemma-1.1-2b-it", dataset_name="0_no_move", resume=False, **extra_kwargs):
         save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
         save_model = f"Dandandooo/user-sim__{model_name.split('/')[-1]}__{dataset_name}"
 
@@ -225,12 +225,13 @@ class LoraLM(HugLM):
 
         extra_config = {
             "model_name": model_name,
-            "torch_dtype": "bfloat16",
+            "torch_dtype": "auto",
+            **extra_kwargs
         }
 
         # To avoid the annoying warning
-        if "bnb" not in model_name:
-            extra_config["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
+        # if "bnb" not in model_name:
+        #     extra_config["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
 
         super().__init__(**extra_config)
 
