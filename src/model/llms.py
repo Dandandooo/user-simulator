@@ -174,6 +174,7 @@ class HugLM(BaseLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it", backend="torch", **model_kwargs):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding=True, padding_side="left", use_fast=True)
+        self.tokenizer.pad_token = self.tokenizer.eos_token
 
         # Autoconfig does not map devices correctly
         config = {
@@ -213,8 +214,6 @@ class LoraLM(HugLM):
     def __init__(self, model_name="google/gemma-1.1-2b-it", dataset_name="0_no_move", resume=False, **extra_kwargs):
         save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
         save_model = f"Dandandooo/user-sim__{model_name.split('/')[-1]}__{dataset_name}"
-
-        self.tokenizer.pad_token = self.tokenizer.eos_token
 
         self.lora_config = LoraConfig(
             r=16,
