@@ -214,6 +214,8 @@ class LoraLM(HugLM):
         save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
         save_model = f"Dandandooo/user-sim__{model_name.split('/')[-1]}__{dataset_name}"
 
+        self.tokenizer.pad_token = self.tokenizer.eos_token
+
         self.lora_config = LoraConfig(
             r=16,
             lora_alpha=8,
