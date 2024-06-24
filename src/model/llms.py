@@ -171,7 +171,7 @@ class HugPipeline(BaseLM):
 
 # To work with huggingface models
 class HugLM(BaseLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it", backend="torch", **model_kwargs):
+    def __init__(self, model_name="google/gemma-1.1-2b-it", backend="torch", no_flash=False, **model_kwargs):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding=True, padding_side="left", use_fast=True)
         self.tokenizer.pad_token = self.tokenizer.eos_token
@@ -184,7 +184,7 @@ class HugLM(BaseLM):
             **model_kwargs
         }
 
-        if torch.cuda.is_available():
+        if torch.cuda.is_available() and not no_flash:
             config["attn_implementation"] = "flash_attention_2"
 
         # todo: try adding some Seq2SeqLM models because GPT4 said it fits better
@@ -211,7 +211,7 @@ class HugLM(BaseLM):
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it", dataset_name="0_no_move", resume=False, **extra_kwargs):
+    def __init__(self, model_name="google/gemma-1.1-2b-it", dataset_name="0_no_move", resume=False, no_flash=False, **extra_kwargs):
         save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
         save_model = f"Dandandooo/user-sim__{model_name.split('/')[-1]}__{dataset_name}"
 
@@ -226,10 +226,22 @@ class LoraLM(HugLM):
 
         extra_config = {
             "model_name": model_name,
-            "torch_dtype": torch.bfloat16,
-            "attn_implementation": None,
+            "torch_dtype": "auto",
             **extra_kwargs,
         }
+
+        if not no_flash and torch.cuda.is_available():
+            extra_config["attn_implementation"] = "flash_attention_2"
+            extra_config["use_flash_attention_2"] = True
+
+        sft_extras = {}
+
+        if torch.backends.mps.is_available():
+            sft_extras["use_mps_device"] = True
+
+        if torch.cuda.is_available():
+            extra_config["torch_dtype"] = torch.bfloat16
+            sft_extras["bf16"] = True
 
         # if torch.cuda.is_available():
         # Apparently flash attention can cause problems with torch compile
@@ -241,10 +253,7 @@ class LoraLM(HugLM):
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
         super().__init__(**extra_config)
 
-        sft_extras = {}
 
-        if torch.backends.mps.is_available():
-            sft_extras["use_mps_device"] = True
 
         self.args = SFTConfig(
             output_dir=save_name,
@@ -254,7 +263,7 @@ class LoraLM(HugLM):
             hub_model_id=save_model,
             max_seq_length=self.model.config.max_position_embeddings,
             per_device_train_batch_size=1,  # Hopefully this won't overflow the memory
-            bf16=True,
+            **sft_extras,
         )
 
         self.data.load(dataset_name)
