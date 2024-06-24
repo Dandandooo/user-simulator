@@ -226,16 +226,13 @@ class LoraLM(HugLM):
 
         extra_config = {
             "model_name": model_name,
-            "torch_dtype": "auto",
-            **extra_kwargs
+            "torch_dtype": torch.bfloat16,
+            "attn_implementation": None,
+            **extra_kwargs,
         }
 
-        if torch.cuda.is_available():
-            # Apparently flash attention can cause problems with torch compile
-            extra_config["attn_implementation"] = None
-
-        torch.backends.cuda.matmul.allow_tf32 = True
-        torch.backends.cudnn.allow_tf32 = True
+        # if torch.cuda.is_available():
+        # Apparently flash attention can cause problems with torch compile
 
         # To avoid the annoying warning
         # if "bnb" not in model_name:
@@ -256,7 +253,7 @@ class LoraLM(HugLM):
             push_to_hub=True,
             hub_model_id=save_model,
             max_seq_length=self.model.config.max_position_embeddings,
-            per_gpu_train_batch_size=1,  # Hopefully this won't overflow the memory
+            per_device_train_batch_size=1,  # Hopefully this won't overflow the memory
             bf16=True,
         )
 
