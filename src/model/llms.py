@@ -230,10 +230,18 @@ class LoraLM(HugLM):
             **extra_kwargs
         }
 
+        if torch.cuda.is_available():
+            # Apparently flash attention can cause problems with torch compile
+            extra_config["attn_implementation"] = None
+
+        torch.backends.cuda.matmul.allow_tf32 = True
+        torch.backends.cudnn.allow_tf32 = True
+
         # To avoid the annoying warning
         # if "bnb" not in model_name:
         #     extra_config["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
 
+        os.environ["TOKENIZERS_PARALLELISM"] = "false"
         super().__init__(**extra_config)
 
         sft_extras = {}
@@ -248,6 +256,8 @@ class LoraLM(HugLM):
             push_to_hub=True,
             hub_model_id=save_model,
             max_seq_length=self.model.config.max_position_embeddings,
+            per_gpu_train_batch_size=1,  # Hopefully this won't overflow the memory
+            bf16=True,
         )
 
         self.data.load(dataset_name)
