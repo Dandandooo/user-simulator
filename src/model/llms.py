@@ -227,12 +227,10 @@ class LoraLM(HugLM):
         extra_config = {
             "model_name": model_name,
             "torch_dtype": "auto",
-            **extra_kwargs,
         }
 
         if not no_flash and torch.cuda.is_available():
             extra_config["attn_implementation"] = "flash_attention_2"
-            extra_config["use_flash_attention_2"] = True
 
         sft_extras = {}
 
@@ -242,6 +240,9 @@ class LoraLM(HugLM):
         if torch.cuda.is_available():
             extra_config["torch_dtype"] = torch.bfloat16
             sft_extras["bf16"] = True
+
+        # Implement extra config after manual configs
+        extra_config |= extra_kwargs
 
         # if torch.cuda.is_available():
         # Apparently flash attention can cause problems with torch compile

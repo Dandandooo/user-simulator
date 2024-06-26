@@ -6,6 +6,8 @@ import shutil
 
 from tqdm import tqdm
 
+from sentence_transformers import SentenceTransformer, util
+
 
 class TurnMaker:
     def __init__(self, **kwargs):
@@ -32,6 +34,7 @@ class TurnMaker:
         self.entire_dataset = kwargs["entire_dataset"]
         self.no_move = kwargs["no_move"]
         self.image_stamps = kwargs["image_stamps"]
+        self.similarity_threshold = kwargs["similarity_threshold"]
 
         if self.nl_ify:
             self.das = {
@@ -106,6 +109,8 @@ class TurnMaker:
 
         self.tasks: list[dict] = self.example_source + self.task_source
 
+        self.st = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+
     def agent_name(self, original_name) -> str:
         match original_name.lower():
             case "commander":
@@ -114,6 +119,15 @@ class TurnMaker:
                 return self.driver_name
             case _:
                 raise ValueError(f"Invalid agent name: {original_name}")
+
+    def sentence_similarity(self, sentence1: str, sentence2: str) -> float:
+        embeddings1 = self.st.encode(sentence1, convert_to_tensor=True)
+        embeddings2 = self.st.encode(sentence2, convert_to_tensor=True)
+        similarity = util.pytorch_cos_sim(embeddings1, embeddings2).squeeze().item()
+        # print(similarity)
+        # print("-->", sentence1)
+        # print("-->", sentence2)
+        return similarity
 
     def process_turn(self, turn: dict, is_last=False) -> str:
         driver_action = turn['DRIVER']['action'] if turn['DRIVER']['action'] != 'dialogue' else turn["DRIVER"]['utterance']
@@ -158,12 +172,14 @@ class TurnMaker:
         end = start + length
         return task['turns'][start:end]
 
-    def display_examples(self) -> str:
+    def display_examples(self, compare_to: dict) -> str:
         examples = []
         used_tasks = []
         while len(examples) < self.n:
             task = random.choice(self.tasks)
-            prompt, answer = self.display_example(task)
+            while self.similarity_threshold and self.sentence_similarity(task['goal'], compare_to['goal']) < self.similarity_threshold:
+                task = random.choice(self.tasks)
+            prompt, answer = self.display_example(task, self.task_length)
             if not examples:
                 examples.append((prompt, answer))
                 used_tasks.append(task)
@@ -200,7 +216,7 @@ class TurnMaker:
         utt = ans.split(":")[-1][:ans.rfind("<<")].strip() if self.gen_response and "<observe>" not in ans else ""
         return prompt, f"{act}\n{utt}".strip()
 
-    def give_instructions(self) -> str:
+    def give_instructions(self, compare_to: dict) -> str:
         prompt = ""
         prompt += open("src/prompt_llm/user_sim_segments/initial_instructions.txt", "r").read() + '\n\n'
 
@@ -210,7 +226,7 @@ class TurnMaker:
             else:
                 prompt += open("src/prompt_llm/user_sim_segments/da_explain.txt", "r").read() + '\n\n'
 
-        prompt += self.display_examples() + '\n\n'
+        prompt += self.display_examples(compare_to) + '\n\n'
 
         if self.predict_das:
             prompt += open("src/prompt_llm/user_sim_segments/final_da_instructions.txt", "r").read() + '\n'
@@ -223,15 +239,15 @@ class TurnMaker:
         return prompt
 
     def make_prompt(self, override=False) -> tuple[str, str]:
-        prompt = self.give_instructions()
+        goal_task = random.choice(self.task_source)
+        goal_prompt, goal_answer = self.display_example(goal_task, self.task_length)
+        prompt = self.give_instructions(goal_task)
 
         answer = ""
         if self.give_task and not override:
             prompt += "Give your answer for the following example:\n"
-            task = random.choice(self.example_source if self.split_dataset else self.tasks)
-            p, a = self.display_example(task)
-            prompt += p + '\n'
-            answer = a
+            prompt += '\n' + goal_prompt
+            answer = goal_answer
 
         return prompt, answer
 
@@ -350,6 +366,7 @@ class TurnMaker:
 @click.option("--entire_dataset", is_flag=True, help="Whether to generate prompts for the entire dataset. Save path should be a folder for this one.")
 @click.option("--no_move", is_flag=True, help="Whether to not remove the move actions")
 @click.option("--image_stamps", is_flag=True, help="Whether to use image time stamps")
+@click.option("--similarity_threshold", default=0.0, help="Threshold for how similar given examples must be")
 def main(**kwargs):
     tm = TurnMaker(**kwargs)
     if kwargs["entire_dataset"]:
