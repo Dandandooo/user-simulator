@@ -244,9 +244,6 @@ class LoraLM(HugLM):
         # Implement extra config after manual configs
         extra_config |= extra_kwargs
 
-        # if torch.cuda.is_available():
-        # Apparently flash attention can cause problems with torch compile
-
         # To avoid the annoying warning
         # if "bnb" not in model_name:
         #     extra_config["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
@@ -259,7 +256,7 @@ class LoraLM(HugLM):
         self.args = SFTConfig(
             output_dir=save_name,
             resume_from_checkpoint=save_model if resume else None,
-            torch_compile=True,
+            # torch_compile=True,
             push_to_hub=True,
             hub_model_id=save_model,
             max_seq_length=self.model.config.max_position_embeddings,
@@ -270,7 +267,7 @@ class LoraLM(HugLM):
         self.data.load(dataset_name)
         
         def format_func(data: Dataset):
-            return [f"### Instruction: {data['prompt'][i]}\n ### Response: {data['answer'][i]}" for i in range(len(data))]
+            return [f"### Instruction: {prompt}\n ### Response: {answer}" for prompt, answer in zip(data["prompt"], data["answer"])]
 
         self.trainer = SFTTrainer(
             model=self.model,
