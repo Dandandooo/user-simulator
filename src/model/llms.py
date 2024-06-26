@@ -260,7 +260,7 @@ class LoraLM(HugLM):
             push_to_hub=True,
             hub_model_id=save_model,
             max_seq_length=self.model.config.max_position_embeddings,
-            per_device_train_batch_size=1,  # Hopefully this won't overflow the memory
+            # per_device_train_batch_size=1,  # Hopefully this won't overflow the memory
             **sft_extras,
         )
 
