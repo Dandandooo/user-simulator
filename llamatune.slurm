@@ -2,13 +2,13 @@
 
 #SBATCH --account="bckf-delta-gpu"
 #SBATCH --job-name="tuning llm"
-#SBATCH --output="/projects/bckf/dphilipov/teach-recreate/logs/llama.out"
+#SBATCH --output="/projects/bckf/dphilipov/teach-recreate/logs/llamatune.out"
 
 #SBATCH --partition="gpuA40x4"
 #SBATCH --mem=16G
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=8
 #SBATCH --gpus-per-node=4
 #SBATCH --gpu-bind=closest
 
