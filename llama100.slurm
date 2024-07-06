@@ -2,7 +2,7 @@
 
 #SBATCH --account="bckf-delta-gpu"
 #SBATCH --job-name="teach-recreate-train"
-#SBATCH --output="/projects/bckf/dphilipov/teach-recreate/logs/llama100.out"
+#SBATCH --output="/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/logs/llama100.out"
 
 #SBATCH --partition="gpuA100x4"
 #SBATCH --mem=32G
@@ -16,4 +16,4 @@
 #SBATCH -t 48:00:00
 
 # Run training script
-/projects/bckf/dphilipov/teach-recreate/llama.bash
+/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/llama.bash

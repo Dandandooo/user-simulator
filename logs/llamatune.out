@@ -1,0 +1,30 @@
+/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Unused kwargs: ['_load_in_4bit', '_load_in_8bit', 'quant_method']. These kwargs are not used in <class 'transformers.utils.quantization_config.BitsAndBytesConfig'>.
+Gemma's activation function should be approximate GeLU and not exact GeLU.
+Changing the activation function to `gelu_pytorch_tanh`.if you want to use the legacy `gelu`, edit the `model.config` to set `hidden_activation=gelu`   instead of `hidden_act`. See https://github.com/huggingface/transformers/pull/29402 for more details.
+/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/trl/trainer/sft_trainer.py:397: UserWarning: You passed a tokenizer with `padding_side` not equal to `right` to the SFTTrainer. This might lead to some unexpected behaviour due to overflow issues when training a model in half-precision. You might consider adding `tokenizer.padding_side = 'right'` to your code.
+  warnings.warn(
+Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+Running unsloth/gemma-2b-it-bnb-4bit on cuda:3
+Initialized trainer for LoRA fine-tuning on unsloth/gemma-2b-it-bnb-4bit with dataset 0_no_move
+Traceback (most recent call last):
+  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/llamatune.py", line 8, in <module>
+    llm.train()
+  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/src/model/llms.py", line 286, in train
+    self.trainer.train()
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/trl/trainer/sft_trainer.py", line 440, in train
+    output = super().train(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 1850, in train
+    return inner_training_loop(
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 2012, in _inner_training_loop
+    model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/accelerate/accelerator.py", line 1263, in prepare
+    result = tuple(
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/accelerate/accelerator.py", line 1264, in <genexpr>
+    self._prepare_one(obj, first_pass=True, device_placement=d) for obj, d in zip(args, device_placement)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/accelerate/accelerator.py", line 1140, in _prepare_one
+    return self.prepare_model(obj, device_placement=device_placement)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/accelerate/accelerator.py", line 1366, in prepare_model
+    raise ValueError(
+ValueError: You can't train a model that has been loaded in 8-bit precision on a different device than the one you're training on. Make sure you loaded the model on the correct device using for example `device_map={'':torch.cuda.current_device() or device_map={'':torch.xpu.current_device()}
