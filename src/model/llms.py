@@ -227,6 +227,7 @@ class LoraLM(HugLM):
         extra_config = {
             "model_name": model_name,
             "torch_dtype": "auto",
+            "device_map": {'': torch.cuda.current_device()}
         }
 
         if not no_flash and torch.cuda.is_available():
@@ -241,6 +242,7 @@ class LoraLM(HugLM):
             extra_config["torch_dtype"] = torch.bfloat16
             sft_extras["bf16"] = True
 
+
         # Implement extra config after manual configs
         extra_config |= extra_kwargs
 
@@ -250,8 +252,6 @@ class LoraLM(HugLM):
 
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
         super().__init__(**extra_config)
-
-
 
         self.args = SFTConfig(
             output_dir=save_name,
@@ -268,6 +268,8 @@ class LoraLM(HugLM):
         
         def format_func(data: Dataset):
             return [f"### Instruction: {prompt}\n ### Response: {answer}" for prompt, answer in zip(data["prompt"], data["answer"])]
+
+        self.tokenizer.padding_side = "right"
 
         self.trainer = SFTTrainer(
             model=self.model,
