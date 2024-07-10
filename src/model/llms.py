@@ -181,11 +181,14 @@ class HugLM(BaseLM):
             "device_map": "auto",
             "use_cache": True,
             "cache_dir": ".cache",
-            **model_kwargs
+            "force_download": False,
         }
 
         if torch.cuda.is_available() and not no_flash:
             config["attn_implementation"] = "flash_attention_2"
+
+        # moved behind to allow for overrides
+        config |= model_kwargs
 
         # todo: try adding some Seq2SeqLM models because GPT4 said it fits better
         match backend:
@@ -260,7 +263,7 @@ class LoraLM(HugLM):
             push_to_hub=True,
             hub_model_id=save_model,
             max_seq_length=self.model.config.max_position_embeddings,
-            # per_device_train_batch_size=1,  # Hopefully this won't overflow the memory
+            per_device_train_batch_size=2,  # Hopefully this won't overflow the memory
             **sft_extras,
         )
 

@@ -1,0 +1,73 @@
+# Environment
+device: cuda
+dtype: bf16
+enable_activation_checkpointing: True
+
+model:
+  _component_: torchtune.models.llama3.lora_llama3_8b
+  lora_attn_modules: [ 'q_proj', 'v_proj' ]
+  apply_lora_to_mlp: False
+  apply_lora_to_output: False
+  lora_rank: 8
+  lora_alpha: 16
+
+tokenizer:
+  _component_: torchtune.models.llama3.llama3_tokenizer
+  path: llm_models/torchtune--llama3_8b--0_no_move/tokenizer.model
+
+checkpointing:
+  _component_: torchtune.utils.FullModelMetaCheckpointer
+
+  # directory with the checkpoint files
+  # this should match the output_dir specified during
+  # fine-tuning
+  checkpoint_dir: llm_models/torchtune--llama3_8b--0_no_move
+
+  # checkpoint files for the fine-tuned model. These will be logged
+  # at the end of your fine-tune
+  checkpoint_files: [
+    meta_model_0.pt
+  ]
+
+  output_dir: llm_models/torchtune--llama3_8b--0_no_move
+  model_type: LLAMA3
+resume_from_checkpoint: False
+
+
+# Dataset
+dataset:
+  _component_: torchtune.datasets.instruct_dataset
+  source: Dandandooo/user-sim_alpaca__0_no_move
+  template: torchtune.data.AlpacaInstructTemplate
+  max_seq_len: 7500 # 8K tokens is the max that llama3 8b can handle
+  packed: true
+  train_on_input: true
+seed: null
+shuffle: true
+batch_size: 2
+
+# Optimizer and Scheduler
+optimizer:
+  _component_: torch.optim.AdamW
+  weight_decay: 0.01
+  lr: 3e-4
+lr_scheduler:
+  _component_: torchtune.modules.get_cosine_schedule_with_warmup
+  num_warmup_steps: 100
+
+loss:
+  _component_: torch.nn.CrossEntropyLoss
+
+# Training
+epochs: 1
+max_steps_per_epoch: null
+gradient_accumulation_steps: 64
+compile: False
+
+# Logging
+output_dir: logs/torchtune--llama3_8b--0_no_move.out
+metric_logger:
+  _component_: torchtune.utils.metric_logging.DiskLogger
+  log_dir: ${output_dir}
+log_every_n_steps: 1
+log_peak_memory_stats: False
