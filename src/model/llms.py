@@ -250,8 +250,8 @@ class LoraLM(HugLM):
         extra_config |= extra_kwargs
 
         # To avoid the annoying warning
-        # if "bnb" not in model_name:
-        #     extra_config["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
+        if "bnb" not in model_name:
+            extra_config["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
 
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
         super().__init__(**extra_config)
