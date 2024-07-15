@@ -13,22 +13,22 @@ model:
 
 tokenizer:
   _component_: torchtune.models.llama3.llama3_tokenizer
-  path: llm_models/torchtune--llama3_8b--0_no_move/tokenizer.model
+  path: llm_models/torchtune--llama3_8b--0_no_move/original/tokenizer.model
 
-checkpointing:
+checkpointer:
   _component_: torchtune.utils.FullModelMetaCheckpointer
 
   # directory with the checkpoint files
   # this should match the output_dir specified during
   # fine-tuning
-  checkpoint_dir: llm_models/torchtune--llama3_8b--0_no_move
+  checkpoint_dir: llm_models/torchtune--llama3_8b--0_no_move/original
 
   # checkpoint files for the fine-tuned model. These will be logged
   # at the end of your fine-tune
   checkpoint_files: [
-    meta_model_0.pt
+    consolidated.00.pth
   ]
-
+  recipe_checkpoint: null
   output_dir: llm_models/torchtune--llama3_8b--0_no_move
   model_type: LLAMA3
 resume_from_checkpoint: False

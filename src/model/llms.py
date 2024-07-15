@@ -34,7 +34,7 @@ class LLMDataset:
         return key in self.data
 
     def load(self, dataset_name):
-        self.data[dataset_name] = load_dataset(f"Dandandooo/user-sim", dataset_name)
+        self.data[dataset_name] = load_dataset("Dandandooo/user-sim", dataset_name)
 
 
 class BaseLM:

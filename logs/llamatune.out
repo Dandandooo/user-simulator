@@ -1,30 +1,103 @@
 /u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
   warnings.warn(
-Unused kwargs: ['_load_in_4bit', '_load_in_8bit', 'quant_method']. These kwargs are not used in <class 'transformers.utils.quantization_config.BitsAndBytesConfig'>.
-Gemma's activation function should be approximate GeLU and not exact GeLU.
-Changing the activation function to `gelu_pytorch_tanh`.if you want to use the legacy `gelu`, edit the `model.config` to set `hidden_activation=gelu`   instead of `hidden_act`. See https://github.com/huggingface/transformers/pull/29402 for more details.
-/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/trl/trainer/sft_trainer.py:397: UserWarning: You passed a tokenizer with `padding_side` not equal to `right` to the SFTTrainer. This might lead to some unexpected behaviour due to overflow issues when training a model in half-precision. You might consider adding `tokenizer.padding_side = 'right'` to your code.
-  warnings.warn(
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:03<00:03,  3.68s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:03<00:00,  1.63s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:03<00:00,  1.93s/it]
 Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-Running unsloth/gemma-2b-it-bnb-4bit on cuda:3
-Initialized trainer for LoRA fine-tuning on unsloth/gemma-2b-it-bnb-4bit with dataset 0_no_move
-Traceback (most recent call last):
-  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/llamatune.py", line 8, in <module>
+wandb: Currently logged in as: 2023dphilipo. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.17.4 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.16.4
+wandb: Run data is saved locally in /taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/wandb/run-20240711_152958-n3gal4bg
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run devout-microwave-15
+wandb: ⭐️ View project at https://wandb.ai/2023dphilipo/huggingface
+wandb: 🚀 View run at https://wandb.ai/2023dphilipo/huggingface/runs/n3gal4bg
+Running google/gemma-1.1-2b-it on cuda:0
+Initialized trainer for LoRA fine-tuning on google/gemma-1.1-2b-it with dataset 0_no_move
+  0%|          | 0/19431 [00:00<?, ?it/s]/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/_functions.py:68: UserWarning: Was asked to gather along dimension 0, but all input tensors were scalars; will instead unsqueeze and return a vector.
+  warnings.warn('Was asked to gather along dimension 0, but all '
+  0%|          | 1/19431 [00:18<101:05:27, 18.73s/it]  0%|          | 2/19431 [00:19<44:53:39,  8.32s/it] Traceback (most recent call last):
+  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/llamatune.py", line 9, in <module>
     llm.train()
-  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/src/model/llms.py", line 286, in train
+  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/src/model/llms.py", line 291, in train
     self.trainer.train()
   File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/trl/trainer/sft_trainer.py", line 440, in train
     output = super().train(*args, **kwargs)
   File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 1850, in train
     return inner_training_loop(
-  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 2012, in _inner_training_loop
-    model, self.optimizer = self.accelerator.prepare(self.model, self.optimizer)
-  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/accelerate/accelerator.py", line 1263, in prepare
-    result = tuple(
-  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/accelerate/accelerator.py", line 1264, in <genexpr>
-    self._prepare_one(obj, first_pass=True, device_placement=d) for obj, d in zip(args, device_placement)
-  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/accelerate/accelerator.py", line 1140, in _prepare_one
-    return self.prepare_model(obj, device_placement=device_placement)
-  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/accelerate/accelerator.py", line 1366, in prepare_model
-    raise ValueError(
-ValueError: You can't train a model that has been loaded in 8-bit precision on a different device than the one you're training on. Make sure you loaded the model on the correct device using for example `device_map={'':torch.cuda.current_device() or device_map={'':torch.xpu.current_device()}
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 2203, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 3138, in training_step
+    loss = self.compute_loss(model, inputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 3161, in compute_loss
+    outputs = model(**inputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/data_parallel.py", line 186, in forward
+    return self.gather(outputs, self.output_device)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/data_parallel.py", line 203, in gather
+    return gather(outputs, output_device, dim=self.dim)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/scatter_gather.py", line 104, in gather
+    res = gather_map(outputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/scatter_gather.py", line 95, in gather_map
+    return type(out)((k, gather_map([d[k] for d in outputs]))
+  File "<string>", line 8, in __init__
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/utils/generic.py", line 393, in __post_init__
+    for idx, element in enumerate(iterator):
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/scatter_gather.py", line 95, in <genexpr>
+    return type(out)((k, gather_map([d[k] for d in outputs]))
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/scatter_gather.py", line 89, in gather_map
+    return Gather.apply(target_device, dim, *outputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/autograd/function.py", line 553, in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/_functions.py", line 75, in forward
+    return comm.gather(inputs, ctx.dim, ctx.target_device)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/comm.py", line 231, in gather
+    return torch._C._gather(tensors, dim, destination)
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 16.59 GiB. GPU 0 has a total capacity of 39.39 GiB of which 2.00 GiB is free. Including non-PyTorch memory, this process has 37.38 GiB memory in use. Of the allocated memory 22.70 GiB is allocated by PyTorch, and 13.09 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+Traceback (most recent call last):
+  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/llamatune.py", line 9, in <module>
+    llm.train()
+  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/src/model/llms.py", line 291, in train
+    self.trainer.train()
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/trl/trainer/sft_trainer.py", line 440, in train
+    output = super().train(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 1850, in train
+    return inner_training_loop(
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 2203, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 3138, in training_step
+    loss = self.compute_loss(model, inputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/trainer.py", line 3161, in compute_loss
+    outputs = model(**inputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/data_parallel.py", line 186, in forward
+    return self.gather(outputs, self.output_device)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/data_parallel.py", line 203, in gather
+    return gather(outputs, output_device, dim=self.dim)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/scatter_gather.py", line 104, in gather
+    res = gather_map(outputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/scatter_gather.py", line 95, in gather_map
+    return type(out)((k, gather_map([d[k] for d in outputs]))
+  File "<string>", line 8, in __init__
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/transformers/utils/generic.py", line 393, in __post_init__
+    for idx, element in enumerate(iterator):
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/scatter_gather.py", line 95, in <genexpr>
+    return type(out)((k, gather_map([d[k] for d in outputs]))
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/scatter_gather.py", line 89, in gather_map
+    return Gather.apply(target_device, dim, *outputs)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/autograd/function.py", line 553, in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/_functions.py", line 75, in forward
+    return comm.gather(inputs, ctx.dim, ctx.target_device)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/torch/nn/parallel/comm.py", line 231, in gather
+    return torch._C._gather(tensors, dim, destination)
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 16.59 GiB. GPU 0 has a total capacity of 39.39 GiB of which 2.00 GiB is free. Including non-PyTorch memory, this process has 37.38 GiB memory in use. Of the allocated memory 22.70 GiB is allocated by PyTorch, and 13.09 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+wandb: - 0.008 MB of 0.008 MB uploadedwandb: \ 0.008 MB of 0.008 MB uploadedwandb: | 0.035 MB of 0.058 MB uploaded (0.005 MB deduped)wandb: 🚀 View run devout-microwave-15 at: https://wandb.ai/2023dphilipo/huggingface/runs/n3gal4bg
+wandb: ️⚡ View job at https://wandb.ai/2023dphilipo/huggingface/jobs/QXJ0aWZhY3RDb2xsZWN0aW9uOjI0NjI5MjgxMA==/version_details/v2
+wandb: Synced 6 W&B file(s), 0 media file(s), 2 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240711_152958-n3gal4bg/logs
