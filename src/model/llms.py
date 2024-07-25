@@ -1,6 +1,6 @@
 from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM, pipeline
-from transformers import AutoTokenizer, BitsAndBytesConfig
-from trl import SFTTrainer, SFTConfig
+from transformers import pipeline, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
+from trl import SFTTrainer
 from trl.trainer import ConstantLengthDataset
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
 from openai import AzureOpenAI, RateLimitError
@@ -61,13 +61,15 @@ class BaseLM:
     def save_answers(self, dataset_name: str, dataset_split: str, destfile: str):
         responses = []
         try:
-            for i, (file_id, prompt, answer, response) in enumerate(self.answer_dataset(dataset_name, dataset_split)):
+            for i, (file_id, prompt, answer, response) in tqdm(enumerate(self.answer_dataset(dataset_name, dataset_split)), total=len(self.data[dataset_name][dataset_split])):
                 responses.append({"file_id": file_id, "prompt": prompt, "answer": answer, "response": response})
         except KeyboardInterrupt:
             print(f'Execution Stopped!!!')
         except Exception as e:
             print(f'Error: {e}')
         finally:
+            if not os.path.exists(os.path.dirname(destfile)):
+                os.makedir(os.path.dirname(destfile))
             with open(destfile, "w") as f:
                 json.dump(responses, f, indent=4)
             print(f'Answers saved to {destfile}')
@@ -184,8 +186,8 @@ class HugLM(BaseLM):
             "force_download": False,
         }
 
-        if torch.cuda.is_available() and not no_flash:
-            config["attn_implementation"] = "flash_attention_2"
+        # if torch.cuda.is_available() and not no_flash:
+        #     config["attn_implementation"] = "flash_attention_2"
 
         # moved behind to allow for overrides
         config |= model_kwargs
@@ -203,13 +205,16 @@ class HugLM(BaseLM):
             case _:
                 raise ValueError(f"Backend {backend} not supported")
 
+        self.pipeline = pipeline("text-generation", model=self.model, tokenizer=self.tokenizer, torch_dtype=torch.bfloat16)
+
         print(f"Running {model_name} on {self.model.device}")
 
     def answer(self, prompt: str) -> str:
-        tokenized = self.tokenizer(prompt, padding=True, return_tensors="pt").to(self.model.device)
-        result = self.model.generate(**tokenized, max_new_tokens=32)
-        decoded = self.tokenizer.decode(result[0], skip_special_tokens=True).removeprefix(prompt).strip()
-        return decoded
+        # tokenized = self.tokenizer(prompt, padding=True, return_tensors="pt").to(self.model.device)
+        # result = self.model.generate(**tokenized, max_new_tokens=20)
+        # decoded = self.tokenizer.decode(result[0], skip_special_tokens=True).removeprefix(prompt).strip()
+        # return decoded
+        return self.pipeline(prompt, max_new_tokens=20)[0]['generated_text'].removeprefix(prompt).strip()
 
 
 # To use the LoRA fine-tuning method for huggingface models
@@ -256,13 +261,12 @@ class LoraLM(HugLM):
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
         super().__init__(**extra_config)
 
-        self.args = SFTConfig(
+        self.args = TrainingArguments(
             output_dir=save_name,
             resume_from_checkpoint=save_model if resume else None,
             # torch_compile=True,
             push_to_hub=True,
             hub_model_id=save_model,
-            max_seq_length=self.model.config.max_position_embeddings,
             per_device_train_batch_size=2,  # Hopefully this won't overflow the memory
             **sft_extras,
         )

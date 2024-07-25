@@ -35,6 +35,7 @@ class TurnMaker:
         self.no_move = kwargs["no_move"]
         self.image_stamps = kwargs["image_stamps"]
         self.similarity_threshold = kwargs["similarity_threshold"]
+        self.max_task_obs = kwargs["max_task_obs"]
 
         if self.nl_ify:
             self.das = {
@@ -264,6 +265,8 @@ class TurnMaker:
             os.mkdir(save_path[:save_path.rfind('/')])
 
         for i, ((prompt, _), (task, answer)) in enumerate(zip(prompts, episodes)):
+            if answer.startswith("OBSERVE") and random.random() > self.max_task_obs:
+                continue
             with open(f"{save_root}_{i}.{save_ext}", "w+") as f:
                 f.write(prompt)
                 f.write(f"\n{task}")
@@ -367,6 +370,7 @@ class TurnMaker:
 @click.option("--no_move", is_flag=True, help="Whether to not remove the move actions")
 @click.option("--image_stamps", is_flag=True, help="Whether to use image time stamps")
 @click.option("--similarity_threshold", default=0.0, help="Threshold for how similar given examples must be")
+@click.option("--max_task_obs", default=1, help="Maximum percentage of observe tasks to be kept (to balance the data)")
 def main(**kwargs):
     tm = TurnMaker(**kwargs)
     if kwargs["entire_dataset"]:
