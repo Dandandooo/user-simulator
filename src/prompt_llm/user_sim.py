@@ -370,7 +370,7 @@ class TurnMaker:
 @click.option("--no_move", is_flag=True, help="Whether to not remove the move actions")
 @click.option("--image_stamps", is_flag=True, help="Whether to use image time stamps")
 @click.option("--similarity_threshold", default=0.0, help="Threshold for how similar given examples must be")
-@click.option("--max_task_obs", default=1, help="Maximum percentage of observe tasks to be kept (to balance the data)")
+@click.option("--max_task_obs", default=1.0, help="Maximum percentage of observe tasks to be kept (to balance the data)")
 def main(**kwargs):
     tm = TurnMaker(**kwargs)
     if kwargs["entire_dataset"]:

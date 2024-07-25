@@ -1,0 +1,91 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: how can i help <<RequestForInstruction>>
+COMMANDER: water the plant please <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Boil Potato.
+COMMANDER: Hello there! <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what shall i do ? <<RequestForInstruction>>
+COMMANDER: today we're going to boil a potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: there's already a potato in a pan on the stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is potato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a salad.
+COMMANDER: lets make a sald <<Instruction>>
+DRIVER: <observe>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Cook 2 slice(s) of Potato and serve on a Plate.
+COMMANDER: <observe>
+DRIVER: what can we do today <<RequestForInstruction>>
+COMMANDER: cook two slices of potato and serve on a plate please <<Instruction>>
+DRIVER: <observe>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all Book on any Bed.
+COMMANDER: <observe>
+DRIVER: hi, what should i do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Boil Potato.
+
+COMMANDER response:

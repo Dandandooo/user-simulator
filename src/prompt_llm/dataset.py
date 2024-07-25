@@ -46,45 +46,65 @@ class LLMData:
 
 
 if __name__ == "__main__":
-    print("Creating dataset '0'...")
-    LLMData.create_dataset(
-        "0",
-        "llm_prompts_data/turns/train_0",
-        "llm_prompts_data/turns/valid_unseen_0",
-        "llm_prompts_data/turns/valid_seen_0",
-        upload=True,
-        alpaca=True,
-    )
+    variants = [
+        # "0",
+        # "0_no_move",
+        # "5",
+        # "5_no_move",
+        "0_no_move_20pc_obs",
+        "5_no_move_20pc_obs",
+    ]
 
-    print("Creating dataset '0_no_move'...")
-    LLMData.create_dataset(
-        "0_no_move",
-        "llm_prompts_data/turns/train_0_no_move",
-        "llm_prompts_data/turns/valid_unseen_0_no_move",
-        "llm_prompts_data/turns/valid_seen_0_no_move",
-        upload=True,
-        alpaca=True,
-    )
-
-    print("Creating dataset '5'...")
-    LLMData.create_dataset(
-        "5",
-        "llm_prompts_data/turns/train_5",
-        "llm_prompts_data/turns/valid_unseen_5",
-        "llm_prompts_data/turns/valid_seen_5",
-        upload=True,
-        alpaca=True,
-    )
-
-    print("Creating dataset '5_no_move'...")
-    LLMData.create_dataset(
-        "5_no_move",
-        "llm_prompts_data/turns/train_5_no_move",
-        "llm_prompts_data/turns/valid_unseen_5_no_move",
-        "llm_prompts_data/turns/valid_seen_5_no_move",
-        upload=True,
-        alpaca=True,
-        # set_default=True,
-    )
+    for dataset in variants:
+        print(f"Creating dataset '{dataset}'...")
+        LLMData.create_dataset(
+            dataset,
+            f"llm_prompts_data/turns/train_{dataset}",
+            f"llm_prompts_data/turns/valid_unseen_{dataset}",
+            f"llm_prompts_data/turns/valid_seen_{dataset}",
+            upload=True,
+            alpaca=False,
+        )
+    #
+    # print("Creating dataset '0'...")
+    # LLMData.create_dataset(
+    #     "0",
+    #     "llm_prompts_data/turns/train_0",
+    #     "llm_prompts_data/turns/valid_unseen_0",
+    #     "llm_prompts_data/turns/valid_seen_0",
+    #     upload=True,
+    #     alpaca=True,
+    # )
+    #
+    # print("Creating dataset '0_no_move'...")
+    # LLMData.create_dataset(
+    #     "0_no_move",
+    #     "llm_prompts_data/turns/train_0_no_move",
+    #     "llm_prompts_data/turns/valid_unseen_0_no_move",
+    #     "llm_prompts_data/turns/valid_seen_0_no_move",
+    #     upload=True,
+    #     alpaca=True,
+    # )
+    #
+    # print("Creating dataset '5'...")
+    # LLMData.create_dataset(
+    #     "5",
+    #     "llm_prompts_data/turns/train_5",
+    #     "llm_prompts_data/turns/valid_unseen_5",
+    #     "llm_prompts_data/turns/valid_seen_5",
+    #     upload=True,
+    #     alpaca=True,
+    # )
+    #
+    # print("Creating dataset '5_no_move'...")
+    # LLMData.create_dataset(
+    #     "5_no_move",
+    #     "llm_prompts_data/turns/train_5_no_move",
+    #     "llm_prompts_data/turns/valid_unseen_5_no_move",
+    #     "llm_prompts_data/turns/valid_seen_5_no_move",
+    #     upload=True,
+    #     alpaca=True,
+    #     # set_default=True,
+    # )
 
 
