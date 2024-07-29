@@ -19,7 +19,7 @@ model_name = "unsloth/llama-3-8b-Instruct-bnb-4bit"
 # TODO: omit most of the observes
 
 print("Loading dataset")
-dataset = "5_no_move"
+dataset = "0_no_move_20pc_obs"
 data = load_dataset("Dandandooo/user-sim", dataset)
 
 print("Initializing Model")

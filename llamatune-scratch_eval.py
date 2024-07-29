@@ -1,6 +1,6 @@
 from src.model.llms import HugLM
 
-dataset = "0_no_move"
+dataset = "0_no_move_20pc_obs"
 
 model_name = f"llm_models/user-sim__llama-3-8b-it__{dataset}"
 

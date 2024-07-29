@@ -201,19 +201,25 @@ def all_matrix(filename="gpt4_result.json", prev=None) -> np.array:
 
 
 def metric_string(filename="gpt4_result.json") -> str:
+    return report(*calc_score(filename))
+
+
+def report(to, fo, ts, fs, cs, is_) -> str:
     to_ret = ""
-    true_observed, false_observed, true_speak, false_speak, correct_speak, incorrect_speak = calc_score(filename)
-    to_ret += f"Observed Accuracy: {true_observed / (true_observed + false_speak):.2%}\n"
-    to_ret += f"Speak Accuracy: {true_speak / (true_speak + false_observed):.2%}\n"
-    if (incorrect_speak + correct_speak) != 0:
-        to_ret += f"Dialogue Act Accuracy: {correct_speak / (incorrect_speak + correct_speak):.2%}\n\n"
+    to_ret += f"Observed Accuracy: {to / (to + fs):.2%}\n"
+    to_ret += f"Speak Accuracy: {ts / (ts + fo):.2%}\n"
+    if (is_ + cs) != 0:
+        to_ret += f"Dialogue Act Accuracy: {cs / (is_ + cs):.2%}\n\n"
 
-    to_ret += f"Spoke when shouldn't: {false_speak / (true_observed + false_speak):.2%}\n"
-    to_ret += f"Observed when shouldn't: {false_observed / (true_speak + false_observed):.2%}\n\n"
+    to_ret += f"Spoke when shouldn't: {fs / (to + fs):.2%}\n"
+    to_ret += f"Observed when shouldn't: {fo / (ts + fo):.2%}\n\n"
 
-    to_ret += f"Overall Accuracy: {(true_observed + true_speak) / (true_observed + false_observed + true_speak + false_speak):.2%}\n"
+    to_ret += f"Overall Accuracy: {(to + ts) / (to + fo + ts + fs):.2%}\n"
     to_ret += f"Confusion Matrix:\n"
-    to_ret += str(np.array([[true_observed, false_speak], [false_observed, true_speak]]))
+    to_ret += str(np.array([[to, fs], [fo, ts]]))
+    to_ret += "\n"
+
+    to_ret += f"F-Score: {2 * ts / (2 * ts + fs + fo):.2%}"
 
     return to_ret
 
@@ -235,8 +241,10 @@ def calc_folder(folder_path:str) -> dict:
         "f-score": 2 * true_speak / (2 * true_speak + false_speak + false_observed),
         "confusion": np.array([[true_observed, false_speak], [false_observed, true_speak]]),
         "speak_acc": correct_speak / (correct_speak + incorrect_speak),
+        "string": report(true_observed, false_observed, true_speak, false_speak, correct_speak, incorrect_speak)
     }
 
 
 if __name__ == "__main__":
-    print(metric_string())
+    folder_to_eval = sys.argv[1]
+    print(calc_folder(folder_to_eval)["string"])
