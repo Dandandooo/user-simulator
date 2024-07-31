@@ -28,57 +28,67 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all TissueBox on one Tables.
-COMMANDER: hello <<Greetings/Salutations>>
+Goal: Put all PepperShaker in any Cabinet.
+COMMANDER: <observe>
+DRIVER: Hello. What should we do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: put 2 pepper shakers inside ay cabinet <<Instruction>>
+DRIVER: <observe>
+COMMANDER: one is inside the microwave, take it. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: and place it inside cabinet <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hi, how are you? What would you like me to do today? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Make a plate of toast.
+DRIVER: <open Microwave>
 COMMANDER: <observe>
-DRIVER: Hello, what is my task <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: today you'll be making toast <<Instruction>>
-DRIVER: <observe>
-COMMANDER: knife is on the chair <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <pickup PepperShaker>
+COMMANDER: <observe>
+DRIVER: <putdown Microwave>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+COMMANDER: <observe>
+DRIVER: <close Microwave>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
+Goal: Put all Spatula in any Cabinet.
+COMMANDER: hi. Today we need to put all spatulas into any cabinet. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Clean all the Plates.
 COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what is my task please <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <pickup Apple>
+DRIVER: hi <<Greetings/Salutations>>
 COMMANDER response:
 Instruction
 
 Example :
 Goal: Boil Potato.
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: we are boiling a potato <<Instruction>>
+COMMANDER: <observe>
+DRIVER: How can i help? <<RequestForInstruction>>
+COMMANDER: Canyou boil a potato for me <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What should I do tody? <<RequestForInstruction>>
+DRIVER: of course <<Acknowledge>>
+COMMANDER: You can find one on the chair by the table <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Make a salad.
+Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER: We need to make a salad <<Instruction>>
+DRIVER: Hello. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: I have the robot commands. Do you also? <<OtherInterfaceComment>>
+COMMANDER: <observe>
+DRIVER: Hello? <<Greetings/Salutations>>
+COMMANDER: boil the potato by cooking it in water <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
-Instruction
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

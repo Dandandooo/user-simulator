@@ -28,97 +28,59 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all RemoteControl on any Sofa.
+Goal: Serve 1 slice(s) of Tomato on a Plate.
 COMMANDER: <observe>
-DRIVER: hello, how may i assist you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Can you put remote control on the sofa? <<Instruction>>
+DRIVER: hello, task please <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: slice tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: tomato in the sink <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
-COMMANDER: <observe>
-DRIVER: <putdown Sofa>
-COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
-COMMANDER: <observe>
-DRIVER: <putdown Sofa>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Clean all the Plates.
-COMMANDER: <observe>
-DRIVER: What should I do today <<RequestForInstruction>>
-COMMANDER: today we will be washing plates. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: check the cupboard to the right of the dishwasher <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: like the cupboard near the white appliance. there's an egg and kettle on the counter over there too <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: to the right of the appliance <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: on the other side of the dishwasher <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: <observe>
-DRIVER: Im only seeing the cooker <<NotifyFailure>>
-COMMANDER response:
-Confirm
-
-Example :
-Goal: Make a salad.
-COMMANDER: We need to make a salad today. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: We will need a knife to slice items <<InformationOther>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: Great! <<Acknowledge>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <slice Tomato>
-COMMANDER response:
-InformationOther
-
-Example :
-Goal: Put all RemoteControl on one CoffeeTable.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what can I do? <<RequestForInstruction>>
-COMMANDER: Hello!  There are three remotes and each says they need to be put on a single coffee table. I'll see where the first remote is for you. <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER: in front of the tv <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
-COMMANDER: <observe>
-DRIVER: <putdown CoffeeTable>
-COMMANDER: <observe>
-DRIVER: done <<Acknowledge>>
+DRIVER: <pickup Tomato>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Water the plant.
-COMMANDER: <observe>
-DRIVER: HI, what can i do <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: WATER THE PLANT <<Instruction>>
-DRIVER: <observe>
-COMMANDER: use the container and water from the sink <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Pot>
-COMMANDER: <observe>
-DRIVER: <pour HousePlant>
-COMMANDER: <observe>
-DRIVER: Anything else? <<RequestMore>>
+Goal: Make a salad.
+
 COMMANDER response:
-FeedbackPositive
+OBSERVE
+
+Example :
+Goal: Put all Apple in one Cabinet.
+
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all RemoteControl on any Dresser.
+COMMANDER: <observe>
+DRIVER: How can I help <<RequestForInstruction>>
+COMMANDER: please place all the remote controls on the dresser <<Instruction>>
+DRIVER: <observe>
+COMMANDER: There is one in the bin in the corner of the room <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: <putdown SideTable>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Boil Potato.
+COMMANDER: <observe>
+DRIVER: how can i help <<RequestForInstruction>>
+COMMANDER: could you please boil a potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: the potato should be in the drawer under the kitchen island <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: would you like me to slice it? <<Confirm>>
+COMMANDER response:
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

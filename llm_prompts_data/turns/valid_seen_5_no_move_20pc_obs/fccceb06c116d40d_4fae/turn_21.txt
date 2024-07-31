@@ -28,85 +28,105 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Prepare breakfast.
+Goal: Put all Plate in any Cabinet.
 COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
-COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: hi how can i help? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: please put the plate next to the microwave in a cabinet <<Instruction,InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <open Cabinet>
 COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
-COMMANDER: lets prepare breakfast today. <<Instruction>>
-DRIVER: <observe>
+DRIVER: <pickup Plate>
 COMMANDER: <observe>
-DRIVER: <open Fridge>
+DRIVER: <putdown Cabinet>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: finished, was that all? <<Acknowledge,Confirm>>
 COMMANDER response:
-Instruction
+FeedbackPositive
 
 Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: what should i do today? <<RequestForInstruction>>
-COMMANDER: make a slice of tomato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: slice it using a knife <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: where can i find the knife.? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: <observe>
-DRIVER: where can i find the tomato? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Make a salad.
-COMMANDER: <observe>
-DRIVER: how can I help? <<RequestForInstruction>>
-COMMANDER: please can you cut one slice of lettuce <<Instruction>>
-DRIVER: <observe>
-COMMANDER: which is on the counter at the corner <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
+Goal: Clean all the Drinkwares.
 COMMANDER: <observe>
 DRIVER: whats first? <<RequestForInstruction>>
-COMMANDER: lets find the tomato <<Instruction>>
+COMMANDER: We need to rinse the drinkware with water. <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: its on your search <<OtherInterfaceComment>>
-COMMANDER: its inside the drawer beneath the sink <<InformationOnObjectDetails>>
+DRIVER: cup, mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: there is something in the cabinet in the top right corner of the room <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Spatula>
+DRIVER: above something ? <<RequestOtherInfo>>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Make a salad.
-COMMANDER: <observe>
-DRIVER: whats first? <<RequestForInstruction>>
-COMMANDER: make a salad <<Instruction>>
+DRIVER: there is alot of cabinets <<RequestOtherInfo>>
+COMMANDER: It looks like it's something white on the floor? <<InformationOther>>
 DRIVER: <observe>
-COMMANDER: lettuce on the chair <<InformationOnObjectDetails>>
+COMMANDER: to the left of the stove <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Put all Pencil on any Desk.
+COMMANDER: <observe>
+DRIVER: Hello. May I have my first task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: I need you to put the pencil on the desk. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: the pencil is on the chair. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Pen>
+COMMANDER: <observe>
+DRIVER: <putdown Desk>
+COMMANDER: <observe>
+DRIVER: I put the pencil on the desk. What is my next task? <<Acknowledge,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Pencil>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: hello what is my task <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Today, you'll be preparing breakfast. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: First, make coffee. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: what do you need? <<RequestForInstruction>>
+COMMANDER: I need you to prepare breakfast. I need coffee in a clean mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: and also a salad <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what kind of salad? <<RequestForInstruction>>
+COMMANDER: with one slice of tomato, lettuce and potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: perfect <<Acknowledge>>
+COMMANDER: the potato needs to be cooked though <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is your mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER response:
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

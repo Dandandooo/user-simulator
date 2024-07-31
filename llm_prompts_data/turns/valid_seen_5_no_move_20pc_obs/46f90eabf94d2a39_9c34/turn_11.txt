@@ -28,71 +28,81 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Drinkwares.
+Goal: Serve 1 slice(s) of Lettuce on a Plate.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what should i do today? <<RequestForInstruction>>
-COMMANDER: lets clean the drinkwares <<Instruction>>
+DRIVER: hello how can i help <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: please slice 1 lettuce <<Instruction>>
 DRIVER: <observe>
-COMMANDER: drinkware next to toaster <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Prepare coffee in a clean mug.
-COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: please make coffee with the mug next to the sink <<Instruction>>
+COMMANDER: and put this on a plate for me <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Mug>
+DRIVER: <pickup Knife>
 COMMANDER: <observe>
-DRIVER: <putdown CoffeeMachine>
-COMMANDER response:
-FeedbackPositive
-
-Example :
-Goal: Serve 1 slice(s) of Tomato in a Bowl.
-COMMANDER: <observe>
-DRIVER: hello, what do you need today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: can you prepare 1 slice of tomato in a clean bowl? <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
+DRIVER: <slice Lettuce>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all RemoteControl on one CoffeeTable.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: what should i do? <<RequestForInstruction>>
-COMMANDER: hi..put all remotes on one coffe table <<Greetings/Salutations,Instruction>>
+DRIVER: hello, what is my task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Please fill coffee in mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: Mug is in coffee maker <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
+DRIVER: <toggle on CoffeeMachine>
 COMMANDER: <observe>
-DRIVER: <putdown CoffeeTable>
+DRIVER: done <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: next please <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
 COMMANDER response:
-Acknowledge
+Instruction
 
 Example :
-Goal: Put all Newspaper on any SideTable.
+Goal: Put all Newspaper on one Sofa.
 COMMANDER: <observe>
-DRIVER: Hi...What is my first task please? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: hello <<Greetings/Salutations>>
+COMMANDER: put the newspaper on the sofa <<Instruction>>
 DRIVER: <observe>
-COMMANDER: today we need to put newspaper on side table <<Instruction>>
+COMMANDER: there is 3 <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: there is one on the wall shelf <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Ok..I'm on it <<Acknowledge>>
+DRIVER: where is the newspaper <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: over the black stand <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Prepare breakfast.
 COMMANDER: <observe>
-DRIVER: <pickup Newspaper>
+DRIVER: What should i do today? <<RequestForInstruction>>
 COMMANDER: <observe>
-DRIVER: The kitchen table or the coffe table? <<AlternateQuestions>>
+DRIVER: <toggle on LightSwitch>
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Make a sandwich.
 COMMANDER: <observe>
-DRIVER: <putdown DiningTable>
+DRIVER: Hello, what should I do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: 2 bread toast <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle on LightSwitch>
+COMMANDER: <observe>
+DRIVER: Please use full sentences as per the instructions <<MiscOther>>
+COMMANDER: bread in the shelf <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: brown shelf on the left corner <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 

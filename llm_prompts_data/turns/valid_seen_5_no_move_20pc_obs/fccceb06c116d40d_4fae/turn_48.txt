@@ -28,83 +28,69 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: what can I help with? <<RequestForInstruction>>
+COMMANDER: Hi! You need to water the plant, please. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER response:
+Instruction
+
+Example :
 Goal: Prepare breakfast.
-COMMANDER: Good day!  We are preparing breakfast.  We first need to wash a dirty mug. <<Greetings/Salutations,Instruction>>
+COMMANDER: <observe>
+DRIVER: hello, how can i help you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: could you make me breakfast please, can you start by making me a coffee? <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <pickup Mug>
-COMMANDER: The mug is located under the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <putdown Sink>
-COMMANDER: <observe>
-DRIVER: <toggle on Faucet>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: Oh you found one!  Okay. <<Acknowledge>>
-DRIVER: <observe>
+DRIVER: <pour Sink>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Newspaper on one SideTable.
+Goal: Cook 1 slice(s) of Potato and serve on a Plate.
 COMMANDER: <observe>
-DRIVER: how can I help? <<RequestForInstruction>>
-COMMANDER: i need my newspapers put on the side table <<Instruction>>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: hi, what's my tsak <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Put all Fork in any Sink.
+COMMANDER: can you ut the fork in the sink for me please <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: sure, where are they? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+DRIVER: on it <<Acknowledge>>
+COMMANDER: it is in the top drawer behind you <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: apologies you were facing the right way when i said that <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: just to the right of te sink in that drawer <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: thanking you <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <open Drawer>
+COMMANDER: <observe>
+DRIVER: <pickup Fork>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Clean all the Plates.
+COMMANDER: there are 2 plates that needs to be clean <<Instruction>>
+DRIVER: <observe>
+COMMANDER: one is in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails
-
-Example :
-Goal: Make a salad.
-COMMANDER: Can you make me a salad? <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
-COMMANDER: There is a knife behind the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: <observe>
-DRIVER: <slice Lettuce>
-COMMANDER: <observe>
-DRIVER: <slice Tomato>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Boil Potato.
-COMMANDER: <observe>
-DRIVER: whats the first step <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Boil Potato.
-COMMANDER: <observe>
-DRIVER: Hello. How are we beginning? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hi there <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: We are going to boil a potato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Where is the potato located? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: <observe>
-DRIVER: <pickup Potato>
-COMMANDER: The potato is infront of you ontop of the counter <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: I have it. <<Acknowledge>>
-COMMANDER: Great <<FeedbackPositive>>
-DRIVER: <observe>
-COMMANDER response:
-Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

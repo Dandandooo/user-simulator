@@ -28,50 +28,105 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a salad.
-COMMANDER: we need to make a salad <<Instruction>>
+Goal: Water the plant.
+COMMANDER: Hi. Water the plant <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
-COMMANDER: lettuce is intthe microwave <<InformationOnObjectDetails>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what is my task tody <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Cup>
 COMMANDER response:
-InformationOnObjectDetails
+OBSERVE
 
 Example :
-Goal: Make a sandwich.
+Goal: Boil Potato.
 COMMANDER: <observe>
 DRIVER: hi <<Greetings/Salutations>>
 COMMANDER: <observe>
-DRIVER: what should I do today? <<RequestForInstruction>>
+DRIVER: what is the task today? <<RequestForInstruction>>
+COMMANDER: hello please boil a potato <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Pot>
+COMMANDER: <observe>
+DRIVER: <toggle on StoveKnob>
+COMMANDER: <observe>
+DRIVER: <toggle on StoveKnob>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER response:
+FeedbackPositive
+
+Example :
+Goal: Clean all the Pans.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
 COMMANDER: Hi <<Greetings/Salutations>>
 DRIVER: <observe>
-COMMANDER: You need to make 2 slices of toast <<Instruction>>
+COMMANDER: <observe>
+DRIVER: what can I do? <<RequestForInstruction>>
+COMMANDER: Could you clean the pan? <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: okay <<Acknowledge>>
+DRIVER: where is it? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: In a bottom cabinet <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
+DRIVER: <open Cabinet>
 COMMANDER: <observe>
-DRIVER: <slice Bread>
+DRIVER: <pickup Pan>
+COMMANDER response:
+NotifyFailure
+
+Example :
+Goal: Put all Newspaper on any Tables.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: newpaper needs to be put on the table <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Newspaper>
+COMMANDER: newspaper is on the sofa <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeTable>
+COMMANDER: in between the 2 cushions <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Newspaper>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeTable>
+COMMANDER: <observe>
+DRIVER: Which table are they supposed to be placed on? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all RemoteControl on one Tables.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all CreditCard on any Desk.
-
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Put all Fork in any Sink.
+DRIVER: Hi what to do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Today you will prepare coffee in a mug. <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hi, what are my directions? <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: where is the mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: It is towards the right of the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: Inside the white vessel that resemblesa grabage bin <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: inside the fridge? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: garbage* bin <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
 COMMANDER response:
 Instruction
 

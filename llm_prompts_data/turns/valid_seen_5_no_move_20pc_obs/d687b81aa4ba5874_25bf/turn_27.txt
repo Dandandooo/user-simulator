@@ -28,73 +28,83 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Prepare breakfast.
+Goal: Clean all the Plates.
 COMMANDER: <observe>
-DRIVER: Hello...What is my first task? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: make coffee in a clean mug <<Instruction>>
+DRIVER: How can I help? <<RequestForInstruction>>
+COMMANDER: Hi, today I'd like to clean my plates <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: the first can be found on the shelves to your left <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: On it <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <pickup Mug>
+DRIVER: okay thank you <<FeedbackPositive>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 3 slice(s) of Lettuce on a Plate.
-COMMANDER: <observe>
-DRIVER: hi, what should I do first? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: We need to serve 3 slices of lettuce on a plate <<Instruction>>
+Goal: Make a salad.
+COMMANDER: tomato is inside the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
-COMMANDER: Could you find lettuce first? <<Instruction>>
+COMMANDER: slice it <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: yes, where do I place it? <<Affirm,RequestOtherInfo>>
-COMMANDER: find knife <<Instruction>>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: Hi. <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: What am I doing today, please? <<RequestForInstruction>>
+COMMANDER: First, slice the lettuce <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup ButterKnife>
-COMMANDER: Knife is near the lettuce <<InformationOnObjectDetails>>
+DRIVER: Okay. Where can I find the lettuce? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: And the knife please? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: The lettuce is inside the cabinet below the coffee maker <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
 
 Example :
 Goal: Make a sandwich.
 COMMANDER: <observe>
-DRIVER: hi what do you need? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: hi i'd like a sandwich <<Greetings/Salutations,Instruction>>
+DRIVER: How can I help? <<RequestForInstruction>>
+COMMANDER: Let's make a sandwich <<Instruction>>
+DRIVER: <observe>
+COMMANDER: Bread is next to the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Plate>
-COMMANDER: first you can toast 2 slices of bread <<Instruction>>
-DRIVER: <observe>
+DRIVER: Sure <<Acknowledge>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Cook 1 slice(s) of Potato and serve in a Bowl.
+COMMANDER: <observe>
+DRIVER: hi, what should I do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
 COMMANDER: <observe>
 DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
-DRIVER: ok <<Acknowledge>>
+DRIVER: <pickup ButterKnife>
 COMMANDER: <observe>
-DRIVER: <pickup Cup>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all CreditCard on any Furniture.
+DRIVER: <slice Lettuce>
 COMMANDER: <observe>
-DRIVER: what can i do for you today <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Serve 2 slice(s) of Lettuce on a Plate.
-COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
-COMMANDER: slice lettuce <<Instruction>>
-DRIVER: <observe>
-COMMANDER: next to the coffee maker <<InformationOnObjectDetails>>
+DRIVER: <putdown CounterTop>
+COMMANDER: make slice of potato <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
+DRIVER: <pickup DishSponge>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
 COMMANDER response:
 OBSERVE
 

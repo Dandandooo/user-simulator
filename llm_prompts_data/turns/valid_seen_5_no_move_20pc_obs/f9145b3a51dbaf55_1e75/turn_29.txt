@@ -28,41 +28,72 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Boil Potato.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+Goal: Clean all the Drinkwares.
+
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare breakfast.
+Goal: Clean all the Plates.
 COMMANDER: <observe>
 DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: first task <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Make a plate of toast.
+Goal: Put all Watch on any SideTable.
 COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER: bread is in the cabinet above the oven <<InformationOnObjectDetails>>
+DRIVER: Hello. what should i do for you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: We need to put te watch on a side table <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Where is the watch? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: I show it on a couch <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Watch>
+COMMANDER: Says place on any side table <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Dresser>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: There is another watch on the brown table under the lamp <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
 
 Example :
-Goal: Prepare breakfast.
-
+Goal: Make a plate of toast.
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Hi ) <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: What is my first task? <<RequestForInstruction>>
+COMMANDER: lets make some toast <<Instruction>>
+DRIVER: <observe>
+COMMANDER: first we need to slice some bread with a knife <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Sounds good <<Acknowledge>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a plate of toast.
-
+Goal: Prepare coffee in a clean mug.
+COMMANDER: clean mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: mug next to the coffeemaker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: place mug in coffeemaker is the task <<Instruction>>
+DRIVER: <observe>
+COMMANDER: and turn on <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
 COMMANDER response:
-Greetings/Salutations
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

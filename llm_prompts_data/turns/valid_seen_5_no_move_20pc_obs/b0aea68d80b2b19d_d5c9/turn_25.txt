@@ -28,67 +28,97 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a plate of toast.
-COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: make a plate of toast <<Instruction>>
+Goal: Cook 3 slice(s) of Potato and serve in a Bowl.
+COMMANDER: Please slice the potato in the sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: There is also a knife in the sink <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <open Drawer>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Potato>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: Please cook 3 slices of potato on the stove <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: wheres the pan? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: In the cabinet below the coffee maker <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Boil Potato.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: Boil a potato <<Instruction>>
+Goal: Make a sandwich.
+COMMANDER: we need to make a sanwich <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: where is it? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: look in the cabinet above the toaster <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: left side of the taoster <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Water the plant.
-COMMANDER: <observe>
-DRIVER: how can i help? <<RequestForInstruction>>
+DRIVER: hi, what shall i do today. <<Greetings/Salutations,RequestForInstruction>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Boil Potato.
-COMMANDER: Hello there! <<Greetings/Salutations>>
+Goal: Prepare coffee in a clean mug.
+COMMANDER: please can you make a coffee for me? <<Instruction>>
+DRIVER: <observe>
+COMMANDER: the mug is on the counter by the stove <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what shall i do ? <<RequestForInstruction>>
-COMMANDER: today we're going to boil a potato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: there's already a potato in a pan on the stove <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: sure <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: where is potato? <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <pickup Mug>
 COMMANDER: <observe>
-DRIVER: ok <<Acknowledge>>
+DRIVER: <putdown CoffeeMachine>
 COMMANDER: <observe>
-DRIVER: <pickup Potato>
+DRIVER: <toggle on CoffeeMachine>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <toggle off CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
 COMMANDER response:
-Instruction
+FeedbackPositive
 
 Example :
-Goal: Prepare breakfast.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: please make coffee <<Instruction>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: We need to make a salad <<Instruction>>
 DRIVER: <observe>
+COMMANDER: First let's slice lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: Lettuce is in fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: Knife is right of fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all RemoteControl on one Tables.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: Hello today we are placing all remote controls on one table <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Where is the table? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: How many remotes? <<RequestOtherInfo>>
+COMMANDER: 4 remotes <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: I could see all 4 remotes <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: Please confirm the place to place these <<RequestOtherInfo>>
 COMMANDER response:
 InformationOnObjectDetails
 

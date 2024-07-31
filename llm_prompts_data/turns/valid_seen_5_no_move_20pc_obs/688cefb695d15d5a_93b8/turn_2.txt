@@ -28,13 +28,33 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all Newspaper on one ArmChair.
+Goal: Put all RemoteControl on one ArmChair.
+COMMANDER: task <<InformationOther>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: What do I need to do? <<RequestForInstruction>>
+COMMANDER: all remote controls on the arm chair <<Instruction>>
 DRIVER: <observe>
-COMMANDER: Please place the newspapers on the same arm chair <<Instruction>>
+COMMANDER: <observe>
+DRIVER: Do I need to move the remote? <<RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Serve 2 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: Hello! What may I do for you today? <<RequestForInstruction>>
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all Newspaper on one Furniture.
+COMMANDER: <observe>
+DRIVER: how can I help <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 
@@ -46,57 +66,28 @@ COMMANDER: HI <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: Clean the bowl <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: where is the bowl? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: The cabinet to the right of the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: <observe>
-DRIVER: <close Cabinet>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all SmallHandheldObjects on one Chairs.
+Goal: Put all SmallHandheldObjects on one Tables.
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: 2 handheld items on the coffee table infront of sofa <<InformationOnObjectDetails>>
+DRIVER: Hello, what is my task <<RequestForInstruction>>
+COMMANDER: hi please put all small handheld objects on one table <<Instruction>>
 DRIVER: <observe>
-COMMANDER: 2 remotes on the chairs of the table <<InformationOnObjectDetails>>
+COMMANDER: object is on table <<InformationOnObjectDetails>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Watch>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
 COMMANDER: <observe>
 DRIVER: <pickup KeyChain>
 COMMANDER: <observe>
-DRIVER: <putdown Ottoman>
+DRIVER: <putdown DiningTable>
 COMMANDER: <observe>
-DRIVER: <pickup Vase>
-COMMANDER: <observe>
-DRIVER: <putdown Ottoman>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Water the plant.
-
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Make a plate of toast.
-COMMANDER: <observe>
-DRIVER: Hi. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: Hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: First we need to make a slice of toast. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: The knife is on the stool behind the counter <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Bread>
-COMMANDER: You can leave the bread there. <<InformationOther>>
+DRIVER: done? <<Acknowledge>>
+COMMANDER: there is one object on the brown coffee table <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
 Instruction

@@ -28,70 +28,97 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Plates.
+Goal: Put all Pillow on any ArmChair.
 COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
-COMMANDER: Hello. Please clean the plate to the left of the sink. <<Greetings/Salutations,Instruction>>
+DRIVER: How can I help? <<RequestForInstruction>>
+COMMANDER: hi, please put all pillows on any arm chair <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: there are three pillows <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Plate>
+DRIVER: okay <<Acknowledge>>
+COMMANDER: two of them are on top of the dresser <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <pickup Pillow>
+COMMANDER: the third one is on the bottom left cabinet of the dresser <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Vase>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <pickup SoapBottle>
+DRIVER: <putdown ArmChair>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a sandwich.
-COMMANDER: toast 2 bread slices <<Instruction>>
-DRIVER: <observe>
-COMMANDER: slice 2 lettuce <<Instruction>>
+Goal: Make a plate of toast.
+COMMANDER: <observe>
+DRIVER: what can we do today <<RequestForInstruction>>
+COMMANDER: make a plate of toast <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: ingredients location please <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <pickup Knife>
 COMMANDER: <observe>
-DRIVER: knife? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: bread is near stove <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: <putdown SideTable>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Put all Newspaper on one SideTable.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: hi how can i helpl today? <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: first task? <<RequestForInstruction>>
+COMMANDER: Make a salad <<Instruction>>
+DRIVER: <observe>
+COMMANDER: make a slice of lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: lettuce is next to the toaster <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Lettuce>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Put all Newspaper on one ArmChair.
-
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: hello what can I do? <<RequestForInstruction>>
+COMMANDER: Today you will make a sandwich <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: okay <<Acknowledge>>
+COMMANDER: First, slice the bread <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: okay <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
 COMMANDER response:
-OBSERVE
+InformationOnObjectDetails
 
 Example :
-Goal: Serve 3 slice(s) of Lettuce on a Plate.
+Goal: Serve 1 slice(s) of Tomato on a Plate.
 COMMANDER: <observe>
-DRIVER: what shall I do today? <<RequestForInstruction>>
-COMMANDER: Hi. First let's get the lettuce out of the fridge <<Greetings/Salutations,Instruction>>
+DRIVER: what should i do? <<RequestForInstruction>>
+COMMANDER: we need to slice a tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: there's a tomato on the counter in the corner <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
-COMMANDER: <observe>
-DRIVER: <close Fridge>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: We're gonna slice that withe the knife next to the toaster <<Instruction>>
-DRIVER: <observe>
+DRIVER: <pickup Knife>
 COMMANDER response:
-FeedbackPositive
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

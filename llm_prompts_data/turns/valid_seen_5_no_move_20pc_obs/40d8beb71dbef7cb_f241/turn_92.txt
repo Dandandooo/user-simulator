@@ -28,67 +28,83 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a plate of toast.
+Goal: Clean all the Plates.
 COMMANDER: <observe>
-DRIVER: Hi what are my directions? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: can you make me a slice of toast please <<Instruction>>
+DRIVER: what can i do for you? <<RequestForInstruction>>
+COMMANDER: please clean a plate <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: where is the knife? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: <observe>
-DRIVER: found it <<Acknowledge>>
-COMMANDER: theres a knife next to the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: <observe>
-DRIVER: <slice Bread>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a plate of toast.
-COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER response:
-Greetings/Salutations
-
-Example :
-Goal: Clean all the Drinkwares.
-COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What can I do for you today? <<RequestForInstruction>>
-COMMANDER: Hi how are you? <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Which task first? <<RequestForInstruction>>
-COMMANDER response:
-Acknowledge
-
-Example :
-Goal: Serve 1 slice(s) of Lettuce on a Plate.
-COMMANDER: <observe>
-DRIVER: Hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What's the task? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Make a plate of toast.
-COMMANDER: hello <<Greetings/Salutations>>
-DRIVER: <observe>
+Goal: Clean all the Cloths.
 COMMANDER: <observe>
 DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what is my task? <<RequestForInstruction>>
-COMMANDER: Please make a slice of toast. <<Instruction>>
+COMMANDER: Clean all the clothes <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
+DRIVER: where are they? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: im not sure <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: i think this is a glitch <<OtherInterfaceComment>>
+DRIVER: <observe>
+COMMANDER: im going to finish it <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: search the object <<Instruction>>
+COMMANDER: and we should report glitch <<OtherInterfaceComment>>
+DRIVER: <observe>
+COMMANDER: i did <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER response:
+InformationOther
+
+Example :
+Goal: Make a plate of toast.
+COMMANDER: <observe>
+DRIVER: Hello, what is my task today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: We are going to start with a slice of toast. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Where is bread please <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: The bread is in the cabinet on the left side of the microwave <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <close Cabinet>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Make a plate of toast.
+COMMANDER: <observe>
+DRIVER: how can i help? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: makea plate of toast please <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: sure <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
 COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Clean all the Plates.
+COMMANDER: <observe>
+DRIVER: Hello. what can i do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: HI <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER response:
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

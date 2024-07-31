@@ -28,85 +28,89 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Water the plant.
+Goal: Serve 1 slice(s) of Tomato on a Plate.
 COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
-COMMANDER: Hello, can you water the plant please? <<Instruction>>
+DRIVER: what should i do? <<RequestForInstruction>>
+COMMANDER: we need to slice a tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: there's a tomato on the counter in the corner <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Egg>
+DRIVER: <pickup Knife>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <slice Tomato>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: next? <<RequestForInstruction>>
+COMMANDER: there's a dirty plate next to the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: we need to clean it <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare breakfast.
+Goal: Put all SaltShaker on any DiningTable.
 COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
-COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: Hi, what  are my directions? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Hi i need 2 saltshakers put onto the dining table <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: task please <<RequestForInstruction>>
-COMMANDER: lets make some breakfast <<Instruction>>
+DRIVER: <pickup SaltShaker>
+COMMANDER: one is next to the microwave <<InformationOnObjectDetails>>
 DRIVER: <observe>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Make a salad.
-COMMANDER: <observe>
-DRIVER: whats first? <<RequestForInstruction>>
-COMMANDER: make a salad <<Instruction>>
-DRIVER: <observe>
-COMMANDER: lettuce on the chair <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all TissueBox on one SideTable.
-COMMANDER: <observe>
-DRIVER: hi how can i help? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hello, can you put the tissue boxes on the side tables <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup TissueBox>
-COMMANDER: You can find them on the shelves <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <putdown SideTable>
-COMMANDER: <observe>
-DRIVER: <pickup TissueBox>
-COMMANDER: <observe>
-DRIVER: <putdown SideTable>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Put all Watch on any CoffeeTable.
-COMMANDER: <observe>
-DRIVER: hi what are my directions <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hi, put all Watch on any Coffee Table please <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER: one watch is on the dining table <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Plate>
 COMMANDER: <observe>
 DRIVER: <putdown DiningTable>
 COMMANDER: <observe>
-DRIVER: <pickup Watch>
+DRIVER: <pickup PepperShaker>
 COMMANDER: <observe>
-DRIVER: <putdown CoffeeTable>
-COMMANDER: <observe>
-DRIVER: is there any more watches? <<RequestMore>>
+DRIVER: <putdown DiningTable>
 COMMANDER response:
-Deny
+InformationOnObjectDetails
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: what can i do for you? <<RequestForInstruction>>
+COMMANDER: I want a sandwich <<Instruction>>
+DRIVER: <observe>
+COMMANDER: toasted with one slice of lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: sure <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: i see the bread and lettuce <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: where is the knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Serve 3 slice(s) of Lettuce in a Bowl.
+COMMANDER: can you please slice a lettuce and place 3 pieces of it into a clean bowl <<Instruction>>
+DRIVER: <observe>
+COMMANDER: there is a lettuce and a knife on the table <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER: and a bowl in a lower corner cupboard <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all Fruit in any Fridge.
+COMMANDER: <observe>
+DRIVER: Hi what are my directions? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: i left my fruit out, could you put them in the fridge for me <<Instruction>>
+DRIVER: <observe>
+COMMANDER response:
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

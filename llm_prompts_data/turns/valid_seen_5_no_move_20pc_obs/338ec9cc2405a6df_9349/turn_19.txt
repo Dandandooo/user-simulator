@@ -28,71 +28,80 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Mugs.
-COMMANDER: clean all mugs <<Instruction>>
+Goal: Put all Apple on any DiningTable.
+COMMANDER: <observe>
+DRIVER: hi how can i help <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: please put the apples on the dining table <<Instruction>>
+DRIVER: <observe>
+COMMANDER: one of them is by the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Apple>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: the other is in the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a salad.
-COMMANDER: we need to make a salad <<Instruction>>
+Goal: Clean all the Plates.
+
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Boil Potato.
+COMMANDER: <observe>
+DRIVER: How can i help? <<RequestForInstruction>>
+COMMANDER: Canyou boil a potato for me <<Instruction>>
 DRIVER: <observe>
-COMMANDER: lettuce is intthe microwave <<InformationOnObjectDetails>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: of course <<Acknowledge>>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Prepare coffee in a clean mug.
+Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: how can I help? <<RequestForInstruction>>
-COMMANDER: Hi there! Can you make me a coffee in a clean mug? <<Greetings/Salutations,Instruction>>
+DRIVER: How can I help? <<RequestForInstruction>>
+COMMANDER: Could you boil a potato? <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: surely <<Acknowledge>>
+DRIVER: <pickup Potato>
 COMMANDER: <observe>
-DRIVER: do you see a mug? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Prepare breakfast.
-COMMANDER: hi lets clean a mug <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER: mug is below coffee maker <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
-DRIVER: <pickup Mug>
-COMMANDER: clean it please <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: clear some itmes in the sink..that may help <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pour Sink>
+DRIVER: <pickup Pot>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare breakfast.
+Goal: Put all RemoteControl on one Ottoman.
 COMMANDER: <observe>
-DRIVER: hi...waht can i do today <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hello. <<Greetings/Salutations>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: how may i help you? <<RequestForInstruction>>
+COMMANDER: get the remote on the tv stand and place it on the center furniture <<Instruction>>
 DRIVER: <observe>
-COMMANDER: Today, you are preparing breakfast. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: First thing we need to do is prepare coffee in a clean mug. <<Instruction>>
+COMMANDER: where the laptop is <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Mug>
+DRIVER: ok <<Affirm>>
 COMMANDER: <observe>
-DRIVER: <putdown Sink>
+DRIVER: <pickup RemoteControl>
 COMMANDER: <observe>
-DRIVER: <toggle on Faucet>
+DRIVER: <putdown DiningTable>
+COMMANDER: no <<Deny>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

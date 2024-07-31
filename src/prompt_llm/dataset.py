@@ -51,8 +51,9 @@ if __name__ == "__main__":
         # "0_no_move",
         # "5",
         # "5_no_move",
-        "0_no_move_20pc_obs",
-        "5_no_move_20pc_obs",
+        # "0_no_move_20pc_obs",
+        # "5_no_move_20pc_obs",
+        "0_no_move_40pc_obs"
     ]
 
     for dataset in variants:

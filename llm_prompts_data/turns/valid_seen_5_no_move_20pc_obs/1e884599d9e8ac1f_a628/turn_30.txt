@@ -28,75 +28,76 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Prepare breakfast.
+Goal: Serve 1 slice(s) of Tomato in a Bowl.
 COMMANDER: <observe>
-DRIVER: Hello. Hoe may I assit you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: hii <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: go find mug <<Instruction>>
-DRIVER: <observe>
-COMMANDER: clean the mug <<Instruction>>
+DRIVER: hello <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: What is my task please? <<RequestForInstruction>>
+COMMANDER: Today you will make one slice of tomato <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Sure. Mug location, please? <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: Where is the tomato please <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Put all Mug in one Cabinet.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: how can i help today <<RequestForInstruction>>
-COMMANDER: please could you put my mug away into the cabinet <<Instruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: Hi <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: sure, where is the mug <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
-COMMANDER: it should be in the dishwasher <<InformationOnObjectDetails>>
+DRIVER: what should i do today? <<RequestForInstruction>>
+COMMANDER: the first task is to make a slice of tomato <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: <observe>
-DRIVER: <pickup Mug>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
+DRIVER: where can i find tomato and knife? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Spatula in any Cabinet.
+Goal: Put all SmallHandheldObjects on one Tables.
 COMMANDER: <observe>
-DRIVER: how can i help? <<RequestForInstruction>>
-COMMANDER: Hi, today I'd like to gather all my spatula's in a single cabinet <<Greetings/Salutations,Instruction>>
+DRIVER: hello what can I do for you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: i'd like all small hand held object placed on one table <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok which objects specifically? <<RequestOtherInfo>>
+COMMANDER: <observe>
+DRIVER: <pickup KeyChain>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Clean all the Plates.
-COMMANDER: Can you please clean the plates for me <<Instruction>>
-DRIVER: <observe>
-COMMANDER: There is a plate in the island <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Plate>
-COMMANDER: please rinse the sink under the tap <<Instruction,InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <pickup SoapBottle>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+Goal: Make a salad.
+
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare breakfast.
-COMMANDER: hello <<Greetings/Salutations>>
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: hi,what should i do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Add coffee to a mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: Mug is in the coffee maker already <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
+DRIVER: should i rinse the mug or not? <<AlternateQuestions>>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER: dont <<Deny>>
+DRIVER: <observe>
 COMMANDER response:
-Instruction
+InformationOther
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

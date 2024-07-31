@@ -1,0 +1,201 @@
+Imagine you, the COMMANDER, are an embodied agent in a simulated world. Your purpose is to instruct a robot, named DRIVER, to do tasks for
+you by telling it what to do and interrupting it to give further instruction when necessary. Your job here is to predict when
+you should be giving instructions to the DRIVER based on turn history with the DRIVER. If there is nothing to do or say, you
+should just observe.
+
+Dialogue histories may also include dialogue actions to further clarify the dialogue. A single
+utterance may have one or more dialogue acts (most have only one). The possible dialogue acts are:
+
+[
+ 'Acknowledge the other's utterance', # Category: Generic. Example: "perfect." Mostly follower
+ 'Affirm',      # Category: Generic. Example: "yes." Mostly commander
+ 'AlternateQuestions', # Category: Object/Location. Example: "yellow or blue mug?" Mostly follower
+ 'Confirm', # Category: Generic. Example: "Should I clean the cup?" Mostly follower
+ 'Deny',    # Category: Generic. Example: "no." Mostly commander
+ 'FeedbackNegative', # Category: feedback. Example: "that is not correct." Almost entirely commander
+ 'FeedbackPositive', # Category: feedback. Example: "great job." Almost entirely commander
+ 'Greetings/Salutations', # Category: Generic. Example: "hello." Even commander/follower
+ 'InformationOnObjectDetails', # Category: Object/Location. Example: "knife is behind the sink." Almost entirely commander
+ 'InformationOther', # Category: Generic. Example: "Mug is already clean." Mostly commander
+ 'Instruction', # Category: Instruction. Example: "fill the mug with coffee." Almost entirely commander
+ 'MiscOther', # Category: Generic. Example: "ta-da." Even commander/follower
+ 'NotifyFailure', # Category: Interface. Example. "not able to do that." Almost entirely follower
+ 'OtherInterfaceComment', # Category: Interface. Example: "which button opens drawer?" Even commander/follower
+ 'RequestForInstruction', # Category: Instruction. Example: "what should I do today?" Almost entirely follower
+ 'RequestForObjectLocationAndOtherDetails', # Category: Object/Location. Example: "where is the mug?" Almost entirely follower
+ 'RequestMore', # Category: Instruction. Example: "Is there anything else to do?" Almost entirely follower
+ 'RequestOtherInfo' # Category: Instruction. Example: "how many slices of tomato?" Almost entirely follower
+]
+
+
+
+Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
+Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
+
+
+Goal: Boil Potato.
+COMMANDER: <observe>
+DRIVER: What do I need to do today? <<RequestForInstruction>>
+COMMANDER: boiling a potatoe <<Instruction>>
+DRIVER: <observe>
+COMMANDER: potatoe next to the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is it <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: by the tea maker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: I have picked the potato <<Acknowledge>>
+COMMANDER: put in a pot of water <<Instruction>>
+DRIVER: <observe>
+COMMANDER: find a pot <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Okay. going to the water pot <<Acknowledge>>
+COMMANDER: check the counter for a pot <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: the whole counter <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Kettle>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: place potatoe in it <<Instruction>>
+DRIVER: <observe>
+COMMANDER: then take to sink and fill with water <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: I have found a pot although very huge <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Pot>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: clear sink first <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: <observe>
+DRIVER: I have cleared the sink <<Acknowledge>>
+COMMANDER: place in sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: The sink is too large for the water pot <<NotifyFailure>>
+COMMANDER: <observe>
+DRIVER: Find me a cup I can use to fetvh water fromthe sink <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: ok remove the potatoe <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: fetch <<Acknowledge>>
+COMMANDER: then turn around to the middle island i think i seen a smaller pot over there <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: if not check the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: drop the big pot <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Bowl>
+COMMANDER: yes <<Affirm>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: I have dropped the pot and picked up a smaller one <<Acknowledge>>
+COMMANDER: put potatoe in there <<Instruction>>
+DRIVER: <observe>
+COMMANDER: then take to the stove <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: put the potatoe in the pot and go to the stove <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: The potato is not fiiting in that pot <<NotifyFailure>>
+COMMANDER: <observe>
+DRIVER: Can we try a pan? <<Confirm>>
+COMMANDER: there is a smaller potatoe in the big pot <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup PepperShaker>
+COMMANDER: one left grab it <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Pot>
+COMMANDER: yea <<Affirm>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: I am unable to remove that potato from taht pot. Find me another one <<NotifyFailure,RequestForObjectLocationAndOtherDetails>>
+COMMANDER: try a pan <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Okay <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Pan>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: fill it with water <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Pan>
+COMMANDER: <observe>
+DRIVER: <pickup Pan>
+COMMANDER: dont fit? <<Confirm>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: The pan cannot fit in the sink <<NotifyFailure>>
+COMMANDER: <observe>
+DRIVER: Let me take a mug <<Acknowledge>>
+COMMANDER: yea try boil in the microwave <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Bowl>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: or you can still use that on the stove <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: I have picked the small bowl and will now fill it with water <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup Bowl>
+COMMANDER: place on the stove <<Instruction>>
+DRIVER: <observe>
+COMMANDER: stove <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: If I place this water on the stove first how will I place the potato on this bowl? <<Confirm>>
+COMMANDER response:

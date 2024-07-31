@@ -28,81 +28,78 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Cook 5 slice(s) of Potato and serve on a Plate.
-COMMANDER: <observe>
-DRIVER: how can I help? <<RequestForInstruction>>
-COMMANDER: Cook five slice of potato and serve it on the clean plate <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: sure, where can I find the potato and knife please? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
-COMMANDER response:
-InformationOnObjectDetails
+Goal: Serve 2 slice(s) of Tomato on a Plate.
 
-Example :
-Goal: Make a salad.
-COMMANDER: Hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: what can I do <<RequestForInstruction>>
-COMMANDER: Make a salad <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: what Do I need <<RequestForInstruction>>
-COMMANDER: Cut the salad <<Instruction>>
-DRIVER: <observe>
-COMMANDER: i mean lettuce <<Instruction>>
-DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
+Goal: Cook 5 slice(s) of Potato and serve on a Plate.
 COMMANDER: <observe>
 DRIVER: hi <<Greetings/Salutations>>
 COMMANDER: <observe>
-DRIVER: what should I do? <<RequestForInstruction>>
-COMMANDER: make a slice of tomato <<Instruction>>
+DRIVER: what is my task? <<RequestForInstruction>>
+COMMANDER: Slice the potato <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Potato>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: Potato is on the pan <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: it's sliced <<Acknowledge>>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
 
 Example :
-Goal: Prepare coffee in a clean mug.
+Goal: Clean all the Cloths.
 COMMANDER: <observe>
-DRIVER: how can i help <<RequestForInstruction>>
-COMMANDER: could you please prepare coffee in a clean mug <<Instruction>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
+COMMANDER: <observe>
+DRIVER: Hello, task please <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: today lets cook potato <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Mug>
+DRIVER: <pickup Potato>
 COMMANDER: <observe>
-DRIVER: <pour Pot>
+DRIVER: I have potato, cook in microwave? <<RequestForInstruction>>
+COMMANDER: grab a knife and slice the potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: ok <<Acknowledge>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <putdown CoffeeMachine>
+DRIVER: <open Microwave>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Fork in one Drawer.
-COMMANDER: grab the fork <<Instruction>>
+Goal: Put all Cup in any Sink.
+COMMANDER: <observe>
+DRIVER: hi, what should i do today <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: put all cups in the sink <<Instruction>>
 DRIVER: <observe>
-COMMANDER: on the counter at the end <<Instruction>>
+COMMANDER: one by the sink on the right <<InformationOnObjectDetails>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Alright <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <pickup Fork>
-COMMANDER: <observe>
-DRIVER: next <<RequestForInstruction>>
-COMMANDER: put in a single drawer <<Instruction>>
+COMMANDER: grab and place in sink <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: where? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: any drawer <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <pickup Cup>
 COMMANDER: <observe>
-DRIVER: <open Cabinet>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <pickup Cup>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

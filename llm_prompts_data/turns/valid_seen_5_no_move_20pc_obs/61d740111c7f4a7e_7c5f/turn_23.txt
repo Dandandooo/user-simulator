@@ -28,53 +28,99 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Plates.
+Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what is my task? <<RequestForInstruction>>
-COMMANDER response:
-Greetings/Salutations
-
-Example :
-Goal: Put all RemoteControl on one Sofa.
-COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
-COMMANDER: put all remote control on one sofa <<Instruction>>
+DRIVER: hi how can i help <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Hi can you boil a potato <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: potato is in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Pot>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: anything else i can help with <<RequestMore>>
+COMMANDER: <observe>
+DRIVER: <toggle on StoveKnob>
 COMMANDER response:
-OBSERVE
+FeedbackPositive
 
 Example :
 Goal: Make a salad.
-COMMANDER: <observe>
-DRIVER: what can I do? <<RequestForInstruction>>
-COMMANDER: Hi first we need the lettuce on the kitchen table <<Greetings/Salutations,Instruction>>
+COMMANDER: we need to make a salad <<Instruction>>
 DRIVER: <observe>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Make a sandwich.
-COMMANDER: we need to make a sandwich <<Instruction>>
+COMMANDER: lettuce tomato and potato <<Instruction>>
 DRIVER: <observe>
-COMMANDER: lets slice some bread <<Instruction>>
+COMMANDER: the knife is on the stool <<InformationOnObjectDetails>>
 DRIVER: <observe>
-COMMANDER: its in the cupboard to the left of the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: <observe>
-DRIVER: <slice Bread>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Clean all the Plates.
-COMMANDER: Hello. <<Greetings/Salutations>>
+Goal: Put all RemoteControl in one Box.
+COMMANDER: <observe>
+DRIVER: Hi what am I doing today <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: You need to place 2 remote controls into 1 box please. <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: There is a remote on the little side table next to the arm chair and floor lamp. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: Both remotes need to be placed into the same box <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Box>
+COMMANDER: <observe>
+DRIVER: I haveplaced one <<Acknowledge>>
+COMMANDER response:
+FeedbackPositive
+
+Example :
+Goal: Serve 1 slice(s) of Tomato in a Bowl.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: make one slice of tomato using a knife <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all AlarmClock on any Bed.
+COMMANDER: <observe>
+DRIVER: Hello, what shall I   be doing today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Hello...We need to take the alam clcoks and place on the bed <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Ok. <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup AlarmClock>
+COMMANDER: <observe>
+DRIVER: <putdown Bed>
+COMMANDER: <observe>
+DRIVER: I   have placed 1 alarm clock on the bed. Are there more? <<Acknowledge,RequestMore>>
+COMMANDER: Take the alarm clock that was already on the bead and move it to a different spot <<InformationOnObjectDetails,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup AlarmClock>
+COMMANDER: <observe>
+DRIVER: <putdown Bed>
 COMMANDER response:
 OBSERVE
 

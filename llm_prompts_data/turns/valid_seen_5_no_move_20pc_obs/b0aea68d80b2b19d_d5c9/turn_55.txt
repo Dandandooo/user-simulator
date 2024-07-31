@@ -28,68 +28,89 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all RemoteControl on one Furniture.
+Goal: Make a sandwich.
 COMMANDER: <observe>
-DRIVER: what should i do? <<RequestForInstruction>>
-COMMANDER: put all remote controls on one furniture <<Instruction>>
+DRIVER: Hello. What is my first task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Make a slice of toast <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: where is remote? <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: Sure. Bread locatio? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
 COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
-COMMANDER: remote is in dust bin beside the sofa <<InformationOnObjectDetails>>
+DRIVER: <pickup ButterKnife>
+COMMANDER: On the chair on the dining table <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <putdown Sofa>
-COMMANDER: good <<FeedbackPositive>>
-DRIVER: <observe>
+DRIVER: Thank you. <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: is that dust bin? <<RequestOtherInfo>>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: Bread sliced. <<Acknowledge>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Egg in one Cabinet.
-
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: First task? <<RequestForInstruction>>
+COMMANDER: We need to prepare coffee in clean mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok, where is the mug? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+COMMANDER: Mug is inside fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Put all Apple in any Cabinet.
-COMMANDER: Hi, today I want all the apples gathered in a cabinet please <<Greetings/Salutations,Instruction>>
+Goal: Put all Watch on one Sofa.
+COMMANDER: <observe>
+DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: good day <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: put all watch on one sofa <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: of course, ill start working on that now <<Acknowledge>>
+DRIVER: Okay.  Can you direct me to the first watch? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+COMMANDER: first watch is on the black side table right to the sofa with the laptop <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Apple>
+DRIVER: <pickup Watch>
+COMMANDER: good <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Sofa>
+COMMANDER: <observe>
+DRIVER: Second watch? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Water the plant.
+Goal: Clean all the Mugs.
 COMMANDER: <observe>
-DRIVER: what should i do? <<RequestForInstruction>>
-COMMANDER: I need a plant watered <<Instruction>>
+DRIVER: Hi, how can I help? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: can you clean a mug for me <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: sure <<Acknowledge>>
+DRIVER: <pickup Mug>
+COMMANDER: there is one on the countertop <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
-OBSERVE
+Acknowledge
 
 Example :
-Goal: Put all RemoteControl on one Chairs.
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: Please put remote by tv on the chair with the others <<Instruction>>
-DRIVER: <observe>
-COMMANDER: hi? <<Greetings/Salutations>>
-DRIVER: <observe>
+Goal: Put all TissueBox on one SideTable.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: okay i will do that <<Acknowledge>>
+DRIVER: What is my task? <<RequestForInstruction>>
+COMMANDER: Put the tissueBox into a single side table <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-FeedbackPositive
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

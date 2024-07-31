@@ -28,53 +28,8 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Prepare coffee in a clean mug.
-COMMANDER: <observe>
-DRIVER: hi, how can i help? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all Mug in any Cabinet.
-COMMANDER: Can you place a mug in the cabinet <<Instruction>>
-DRIVER: <observe>
-COMMANDER: the mug should be on the table <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: in the corner <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Mug>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: <observe>
-DRIVER: <putdown Cabinet>
-COMMANDER: <observe>
-DRIVER: <close Cabinet>
-COMMANDER response:
-Acknowledge
-
-Example :
-Goal: Make a plate of toast.
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Hello. What is my first task? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: make one slice of toast <<Instruction>>
-DRIVER: <observe>
-COMMANDER: bread is in the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Clean all the Plates.
-COMMANDER: <observe>
-DRIVER: what do toy need help with? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: you* <<RequestForInstruction>>
-COMMANDER: i need the plates cleaned <<Instruction>>
+Goal: Put all TissueBox on one SideTable.
+COMMANDER: can you please put all the tissue boxes on one side table? <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
@@ -82,11 +37,52 @@ OBSERVE
 Example :
 Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER: bread is in the cabinet above the oven <<InformationOnObjectDetails>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: Hi. Please make a plate of toast. <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: On the brown shelf <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: I need you to help make a sandwhich <<Instruction>>
+DRIVER: <observe>
+COMMANDER: first lets slice the bread <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Whats my first task? <<RequestForInstruction>>
+COMMANDER: for it <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Boil Potato.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what should i do today? <<RequestForInstruction>>
+COMMANDER: hi please boil poato <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup DishSponge>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: First task? <<RequestForInstruction>>
+COMMANDER response:
+Greetings/Salutations
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

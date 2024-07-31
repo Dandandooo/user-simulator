@@ -28,75 +28,84 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all RemoteControl on one Sofa.
+Goal: Put all TissueBox on any Dresser.
 COMMANDER: <observe>
-DRIVER: HI. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER response:
-Greetings/Salutations
-
-Example :
-Goal: Put all Apple in one Cabinet.
-COMMANDER: put apple into a single cabinet <<Instruction>>
-DRIVER: <observe>
-COMMANDER: it is in the wash basin <<InformationOnObjectDetails>>
+DRIVER: hi, how can i help? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: put the tissue boxes on the dresser <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: ok <<Acknowledge>>
+DRIVER: sure, where are the tissues? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
 COMMANDER: <observe>
-DRIVER: <pickup Apple>
+DRIVER: hi, how can i help? <<Greetings/Salutations,RequestForInstruction>>
 COMMANDER: <observe>
-DRIVER: <open Cabinet>
+DRIVER: sorry, where are the tissues? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER: <observe>
-DRIVER: <putdown Cabinet>
-COMMANDER: <observe>
-DRIVER: <pickup Fork>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: check the cabinet right next to wash basin <<Instruction>>
+DRIVER: <pickup TissueBox>
+COMMANDER: put that one back on the dresser <<InformationOnObjectDetails>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown SideTable>
+COMMANDER: <observe>
+DRIVER: yeah <<Affirm>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all RemoteControl on one Chairs.
-COMMANDER: Hi <<Greetings/Salutations>>
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: hi, what should i do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: we need to water the plant. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: the plant is on the counter near the sink <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: First task? <<RequestForInstruction>>
+DRIVER: <pickup Pot>
+COMMANDER: find a cup or bowl to put water in <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pour HousePlant>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: done. <<Acknowledge>>
+COMMANDER: Great! <<FeedbackPositive>>
+DRIVER: <observe>
 COMMANDER response:
-Instruction
+Acknowledge
 
 Example :
-Goal: Clean all the Bowls.
-COMMANDER: Today we are going to clean the bowls. <<Instruction>>
-DRIVER: <observe>
+Goal: Put all RemoteControl on one Tables.
 COMMANDER: <observe>
-DRIVER: where are they <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: Hi <<Greetings/Salutations>>
+COMMANDER: 2 remotes <<Instruction>>
+DRIVER: <observe>
+COMMANDER: put in a single table <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Put all Watch on one ArmChair.
+Goal: Put all AlarmClock on any Desk.
 COMMANDER: <observe>
-DRIVER: Hello <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What's the first task <<RequestForInstruction>>
-COMMANDER: hi, please find the watches and put them on the armchair. <<Greetings/Salutations,Instruction>>
+DRIVER: What are we doing today <<RequestForInstruction>>
+COMMANDER: you need to put an alarm clock onto a desk <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Where are the watches <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <pickup AlarmClock>
 COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: there is one on the couch next to the remote control <<InformationOnObjectDetails>>
+DRIVER: <putdown Desk>
+COMMANDER: there is another alarm clock on the bed that needs to go onto the desk <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Watch>
-COMMANDER: <observe>
-DRIVER: <putdown Box>
-COMMANDER: <observe>
-DRIVER: Next one <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <pickup AlarmClock>
 COMMANDER response:
 InformationOnObjectDetails
+
+Example :
+Goal: Cook 5 slice(s) of Potato and serve on a Plate.
+
+COMMANDER response:
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

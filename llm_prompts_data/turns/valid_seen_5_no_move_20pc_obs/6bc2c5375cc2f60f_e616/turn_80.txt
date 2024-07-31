@@ -28,58 +28,85 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a salad.
-COMMANDER: hi <<Greetings/Salutations>>
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: Hello! What may I do for you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: make a slice of tomato <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: hey <<Greetings/Salutations>>
-COMMANDER: pls slice the tomato by the toaster <<Instruction>>
-DRIVER: <observe>
-COMMANDER: knife is near the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <toggle off Faucet>
 COMMANDER: <observe>
-DRIVER: <pickup Spoon>
+DRIVER: <pickup Knife>
 COMMANDER: <observe>
-DRIVER: <putdown Stool>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare coffee in a clean mug.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: How can I help? <<RequestForInstruction>>
+DRIVER: what shall I do today? <<RequestForInstruction>>
+COMMANDER: We are making a salad. <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
 
 Example :
-Goal: Put all RemoteControl on one SideTable.
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
+Goal: Make a plate of toast.
 COMMANDER: <observe>
 DRIVER: hi <<Greetings/Salutations>>
 COMMANDER: <observe>
-DRIVER: what should I do <<RequestForInstruction>>
-COMMANDER: put all remotecontrols on side table <<Instruction>>
-DRIVER: <observe>
-COMMANDER: remote is on the middle table in the room <<InformationOnObjectDetails>>
+DRIVER: what can I do today? <<RequestForInstruction>>
+COMMANDER: ☐ Make a slice of toast.
+
+  ⁍ [The bread needs to be sliced using a knife.]
+  ⁍ [The bread needs to be toasted.]
+☑️ Clean a Plate. <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
-COMMANDER: <observe>
-DRIVER: <putdown SideTable>
+DRIVER: where is the knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: Sorry its not showing me the knife <<OtherInterfaceComment>>
+DRIVER: <observe>
+COMMANDER: Can u pls look around <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-Acknowledge
+InformationOnObjectDetails
 
 Example :
 Goal: Make a salad.
-
+COMMANDER: Hi there! <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Hello. What is my first task, please? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Today we are going to make a salad on a plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: <observe>
+DRIVER: Sounds good <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: the plate is in the cabinet at eye level to the right of the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Water the plant.
+Goal: Put all RemoteControl on one Chairs.
 COMMANDER: <observe>
-DRIVER: HI, what can i do <<Greetings/Salutations,RequestForInstruction>>
+DRIVER: Hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: What's today's task <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 

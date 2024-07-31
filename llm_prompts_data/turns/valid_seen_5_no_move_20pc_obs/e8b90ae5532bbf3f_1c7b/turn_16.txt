@@ -28,74 +28,79 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Water the plant.
-COMMANDER: <observe>
-DRIVER: what should i do? <<RequestForInstruction>>
-COMMANDER: I need a plant watered <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: sure <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: i found a container with water <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <pickup Pot>
-COMMANDER response:
-Acknowledge
-
-Example :
 Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: hi what can i do for you today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: I'd like you to make a salad <<Instruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what should I do? <<RequestForInstruction>>
+COMMANDER: today we need to make a salad <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: sure, what kind of salad? <<Acknowledge,RequestOtherInfo>>
-COMMANDER: sliced lettuce and two tomato slices <<Instruction>>
+COMMANDER: please cut the lettuce using a knife <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
 COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Put all RemoteControl on any Furniture.
+COMMANDER: Put all RemoteControl on any Furniture <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Hello. My first task please ) <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: OK <<Acknowledge>>
+COMMANDER: there is a remote in the trash <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: <putdown Sofa>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: <putdown SideTable>
+COMMANDER response:
+FeedbackPositive
+
+Example :
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: make  a slice  of tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is tomato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER response:
+Instruction
 
 Example :
 Goal: Make a sandwich.
-
-COMMANDER response:
-Greetings/Salutations
-
-Example :
-Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: hi how can I help you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: i'd like a slice of toast <<Instruction>>
+DRIVER: Hi, what are my directions? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: can you make me a sandwich please <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup ButterKnife>
-COMMANDER: <observe>
-DRIVER: ok <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+COMMANDER: 2slices of toast and 2 slices of tomato <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 1 slice(s) of Tomato in a Bowl.
+Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: Hi there <<Greetings/Salutations>>
+DRIVER: What do I need to do today? <<RequestForInstruction>>
+COMMANDER: boiling a potatoe <<Instruction>>
 DRIVER: <observe>
-COMMANDER: were serving 1 slice of a tomato in a bowl <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Ok <<Acknowledge>>
-COMMANDER: knife is in the sink <<InformationOnObjectDetails>>
+COMMANDER: potatoe next to the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Tomato>
+DRIVER: where is it <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: by the tea maker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: I have picked the potato <<Acknowledge>>
 COMMANDER response:
-InformationOnObjectDetails
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

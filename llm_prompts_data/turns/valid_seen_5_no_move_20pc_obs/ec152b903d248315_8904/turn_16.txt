@@ -28,50 +28,75 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Cook 5 slice(s) of Potato and serve on a Plate.
-
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: Hi. Could you prepare breakfast? First prepare coffee. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: In the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: There is another one ont he white table <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 1 slice(s) of Tomato in a Bowl.
+Goal: Prepare breakfast.
 COMMANDER: <observe>
-DRIVER: First task? <<RequestForInstruction>>
-COMMANDER: make a slice of tomato <<Instruction>>
+DRIVER: What tasks do I today? <<RequestForInstruction>>
+COMMANDER: grab the mug from the coffee maker <<Instruction>>
+DRIVER: <observe>
+COMMANDER: take it to the sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: hi task plz <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Put all RemoteControl on one Tables.
+COMMANDER: <observe>
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER: I need you to put the remotes on one of the tables <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok where's the remote? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: there's one on the couch <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: <putdown SideTable>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a salad.
+COMMANDER: lets make salad today <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what is the first step? <<RequestForInstruction>>
+COMMANDER: slice atomato using knife <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where are they? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: tomato is in the above cabinet above the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails
-
-Example :
-Goal: Clean all the Cloths.
-COMMANDER: Clean all the Cloths <<Instruction>>
-DRIVER: <observe>
-COMMANDER: in the tub <<Instruction>>
-DRIVER: <observe>
-COMMANDER: !!!!! <<MiscOther>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Okay <<Acknowledge>>
-COMMANDER: the first is already in the tub <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <toggle on Faucet>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Clean all the Plates.
-
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Put all RemoteControl in one Box.
-
-COMMANDER response:
-Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

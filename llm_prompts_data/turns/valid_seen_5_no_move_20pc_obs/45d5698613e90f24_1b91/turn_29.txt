@@ -28,85 +28,87 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a salad.
-COMMANDER: hello <<Greetings/Salutations>>
+Goal: Put all Newspaper on one Furniture.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: Put all newspapers on a table or chair <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hi how can I help you? <<RequestForInstruction>>
-COMMANDER: i'd like a salad today <<Instruction>>
+DRIVER: <pickup Newspaper>
+COMMANDER: <observe>
+DRIVER: <putdown SideTable>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Put all AlarmClock on any Desk.
+COMMANDER: <observe>
+DRIVER: What are we doing today <<RequestForInstruction>>
+COMMANDER: you need to put an alarm clock onto a desk <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Plate>
+DRIVER: <pickup AlarmClock>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: what would you like in the salad? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: one slice of lettuce and one slice of tomato please <<Instruction>>
+DRIVER: <putdown Desk>
+COMMANDER: there is another alarm clock on the bed that needs to go onto the desk <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <slice Tomato>
+DRIVER: <pickup AlarmClock>
+COMMANDER: the third alarm clock is on the desk chair and also needs to go onto the desk <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Desk>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Clean all the Plates.
-COMMANDER: Hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: You ready? <<InformationOther>>
-DRIVER: <observe>
+Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+DRIVER: Hi <<Greetings/Salutations>>
 COMMANDER: <observe>
-DRIVER: what should i do today? <<RequestForInstruction>>
+DRIVER: what's the task? <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Water the plant.
+Goal: Make a sandwich.
 COMMANDER: <observe>
-DRIVER: hi, what can i do for you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Clean all the Plates.
-COMMANDER: <observe>
-DRIVER: How can I help you today? <<RequestForInstruction>>
-COMMANDER: clean plate in the sink <<Instruction>>
+DRIVER: whats first? <<RequestForInstruction>>
+COMMANDER: Hi there! Today we are going to make sandwich. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: I need two pieces of bread toasted. <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: <observe>
-DRIVER: I can't seem to find a plate in the sink <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: you might have to look in the cupboards <<InformationOnObjectDetails>>
+DRIVER: Lets do it <<Acknowledge>>
+COMMANDER: It says the knife is in the fridge? <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <open Cabinet>
+DRIVER: <open Fridge>
 COMMANDER: <observe>
-DRIVER: <open Cabinet>
+DRIVER: <pickup Knife>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
+Goal: Boil Potato.
+COMMANDER: Hello! <<Greetings/Salutations>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
+DRIVER: what shall I do today <<RequestForInstruction>>
+COMMANDER: The task is to "Boil a potaoto in water" please <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <slice Bread>
+DRIVER: <open Fridge>
 COMMANDER: <observe>
-DRIVER: <slice Potato>
+DRIVER: where can i find potatoe <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: There is a potato on the black stool on the otherside of the counter. <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <close Fridge>
 COMMANDER: <observe>
 DRIVER: <pickup Potato>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <toggle off Microwave>
-COMMANDER: <observe>
-DRIVER: <open Microwave>
+COMMANDER: Great job! <<FeedbackPositive>>
+DRIVER: <observe>
 COMMANDER response:
 Instruction
 

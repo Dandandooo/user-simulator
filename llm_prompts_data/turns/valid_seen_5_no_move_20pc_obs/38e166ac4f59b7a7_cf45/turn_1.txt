@@ -28,61 +28,97 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Cups.
-
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: Please rinse the mug beside thje sink <<Instruction,InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: and the mug in the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Clean all the Cloths.
+Goal: Cook 1 slice(s) of Potato and serve on a Plate.
 COMMANDER: <observe>
-DRIVER: What should I do today> <<RequestForInstruction>>
-COMMANDER: find a cloth <<Instruction>>
-DRIVER: <observe>
-COMMANDER: on back of commode <<InformationOnObjectDetails>>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: we need a potato please <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Cloth>
+DRIVER: Where is the potato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: there is one in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: I have the cloth <<Acknowledge>>
+DRIVER: Found it <<Acknowledge>>
+COMMANDER: please cook on stove <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Do I boil it or slice it? <<AlternateQuestions>>
+COMMANDER: there are pots already there <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: How many slices do we need? <<RequestOtherInfo>>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Put all Spatula in any Cabinet.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: how can i help? <<RequestForInstruction>>
-COMMANDER: Hi, today I'd like to gather all my spatula's in a single cabinet <<Greetings/Salutations,Instruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: hello <<Greetings/Salutations>>
 DRIVER: <observe>
-COMMANDER: The first can be found in the fridge <<InformationOnObjectDetails>>
+COMMANDER: make a salad <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: <observe>
-DRIVER: <pickup Spatula>
-COMMANDER: <observe>
-DRIVER: <open Cabinet>
-COMMANDER: <observe>
-DRIVER: <putdown Cabinet>
+COMMANDER: slice tomatoes first <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
 Goal: Prepare breakfast.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what do i do <<RequestForInstruction>>
-COMMANDER: First, prepare coffee in  a clean mug <<Instruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what is task <<RequestForInstruction>>
+COMMANDER: pls make coffee with the mug int he microwave <<Instruction>>
 DRIVER: <observe>
-COMMANDER: Mug is in the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <close Microwave>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Cloth in any Bathtub.
-
+Goal: Prepare breakfast.
+COMMANDER: Hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: Lets start by making a cup of coffee. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: Where is the mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: There is a mug above the toaster. <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
-Greetings/Salutations
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

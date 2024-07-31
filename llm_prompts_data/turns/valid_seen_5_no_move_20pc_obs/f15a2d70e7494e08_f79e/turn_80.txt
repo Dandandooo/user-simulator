@@ -28,83 +28,73 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all DishSponge in any Sink.
-COMMANDER: Hello <<Greetings/Salutations>>
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: hello how can I help? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: slice one slice of lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: it is in the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: Please put the 2 sponges into the sink. You can begin with the one in the microwave <<Instruction,InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <open Fridge>
 COMMANDER: <observe>
-DRIVER: <open Microwave>
+DRIVER: <pickup Lettuce>
 COMMANDER: <observe>
-DRIVER: <pickup DishSponge>
-COMMANDER: <observe>
-DRIVER: <putdown Plate>
-COMMANDER: <observe>
-DRIVER: <pickup Plate>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
-COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Prepare breakfast.
-COMMANDER: hii <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: make a sandwich <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: hi \ <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what  ingredients do I need <<RequestOtherInfo>>
+DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
 DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: <slice Lettuce>
 COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all Newspaper on one SideTable.
-COMMANDER: <observe>
-DRIVER: Hello, what is my first task? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hi. We need to take 2 newspapers and place them on a single side table <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Great! Where are the newspapers? <<FeedbackPositive,RequestForObjectLocationAndOtherDetails>>
-COMMANDER: There is one to the right of the box on the stand <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Newspaper>
-COMMANDER: <observe>
-DRIVER: <putdown SideTable>
-COMMANDER response:
-InformationOnObjectDetails
+OBSERVE
 
 Example :
 Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: how can i help? <<RequestForInstruction>>
-COMMANDER: I need a plant watered please <<Instruction>>
+DRIVER: hi what can i do? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Clean all the Cloths.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: Clean all the clothes <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: sure <<Acknowledge>>
+DRIVER: where are they? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: im not sure <<InformationOther>>
+DRIVER: <observe>
+COMMANDER: i think this is a glitch <<OtherInterfaceComment>>
+DRIVER: <observe>
+COMMANDER response:
+InformationOther
+
+Example :
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: can i use any container? <<Confirm>>
-COMMANDER: <observe>
-DRIVER: <pickup Bottle>
-COMMANDER: I think so <<InformationOther>>
+DRIVER: hello how can I help you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: i'd like a salad today <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
+DRIVER: <pickup Knife>
 COMMANDER: <observe>
-DRIVER: <putdown Sink>
+DRIVER: <slice Tomato>
 COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER response:
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

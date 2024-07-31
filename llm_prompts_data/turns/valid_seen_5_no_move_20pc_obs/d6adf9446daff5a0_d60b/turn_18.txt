@@ -28,61 +28,89 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a sandwich.
+Goal: Put all TissueBox on one Tables.
 COMMANDER: <observe>
-DRIVER: Hello. How may I assist you, today? <<Greetings/Salutations>>
-COMMANDER: Hello please put 2 slices of toast on clean plate to begin <<Greetings/Salutations>>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: find a tissuebox <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup TissueBox>
+COMMANDER: put on a table <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: I have founhd the tissue box <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: found* <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeTable>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Clean all the Cloths.
-COMMANDER: Clean all the Cloths <<Instruction>>
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what can i do <<RequestForInstruction>>
+COMMANDER: grab mug and place in coffee maker <<Instruction>>
 DRIVER: <observe>
-COMMANDER: in the tub <<Instruction>>
+COMMANDER: thats it <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok where is the mug <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
+COMMANDER: nug is on the chair <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
-MiscOther
+InformationOnObjectDetails
 
 Example :
 Goal: Make a sandwich.
 COMMANDER: <observe>
-DRIVER: What shall I do today? <<RequestForInstruction>>
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER: please take the bread out of the fridge and slice it with the knife in the sink <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-Greetings/Salutations
+Instruction
 
 Example :
-Goal: Water the plant.
-COMMANDER: <observe>
-DRIVER: how can i help? <<RequestForInstruction>>
-COMMANDER: I need you to water the plant <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Mug>
-COMMANDER: the container for water is in the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: <observe>
-DRIVER: <pickup Cup>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
-COMMANDER: done? <<Confirm>>
+Goal: Make a salad.
+COMMANDER: Good day! <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: hi <<Greetings/Salutations>>
+COMMANDER: We are going to make a salad today! <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what can i do for you today <<RequestForInstruction>>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: First get the lettuce. It is on the table next to the egg. <<Instruction,InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: knife <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
+
+Example :
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: Hi, what are my directions? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Hi, serve 1 slice of Tomato on a plate. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: where can I find the plate? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: The plate is on the counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: You will need to rinse the plate with water <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: I can't see the plate <<NotifyFailure>>
+COMMANDER response:
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

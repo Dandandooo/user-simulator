@@ -28,57 +28,64 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all Potato in any Cabinet.
-
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Put all Apple in any Cabinet.
-COMMANDER: <observe>
-DRIVER: hello how can I help? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Can you place all the apples in any of the cabinets for me please <<Instruction>>
-DRIVER: <observe>
-COMMANDER: The first apple is on the island counter <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Water the plant.
-COMMANDER: Hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: water the plant <<Instruction>>
-DRIVER: <observe>
-COMMANDER: bring some water in a container from the sink <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Pot>
-COMMANDER: <observe>
-DRIVER: <pour HousePlant>
-COMMANDER: <observe>
-DRIVER: done <<Acknowledge>>
-COMMANDER response:
-Acknowledge
-
-Example :
-Goal: Prepare coffee in a clean mug.
-
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Put all Pillow on any ArmChair.
-COMMANDER: put all pillows on the arm chair <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Hi <<Greetings/Salutations>>
+Goal: Cook 1 slice(s) of Potato and serve in a Bowl.
 COMMANDER: Hello <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Pillow>
+DRIVER: hello. Ay tasks for me? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Please cook a slice of potato. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Where is the potato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: The potato is in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: task? <<RequestForInstruction>>
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Make a salad.
+
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: slice tomatoes <<Instruction>>
+DRIVER: <observe>
+COMMANDER: tomato in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: knife next to the toaster <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: slice 1 slice <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails
+
+Example :
+Goal: Prepare coffee in a clean mug.
+COMMANDER: Prepare coffee in a clean mug please <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: hi how can i help <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER response:
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

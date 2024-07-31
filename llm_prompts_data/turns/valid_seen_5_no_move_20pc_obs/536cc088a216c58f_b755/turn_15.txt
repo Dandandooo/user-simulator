@@ -28,75 +28,88 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all RemoteControl on one Chairs.
-COMMANDER: lets put 2 remotes on 1 chair please <<Instruction>>
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: hello, task please <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: slice tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: tomato in the sink <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: where are the remotes <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: under the tv <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: and 1 on the sofa <<InformationOnObjectDetails>>
+DRIVER: <pickup Tomato>
+COMMANDER: knife on the chair <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
+DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
-DRIVER: <putdown ArmChair>
+DRIVER: <pickup ButterKnife>
 COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
+DRIVER: <slice Tomato>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: <putdown ArmChair>
+DRIVER: hi <<Greetings/Salutations>>
 COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
+DRIVER: what's the task <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: are you there <<MiscOther>>
+COMMANDER: prepare coffee in a clean mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the mug <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
+Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: what do you need help with today? <<RequestForInstruction>>
-COMMANDER: serve 1 slice of tomato on a plate <<Instruction>>
+DRIVER: Hi whats the task <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: please boil a potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: on the stove <<Instruction>>
+DRIVER: <observe>
+COMMANDER: there is one in the black bin <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: okay, where is a tomato? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
-COMMANDER: look to the elft of the microwave <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: where do i find a potato <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Boil Potato.
+
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Serve 1 slice(s) of Tomato in a Bowl.
-COMMANDER: can you slice and serve a tomoato for me please? <<Instruction>>
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: hi, what can i do for you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: just need my plant watered please <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: yes, how many slices would you like? <<Affirm,RequestOtherInfo>>
+DRIVER: sure <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
+DRIVER: i see a container with water on the stove <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: <slice Tomato>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: just the one please <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Make a sandwich.
-COMMANDER: <observe>
-DRIVER: hi, <<Greetings/Salutations>>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Make a sandwich.
-COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <pickup Pot>
+COMMANDER: nice that should work <<FeedbackPositive,Acknowledge>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+DRIVER: <pour HousePlant>
 COMMANDER: <observe>
-DRIVER: what should i do today <<RequestForInstruction>>
+DRIVER: doen <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
 COMMANDER response:
-Instruction
+FeedbackPositive
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

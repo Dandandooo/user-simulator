@@ -28,72 +28,71 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a sandwich.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: Hello. How may I assist you, today? <<Greetings/Salutations>>
-COMMANDER: Hello please put 2 slices of toast on clean plate to begin <<Greetings/Salutations>>
+DRIVER: Hello. How may I assist you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Please water plant <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Sure. <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <pickup Bread>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: OK <<Acknowledge>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a salad.
-COMMANDER: hello <<Greetings/Salutations>>
+Goal: Make a plate of toast.
+COMMANDER: <observe>
+DRIVER: Hi. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: We need to make a toast <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hello. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: please cook 2 slices potato and put on plate <<Instruction>>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: Slice bread using knife <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Where would I find a potato? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: micro <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: Thank you. <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: I don't see a micro. I see what loks like a potato by the toaster, but I couldn't pick it up and one inside the sink. <<RequestOtherInfo,NotifyFailure>>
-COMMANDER: <observe>
-DRIVER: <pickup Potato>
-COMMANDER: <observe>
-DRIVER: I can pick up the potato in the sink. <<Acknowledge>>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
-
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: Hello. What is my task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: slice the lettuce and tomato <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-Greetings/Salutations
+InformationOnObjectDetails
 
 Example :
-Goal: Make a sandwich.
-COMMANDER: hi <<Greetings/Salutations>>
+Goal: Serve 3 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: slice a tomato thrice <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+DRIVER: Can you help me find tomato and knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: inside the cabinet above the microwave <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: the knife is inside the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what should i do today <<RequestForInstruction>>
-COMMANDER: lets make sandwich <<Instruction>>
+DRIVER: Cannot reach <<NotifyFailure>>
+COMMANDER: use the up option <<OtherInterfaceComment>>
 DRIVER: <observe>
-COMMANDER: bread is next to stove <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: knife is under the toaster cabinet <<InformationOnObjectDetails>>
-DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Clean all the Drinkwares.
+Goal: Prepare breakfast.
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what to do <<RequestForInstruction>>
+COMMANDER: clean mug <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

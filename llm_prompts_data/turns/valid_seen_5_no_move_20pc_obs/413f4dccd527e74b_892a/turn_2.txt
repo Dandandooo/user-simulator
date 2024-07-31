@@ -28,73 +28,80 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Serve 1 slice(s) of Lettuce on a Plate.
-COMMANDER: <observe>
-DRIVER: hi, how can I help you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: please serve one slice of lettuce on a plate <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Plate>
-COMMANDER response:
-OBSERVE
-
-Example :
 Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what should i do today <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: ? <<Confirm>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Prepare breakfast.
-COMMANDER: <observe>
-DRIVER: Hi! <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What help do you need today? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all RemoteControl in one Box.
-COMMANDER: <observe>
-DRIVER: whats first? <<RequestForInstruction>>
-COMMANDER: put a remote in a single box <<Instruction>>
+DRIVER: what can i do for you <<RequestForInstruction>>
+COMMANDER: slice of tomato please <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: ok <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
-COMMANDER: remote on coffee table <<InformationOnObjectDetails>>
+DRIVER: <toggle off Faucet>
+COMMANDER: knife is on the round table <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <putdown Box>
-COMMANDER: box on table by window <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <pickup Tomato>
 COMMANDER: <observe>
-DRIVER: <pickup Box>
+DRIVER: knife? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER: <observe>
 DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Newspaper on one SideTable.
-COMMANDER: <observe>
-DRIVER: What should we do today <<RequestForInstruction>>
-COMMANDER: place the newspapers onto a single table <<Instruction>>
-DRIVER: <observe>
-COMMANDER: there is one on the couch <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Newspaper>
-COMMANDER: <observe>
-DRIVER: Sorry, its taking long to load commands guess its a glitch <<NotifyFailure,OtherInterfaceComment>>
+Goal: Clean all the Plates.
+
 COMMANDER response:
 Instruction
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: Hello. <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: What am I doing today? <<RequestForInstruction>>
+COMMANDER: hi lets water the plant <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Okay. <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: Where do I find the container, please? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Serve 1 slice(s) of Lettuce on a Plate.
+COMMANDER: <observe>
+DRIVER: what do you need me to do? <<RequestForInstruction>>
+COMMANDER: serve 1 slice of lettuce on a plate please <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where's the plate? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: checking cabinet <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: under coffee machine <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Boil Potato.
+COMMANDER: <observe>
+DRIVER: How can I help <<RequestForInstruction>>
+COMMANDER: please could you boil a potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: there is one next to the stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: <putdown Pot>
+COMMANDER: <observe>
+DRIVER: Hows that <<Acknowledge>>
+COMMANDER response:
+FeedbackPositive
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

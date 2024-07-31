@@ -28,69 +28,83 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: hello, task please <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: slice tomato <<Instruction>>
+DRIVER: hi, what can i do for you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: I need you to water the plant for me <<Instruction>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
 COMMANDER response:
-InformationOnObjectDetails
+OBSERVE
 
 Example :
-Goal: Make a salad.
+Goal: Put all Potato in any Cabinet.
 COMMANDER: <observe>
-DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Hello <<Greetings/Salutations>>
+DRIVER: Hi how can i help you today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: Take the mug. <<Instruction>>
 DRIVER: <observe>
-COMMANDER: Make a salad <<Instruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: I have the mug. <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: What should I do with it? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Cook 1 slice(s) of Potato and serve in a Bowl.
+COMMANDER: <observe>
+DRIVER: what is my task today <<RequestForInstruction>>
+COMMANDER: slice potato <<Instruction>>
 DRIVER: <observe>
-COMMANDER: First <<Instruction>>
+COMMANDER: potato inpot on counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: knife by coffemaker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: ?? <<MiscOther>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: in sink also <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: potato <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve on a Plate.
-COMMANDER: <observe>
-DRIVER: hi how can i help <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: please cook 2 slices of potato <<Instruction>>
+Goal: Cook 2 slice(s) of Potato and serve in a Bowl.
+COMMANDER: cook 2 slice potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: potato is infront of toaster <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Knife>
+DRIVER: ok <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: <slice Potato>
+DRIVER: knife please? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: in the cabinet above toaster <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
 COMMANDER response:
 OBSERVE
-
-Example :
-Goal: Clean all the Cloths.
-COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: hi there. You will  need to rinse the dirty cloth with water. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open ShowerCurtain>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Cook 4 slice(s) of Potato and serve in a Bowl.
-COMMANDER: Today we need to slice a potato <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: what shall i do today <<RequestForInstruction>>
-COMMANDER: The potato is to the left of the sink <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Potato>
-COMMANDER: <observe>
-DRIVER: <putdown Plate>
-COMMANDER: <observe>
-DRIVER: <pickup Potato>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER response:
-InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

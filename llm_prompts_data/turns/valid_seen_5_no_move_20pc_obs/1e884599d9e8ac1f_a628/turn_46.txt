@@ -28,66 +28,65 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Boil Potato.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: boil a potato <<Instruction>>
+DRIVER: How can I help? <<RequestForInstruction>>
+COMMANDER: please could you water the plant <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Plate>
+DRIVER: <pickup Cup>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: <putdown Sink>
 COMMANDER: <observe>
-DRIVER: <pickup Potato>
-COMMANDER: place in pot on stove <<Instruction>>
-DRIVER: <observe>
-COMMANDER: place in pot on stove <<Instruction>>
-DRIVER: <observe>
+DRIVER: <toggle on Faucet>
 COMMANDER response:
 OBSERVE
+
+Example :
+Goal: Clean all the Cloths.
+COMMANDER: <observe>
+DRIVER: hi, what should I do today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Hi please rinse cloths <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup SprayBottle>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER response:
+InformationOnObjectDetails
 
 Example :
 Goal: Put all Pillow on any ArmChair.
-COMMANDER: pillows need to be put onto a armchair <<Instruction>>
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what should i do today <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: where is the pillow <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: first pillow is below the table at the centre <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Make a salad.
-COMMANDER: Hello. We need to make a salad <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Make a plate of toast.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: Hi. Please make a plate of toast. <<Greetings/Salutations,Instruction>>
+DRIVER: hello! <<Greetings/Salutations>>
+COMMANDER: please put a pillow on armchair <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what should i do today <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: ? <<RequestForInstruction>>
-COMMANDER: Make a plate of toast. <<Instruction>>
-DRIVER: <observe>
+DRIVER: What shall I   be doing today? <<RequestForInstruction>>
 COMMANDER: <observe>
 DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Pillow>
+COMMANDER: <observe>
+DRIVER: I  cannot see where the armchair is because the pillow is blocking my view <<NotifyFailure>>
+COMMANDER: <observe>
+DRIVER: Can you please tell me how to get to the chair? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
-OBSERVE
+InformationOnObjectDetails
 
 Example :
-Goal: Boil Potato.
+Goal: Prepare breakfast.
 
 COMMANDER response:
 Greetings/Salutations
+
+Example :
+Goal: Put all TissueBox on one CoffeeTable.
+
+COMMANDER response:
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

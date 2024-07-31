@@ -28,45 +28,71 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Cook 2 slice(s) of Potato and serve on a Plate.
+Goal: Serve 2 slice(s) of Tomato on a Plate.
 COMMANDER: <observe>
 DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what is the task? <<RequestForInstruction>>
+COMMANDER: task is to serve 2 sclices of tomatoes on a plate.. <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a plate of toast.
+Goal: Make a sandwich.
 COMMANDER: <observe>
-DRIVER: what do ya need? <<RequestForInstruction>>
-COMMANDER: I would like some toast! <<Instruction>>
+DRIVER: Hello! What is my task today? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: today we need to make a sandwich <<Instruction>>
 DRIVER: <observe>
+COMMANDER: first lets slice some bread <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Ok. <<Acknowledge>>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Serve 2 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: We need to make 2 slices of tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: The knife is in the fridge <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Do you know where the knife is? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Put all Pillow on any Sofa.
-
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Water the plant.
+Goal: Put all Watch on any ArmChair.
 COMMANDER: <observe>
-DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Water the plant.
-☐ <<Instruction>>
+DRIVER: how can I help <<RequestForInstruction>>
+COMMANDER: there is a watch on the sofa. please place it on an armchair. There is another watch that needs to be put onto the same armchair <<InformationOnObjectDetails,Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Cup>
+DRIVER: <pickup Watch>
 COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
+DRIVER: <putdown ArmChair>
+COMMANDER: <observe>
+DRIVER: <pickup Watch>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Prepare breakfast.
+Goal: Clean all the Mugs.
 COMMANDER: <observe>
-DRIVER: what do i do <<RequestForInstruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: task plz <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 

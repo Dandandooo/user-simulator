@@ -28,81 +28,89 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Put all TissueBox on one Tables.
-COMMANDER: hello <<Greetings/Salutations>>
+Goal: Put all Spatula in any Sink.
+COMMANDER: can you put the spatula in the sink <<Instruction>>
+DRIVER: <observe>
+COMMANDER: the spatula is currently in the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hi, how are you? What would you like me to do today? <<RequestForInstruction>>
-COMMANDER: put the tissue box on the table <<Instruction>>
-DRIVER: <observe>
-COMMANDER: tissue box to your left <<InformationOnObjectDetails>>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Spatula>
+COMMANDER: <observe>
+DRIVER: I'm going to clear the sink <<Acknowledge>>
+COMMANDER: you may need to empty out the sink first <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Okay, let me look. <<Acknowledge>>
-COMMANDER: check the below shelf <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: no <<Deny>>
-DRIVER: <observe>
-COMMANDER: dont move <<Instruction>>
+DRIVER: <putdown CounterTop>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER: i'd like a salad <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Okay I see it. <<Acknowledge>>
+DRIVER: whats in it? <<RequestOtherInfo>>
+COMMANDER: tomato and potato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: one slice of tomato, 2 slices of cooked potato slices <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: found a knife where are the potato and tomato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Cook 3 slice(s) of Potato and serve on a Plate.
-COMMANDER: hi please cook a potato in the microwave <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
+Goal: Serve 2 slice(s) of Tomato on a Plate.
 COMMANDER: <observe>
-DRIVER: what is my task today <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: wher eis the potto <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: <observe>
-DRIVER: potato <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: potato is on oven? <<InformationOnObjectDetails>>
+DRIVER: whats first? <<RequestForInstruction>>
+COMMANDER: find the tomato <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
-OtherInterfaceComment
+Instruction
 
 Example :
-Goal: Put all AlarmClock on any Bed.
-COMMANDER: I need you to put all my alarm clocks on the bed <<Instruction>>
+Goal: Clean all the Cups.
+COMMANDER: <observe>
+DRIVER: what can I do? <<RequestForInstruction>>
+COMMANDER: Good day! Today we are going to clean all the cups. <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: There should be a cup located in the microwave. <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup AlarmClock>
+DRIVER: <pickup Mug>
 COMMANDER: <observe>
-DRIVER: <putdown Bed>
+DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
-DRIVER: <pickup AlarmClock>
-COMMANDER: <observe>
-DRIVER: <putdown Bed>
-COMMANDER: <observe>
-DRIVER: How many alarm clocks are there <<RequestOtherInfo>>
-COMMANDER: there should be three <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup AlarmClock>
+DRIVER: <toggle off Faucet>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Clean all the Plates.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: hi how can I help? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: can you clean the plate? <<Instruction>>
+DRIVER: what is my task <<RequestForInstruction>>
+COMMANDER: you need to slice the lettuce and tomato <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: yes <<Affirm>>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Put all RemoteControl in one Box.
+DRIVER: ok <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: how may i assist you today? <<RequestForInstruction>>
-COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: where is the knife <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: lettuce is on the stool next to the counter <<InformationOnObjectDetails>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: <observe>
+DRIVER: <slice Lettuce>
+COMMANDER: <observe>
+DRIVER: whats next <<RequestForInstruction>>
 COMMANDER response:
 Instruction
 

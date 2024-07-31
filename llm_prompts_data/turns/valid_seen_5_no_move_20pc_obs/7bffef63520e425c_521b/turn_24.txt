@@ -28,47 +28,62 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a plate of toast.
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: what should i do? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Spatula>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: hello two toast please <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Bread>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER response:
+OBSERVE
 
+Example :
+Goal: Clean all the Drinkwares.
+COMMANDER: <observe>
+DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: yo <<Greetings/Salutations>>
+DRIVER: <observe>
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Water the plant.
-
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Put all Pillow on any ArmChair.
-COMMANDER: pillows need to be put onto a armchair <<Instruction>>
+Goal: Put all TissueBox on one SideTable.
+COMMANDER: <observe>
+DRIVER: hi how can i help <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Can you please place all the tissue boxes on one side table <<Instruction>>
+DRIVER: <observe>
+COMMANDER: The side table is the table with the lamp shade on currently <<InformationOther>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what should i do today <<RequestForInstruction>>
+DRIVER: <pickup TissueBox>
 COMMANDER: <observe>
-DRIVER: where is the pillow <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: first pillow is below the table at the centre <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Clean all the Cloths.
+DRIVER: <putdown Dresser>
 COMMANDER: <observe>
-DRIVER: whats first? <<RequestForInstruction>>
-COMMANDER: hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: we need to clean a dirty cloth <<Instruction>>
-DRIVER: <observe>
+DRIVER: are there any more <<AlternateQuestions>>
 COMMANDER response:
-OBSERVE
+Affirm
 
 Example :
 Goal: Make a plate of toast.
-COMMANDER: Can you make a plate of toast for me <<Instruction>>
-DRIVER: <observe>
+
 COMMANDER response:
-InformationOnObjectDetails
+OBSERVE
+
+Example :
+Goal: Make a salad.
+COMMANDER: <observe>
+DRIVER: how can I help? <<RequestForInstruction>>
+COMMANDER response:
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

@@ -28,49 +28,20 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a salad.
-COMMANDER: Hello <<Greetings/Salutations>>
+Goal: Boil Potato.
+COMMANDER: Hello. We need to boil a potato <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: We will make a salad. Please begin with 2 slices of lettuce. <<Instruction>>
+DRIVER: task? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: where is the potato? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: Potato is in the cabinet above the microwave <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Where is the lettuce? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: The lettuce is in the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Clean all the Tablewares.
+DRIVER: <pickup PaperTowelRoll>
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Prepare coffee in a clean mug.
-COMMANDER: <observe>
-DRIVER: how can I help? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: what do you need help with? <<RequestForInstruction>>
-COMMANDER: i'd liek a cup of coffee <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: sure where is the mug? <<Acknowledge,RequestForObjectLocationAndOtherDetails>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all Book on any Desk.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: what to do <<RequestForInstruction>>
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: put the book on the bed onto a desk <<Instruction>>
+DRIVER: <putdown CounterTop>
+COMMANDER: The upper left cabinet <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
@@ -78,9 +49,58 @@ OBSERVE
 Example :
 Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+DRIVER: hello, what is my task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Please fill coffee in mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: Mug is in coffee maker <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what is my task today? <<RequestForInstruction>>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: next please <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a plate of toast.
+COMMANDER: <observe>
+DRIVER: hello how can I help <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: can you please toast a slice of bread? <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: yes sure <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: where can I find a knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: there's a knife in the microwave <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Ah OK <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <open Microwave>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <close Microwave>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: hello <<Greetings/Salutations>>
 COMMANDER response:
 Greetings/Salutations
 

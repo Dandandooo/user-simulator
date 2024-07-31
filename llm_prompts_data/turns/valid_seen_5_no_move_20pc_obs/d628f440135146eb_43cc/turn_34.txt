@@ -28,61 +28,87 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Bowls.
+Goal: Cook 2 slice(s) of Potato and serve on a Plate.
 COMMANDER: <observe>
-DRIVER: what shall I do today? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
-COMMANDER: <observe>
-DRIVER: hello, how can i help? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Please serve one slice of tomato on a plate <<Instruction>>
+DRIVER: What should I do today> <<RequestForInstruction>>
+COMMANDER: Hello <<Greetings/Salutations>>
 DRIVER: <observe>
-COMMANDER: there's a tomoato in the fridge <<InformationOnObjectDetails>>
+COMMANDER: Please cook 2 slice potato <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: the knife is next to the coffee machine <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Boil Potato.
+DRIVER: <pickup Knife>
 COMMANDER: <observe>
-DRIVER: Hello <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: Task? <<RequestForInstruction>>
-COMMANDER: boil the potato by cooking it in water <<Instruction>>
-DRIVER: <observe>
-COMMANDER: grab a potato. <<Instruction>>
-DRIVER: <observe>
-COMMANDER: potato is on the middle table <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <putdown CounterTop>
 COMMANDER: <observe>
 DRIVER: <pickup Potato>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
 COMMANDER: <observe>
-DRIVER: what can I do for you? <<RequestForInstruction>>
-COMMANDER: can you serve 2 slices of tomato on a plate? <<Instruction>>
-DRIVER: <observe>
+DRIVER: <open Microwave>
 COMMANDER: <observe>
-DRIVER: <pickup Tomato>
+DRIVER: <putdown CounterTop>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Boil Potato.
+Goal: Put all RemoteControl on one SideTable.
 COMMANDER: <observe>
-DRIVER: how can I help? <<RequestForInstruction>>
+DRIVER: what can we do today <<RequestForInstruction>>
+COMMANDER: Please place the remote on a single side table. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the remote please <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: Good day.  How may I assist? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: Water the plant <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: Sure.  What would you like me to put the water in? <<Acknowledge,AlternateQuestions>>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: Okay <<Acknowledge>>
+DRIVER: <observe>
+COMMANDER: A cup will do <<Instruction>>
+DRIVER: <observe>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Make a salad.
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: Please put 2 lettuce on a plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what should i do today <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: where can i find lettuce <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Put all RemoteControl on one Dresser.
+COMMANDER: <observe>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: Place two remote controls on one dresser. <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup RemoteControl>
+COMMANDER: <observe>
+DRIVER: <putdown Dresser>
+COMMANDER response:
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

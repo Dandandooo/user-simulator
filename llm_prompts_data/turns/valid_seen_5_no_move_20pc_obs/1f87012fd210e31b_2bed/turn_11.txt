@@ -28,63 +28,89 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Serve 1 slice(s) of Tomato in a Bowl.
+Goal: Prepare breakfast.
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: Hi there <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: were serving 1 slice of a tomato in a bowl <<Instruction>>
+DRIVER: hell0 <<Greetings/Salutations>>
+COMMANDER: Prepare breakfast <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Ok <<Acknowledge>>
-COMMANDER: knife is in the sink <<InformationOnObjectDetails>>
+DRIVER: what is my task <<RequestForInstruction>>
+COMMANDER: clean a mug <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Tomato>
-COMMANDER: together with the tomato <<InformationOnObjectDetails>>
+DRIVER: <pickup Plate>
+COMMANDER: mug in the trash <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <putdown CounterTop>
-COMMANDER: bowl is in the fridge <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Clean all the Plates.
 COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <pour Sink>
 COMMANDER response:
 Instruction
-
-Example :
-Goal: Serve 3 slice(s) of Lettuce on a Plate.
-COMMANDER: <observe>
-DRIVER: hi, what should I do first? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: We need to serve 3 slices of lettuce on a plate <<Instruction>>
-DRIVER: <observe>
-COMMANDER: Could you find lettuce first? <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: yes, where do I place it? <<Affirm,RequestOtherInfo>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Prepare breakfast.
-COMMANDER: <observe>
-DRIVER: First task? <<RequestForInstruction>>
-COMMANDER: Good day.  We will be preparing breakfast.  First taks, we need a clean mug <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-InformationOnObjectDetails
 
 Example :
 Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
+DRIVER: hello <<Greetings/Salutations>>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all TissueBox on any SideTable.
+COMMANDER: <observe>
+DRIVER: First task? <<RequestForInstruction>>
+COMMANDER: tissue box needs to be put onto a side table <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup TissueBox>
+COMMANDER: put all tissue box on any side table <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown SideTable>
+COMMANDER: <observe>
+DRIVER: next <<RequestForInstruction>>
 COMMANDER response:
 Instruction
+
+Example :
+Goal: Make a sandwich.
+COMMANDER: <observe>
+DRIVER: what can i do for you? <<RequestForInstruction>>
+COMMANDER: I want a sandwich <<Instruction>>
+DRIVER: <observe>
+COMMANDER: toasted with one slice of lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: sure <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: i see the bread and lettuce <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Bread>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: where is the knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Serve 4 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: hi how can i help <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: please serve 4 slices of tomato on a plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where can i find a plate <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER response:
+OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

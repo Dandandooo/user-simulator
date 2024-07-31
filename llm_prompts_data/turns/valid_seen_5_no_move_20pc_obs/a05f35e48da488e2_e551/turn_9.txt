@@ -28,65 +28,95 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Prepare coffee in a clean mug.
-COMMANDER: prepare coffee in a clean mug <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: What should I do <<RequestForInstruction>>
-COMMANDER response:
-OBSERVE
-
-Example :
 Goal: Make a plate of toast.
 COMMANDER: <observe>
-DRIVER: what do i do <<RequestForInstruction>>
-COMMANDER: bread1 toast <<Instruction>>
-DRIVER: <observe>
-COMMANDER: bread in fridge <<InformationOnObjectDetails>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: Hi. Please make a plate of toast. <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: knife? <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: what is my task? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: how many slices? <<RequestOtherInfo>>
+COMMANDER: One <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: There is bread in the cabinet above the microwave. <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
 COMMANDER response:
-InformationOnObjectDetails
+OBSERVE
 
 Example :
-Goal: Water the plant.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: hi, what can i do for you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: just need my plant watered please <<Instruction>>
+DRIVER: Hello. What is my first task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: please slice the lettuce <<Instruction>>
+DRIVER: <observe>
+COMMANDER: knife is in the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: sure <<Acknowledge>>
+DRIVER: Thank you <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: i see a container with water on the stove <<Acknowledge>>
+DRIVER: <open Fridge>
 COMMANDER: <observe>
-DRIVER: <pickup Pot>
-COMMANDER: nice that should work <<FeedbackPositive,Acknowledge>>
-DRIVER: <observe>
+DRIVER: <pickup Knife>
 COMMANDER: <observe>
-DRIVER: <pour HousePlant>
+DRIVER: <close Fridge>
 COMMANDER: <observe>
-DRIVER: doen <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: done <<Acknowledge>>
+DRIVER: <slice Lettuce>
 COMMANDER response:
-FeedbackPositive
+Instruction
 
 Example :
-Goal: Put all Newspaper on one Dresser.
+Goal: Prepare breakfast.
+COMMANDER: we need to prepare cofee first please <<Instruction>>
+DRIVER: <observe>
+COMMANDER: in a mug <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what is my task tody <<RequestForInstruction>>
-COMMANDER: place 2 newspapers onto single dresser <<Instruction>>
+DRIVER: What should I do today? <<RequestForInstruction>>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: by the stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: there is one <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: it may be dirty though <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Clean all the Mugs.
+COMMANDER: <observe>
+DRIVER: what can I do? <<RequestForInstruction>>
+COMMANDER: clean all mugs <<Instruction>>
+DRIVER: <observe>
+COMMANDER: mug on the chair by the table <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a sandwich.
+Goal: Clean all the Plates.
+COMMANDER: Hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: You ready? <<InformationOther>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what ca i do today <<RequestForInstruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what should i do today? <<RequestForInstruction>>
 COMMANDER response:
-Greetings/Salutations
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

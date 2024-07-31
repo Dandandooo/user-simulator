@@ -28,56 +28,72 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Water the plant.
+Goal: Clean all the Pans.
 COMMANDER: <observe>
-DRIVER: What am I doing today? <<RequestForInstruction>>
-COMMANDER: mug is on chair <<Instruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: Hi <<Greetings/Salutations>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what can I do? <<RequestForInstruction>>
+COMMANDER: Could you clean the pan? <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is it? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: In a bottom cabinet <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Cabinet>
+COMMANDER: <observe>
+DRIVER: <pickup Pan>
 COMMANDER response:
-Instruction
+NotifyFailure
 
 Example :
 Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: hello what can I do? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: prepare coffee <<Instruction>>
-DRIVER: <observe>
-COMMANDER: clean mug is near toaster <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: hello, task please <<Greetings/Salutations,RequestForInstruction>>
 COMMANDER: <observe>
-DRIVER: in the drawers? <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: inside the cabinet below toaster <<InformationOnObjectDetails>>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Plate>
+COMMANDER: Prepare coffee in clean mug <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <open Cabinet>
+DRIVER: <close Fridge>
 COMMANDER: <observe>
-DRIVER: <open Cabinet>
+DRIVER: <putdown CounterTop>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Water the plant.
+
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a salad.
+Goal: Water the plant.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+DRIVER: hello, how can i help you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: water the plant please <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: whats the task? <<RequestForInstruction>>
+DRIVER: sure <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: can i use the green cup by the stove? <<RequestForInstruction>>
+COMMANDER: yes that should work <<Affirm>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Cup>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Put all RemoteControl on any SideTable.
+COMMANDER: <observe>
+DRIVER: whats first? <<RequestForInstruction>>
 COMMANDER response:
 Greetings/Salutations
-
-Example :
-Goal: Prepare breakfast.
-COMMANDER: hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Serve 3 slice(s) of Lettuce on a Plate.
-
-COMMANDER response:
-OBSERVE
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

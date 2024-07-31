@@ -28,48 +28,93 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Water the plant.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: how ocan i help you? <<RequestForInstruction>>
-COMMANDER: hello <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: your task is to water the plant <<Instruction>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: rinse this dirty mug and make coffee please <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: ok <<Acknowledge>>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <putdown Sink>
+COMMANDER: <observe>
+DRIVER: <toggle on Faucet>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <pour Sink>
+COMMANDER: <observe>
+DRIVER: <toggle off CoffeeMachine>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all Mug in one Cabinet.
+Goal: Make a salad.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: lettuce <<Instruction>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: oops sorry i meant we need to slice some lettuce <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
 
 Example :
-Goal: Serve 1 slice(s) of Tomato on a Plate.
+Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: Hi, what can I   do? <<RequestForInstruction>>
+DRIVER: what can i do today <<RequestForInstruction>>
+COMMANDER: make a slice of tomato <<Instruction>>
+DRIVER: <observe>
+COMMANDER: tomato is on the chair <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Tomato>
+COMMANDER: <observe>
+DRIVER: <putdown DiningTable>
+COMMANDER: <observe>
+DRIVER: <pickup Knife>
+COMMANDER: <observe>
+DRIVER: <slice Tomato>
+COMMANDER: knife is on the left side to the oven <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
 COMMANDER response:
-Greetings/Salutations
+InformationOnObjectDetails
 
 Example :
-Goal: Put all Kettle on any DiningTable.
+Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: Hi, what are my directions <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: could you please put my kettles onto the dining table for me <<Instruction>>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: hi...please boil a potato <<Greetings/Salutations,Instruction>>
 DRIVER: <observe>
-COMMANDER: one is on the back shelving on the bottom shelf <<InformationOnObjectDetails>>
+COMMANDER: potato is in the fridge <<InformationOnObjectDetails>>
 DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
+COMMANDER: <observe>
+DRIVER: <pickup Potato>
+COMMANDER: <observe>
+DRIVER: where is pot? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: <observe>
+DRIVER: <close Fridge>
+COMMANDER: the pot is right next to you on the counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Put all AlarmClock on any Bed.
-
+Goal: Clean all the Plates.
+COMMANDER: there are 2 plates that needs to be clean <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-Instruction
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

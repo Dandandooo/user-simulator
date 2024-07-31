@@ -28,80 +28,81 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Drinkwares.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: hello <<Greetings/Salutations>>
+DRIVER: What should I do today? <<RequestForInstruction>>
 COMMANDER: <observe>
-DRIVER: What can I do for you today? <<RequestForInstruction>>
-COMMANDER: Hi how are you? <<Greetings/Salutations>>
+DRIVER: <toggle on LightSwitch>
+COMMANDER: get coffe mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: rinse in sink <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Which task first? <<RequestForInstruction>>
-COMMANDER response:
-Acknowledge
-
-Example :
-Goal: Water the plant.
-COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
-COMMANDER: get some water in a container from the sink <<Instruction>>
+DRIVER: <pickup Mug>
+COMMANDER: correct <<Acknowledge>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Bowl>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a salad.
-COMMANDER: <observe>
-DRIVER: how can i help <<RequestForInstruction>>
-COMMANDER: Please make a salad <<Instruction>>
+Goal: Put all Newspaper on any SideTable.
+COMMANDER: Put all Newspaper on any SideTable. <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: sure, what would you like in your salad? <<Acknowledge,RequestOtherInfo>>
-COMMANDER: slice lettuce and tomato <<Instruction>>
+DRIVER: the task? <<RequestForInstruction>>
+COMMANDER: Put all Newspaper on any SideTable. <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <open Fridge>
-COMMANDER: there is a knife on the left side of the sink <<InformationOnObjectDetails>>
+COMMANDER: theres 3 <<InformationOther>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: <observe>
-DRIVER: <close Fridge>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+COMMANDER: two are on the counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: to your left <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
 InformationOnObjectDetails
 
 Example :
-Goal: Make a plate of toast.
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: what should i do today? <<RequestForInstruction>>
+COMMANDER: make coffee <<Instruction>>
+DRIVER: <observe>
+COMMANDER: Mug is beside the cooker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: Just by the coffee maker <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: <observe>
+DRIVER: <putdown CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: <toggle on CoffeeMachine>
+COMMANDER: <observe>
+DRIVER: done <<Acknowledge>>
+COMMANDER response:
+FeedbackPositive
 
+Example :
+Goal: Boil Potato.
+COMMANDER: <observe>
+DRIVER: what do i do <<RequestForInstruction>>
+COMMANDER: Hi! Can you boil a potato? <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Water the plant.
-COMMANDER: hello <<Greetings/Salutations>>
+Goal: Prepare breakfast.
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: hello what is the task today <<Greetings/Salutations>>
-COMMANDER: Would you please water the plant. <<Instruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: lets prepare breakfast <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: what might i water it wih <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: You can use the mug in the sink <<InformationOther>>
+COMMANDER: lets make 2 coffees first <<Instruction>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <toggle on Faucet>
-COMMANDER: <observe>
-DRIVER: <toggle off Faucet>
-COMMANDER: <observe>
-DRIVER: <pickup Mug>
-COMMANDER: <observe>
-DRIVER: <pour HousePlant>
 COMMANDER response:
-FeedbackPositive
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

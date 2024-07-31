@@ -28,12 +28,16 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Water the plant.
+Goal: Prepare coffee in a clean mug.
 COMMANDER: <observe>
-DRIVER: What am I doing today? <<RequestForInstruction>>
-COMMANDER: mug is on chair <<Instruction>>
+DRIVER: what do you need me to do? <<RequestForInstruction>>
+COMMANDER: prepare coffee in a clean mug <<Instruction>>
 DRIVER: <observe>
-COMMANDER: fill water and water the plant <<Instruction>>
+COMMANDER: <observe>
+DRIVER: do you see a clean mug anywhere? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: there is on on the kitcehn table <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: not sure if its clean or not <<InformationOther>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <pickup Mug>
@@ -41,36 +45,47 @@ COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a sandwich.
+Goal: Make a salad.
+COMMANDER: hi <<Greetings/Salutations>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
+DRIVER: hello <<Greetings/Salutations>>
+COMMANDER: today we will be making a salad <<Instruction>>
+DRIVER: <observe>
+COMMANDER: start slicing the lettuce in the fridge <<Instruction>>
+DRIVER: <observe>
 COMMANDER response:
-Greetings/Salutations
+InformationOnObjectDetails
 
 Example :
-Goal: Make a salad.
+Goal: Clean all the Pots.
 
 COMMANDER response:
 Instruction
 
 Example :
-Goal: Prepare coffee in a clean mug.
+Goal: Put all CreditCard on any Furniture.
 COMMANDER: <observe>
-DRIVER: hello what shou;d i do? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: Oh sorry! <<MiscOther>>
+DRIVER: hello <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: What is my task <<RequestForInstruction>>
+COMMANDER: hi <<Greetings/Salutations>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: it is fine <<MiscOther>>
-COMMANDER: Prepare some coffee in a clean mug. <<Instruction>>
+COMMANDER: find a porch <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Make a sandwich.
-
+Goal: Prepare breakfast.
+COMMANDER: 2 coffee in clean mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <open Fridge>
 COMMANDER response:
-Greetings/Salutations
+InformationOnObjectDetails
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

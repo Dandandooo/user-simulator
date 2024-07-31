@@ -28,68 +28,73 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Clean all the Plates.
-COMMANDER: Today you will clean plates <<Instruction>>
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: whats first <<RequestForInstruction>>
+COMMANDER: get the mug and make coffee <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hello. My first task, please. <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: great where is the plate <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Put all CreditCard on any Bed.
-COMMANDER: <observe>
-DRIVER: Hello what is my task? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: Hi <<Greetings/Salutations>>
-COMMANDER: put creditcards on bed <<Instruction>>
+DRIVER: where is the mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: mug is on the stove <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: left clean mug <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: thank you <<Acknowledge>>
-COMMANDER: one is in the trash <<InformationOnObjectDetails>>
-DRIVER: <observe>
+DRIVER: <pickup Mug>
 COMMANDER: <observe>
-DRIVER: <pickup CreditCard>
-COMMANDER: <observe>
-DRIVER: <putdown Bed>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Water the plant.
-COMMANDER: <observe>
-DRIVER: hi, what can i do for you? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: just need my plant watered please <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: sure <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: i see a container with water on the stove <<Acknowledge>>
-COMMANDER: <observe>
-DRIVER: <pickup Pot>
-COMMANDER: nice that should work <<FeedbackPositive,Acknowledge>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pour HousePlant>
-COMMANDER: <observe>
-DRIVER: doen <<Acknowledge>>
+DRIVER: this the right one or the other one? <<AlternateQuestions>>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Clean all the Cloths.
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what to do <<RequestForInstruction>>
+COMMANDER: there is a mug behind the lettuce <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER response:
+Instruction
 
+Example :
+Goal: Clean all the Mugs.
+COMMANDER: <observe>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: what is the task? <<RequestForInstruction>>
+COMMANDER: Clean all the Mugs <<Instruction>>
+DRIVER: <observe>
+COMMANDER: on the counter <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: next to you <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: turn around' <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Clean all the Plates.
+COMMANDER: <observe>
+DRIVER: Hello, task please? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: clean plate <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is plate <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: plate is beside the sink <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
 Goal: Boil Potato.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+DRIVER: Hi. What should I do today? <<Greetings/Salutations,RequestForInstruction>>
 COMMANDER response:
-Instruction
+Greetings/Salutations
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

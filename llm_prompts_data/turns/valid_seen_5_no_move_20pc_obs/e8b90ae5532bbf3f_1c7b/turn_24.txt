@@ -28,81 +28,69 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Make a salad.
-COMMANDER: hi <<Greetings/Salutations>>
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: Hi, first task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: clean mug and prepare coffee <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: today we need to make a salad <<Instruction>>
-DRIVER: <observe>
-COMMANDER: grab a knife and slice lettuce first <<Instruction>>
-DRIVER: <observe>
+DRIVER: ok <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: Where is the knife <<RequestForObjectLocationAndOtherDetails>>
-COMMANDER: knife is in top right cabinet above the microwave <<InformationOnObjectDetails>>
+DRIVER: mug? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: mug is on the brown table at the corner left to wash basin <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <toggle on LightSwitch>
+DRIVER: <pickup Mug>
 COMMANDER: <observe>
-DRIVER: Where is the microwave? <<RequestForObjectLocationAndOtherDetails>>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
 COMMANDER response:
-InformationOnObjectDetails
+OBSERVE
+
+Example :
+Goal: Serve 1 slice(s) of Tomato on a Plate.
+COMMANDER: <observe>
+DRIVER: what shall I do today? <<RequestForInstruction>>
+COMMANDER response:
+Greetings/Salutations
+
+Example :
+Goal: Prepare breakfast.
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: Hello ) <<Greetings/Salutations>>
+COMMANDER: <observe>
+DRIVER: What's my first task? <<RequestForInstruction>>
+COMMANDER response:
+Instruction
 
 Example :
 Goal: Make a salad.
 COMMANDER: <observe>
-DRIVER: how can I help? <<RequestForInstruction>>
-COMMANDER: can you slice a tomato? <<Instruction>>
-DRIVER: <observe>
-COMMANDER: the tomato is on the oven <<InformationOnObjectDetails>>
+DRIVER: hi what can I do for you? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: make a salad, 1 slice of lettuce and 2 slices of cooked potato <<Instruction>>
 DRIVER: <observe>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Water the plant.
+Goal: Put all AlarmClock on any Bed.
 COMMANDER: <observe>
-DRIVER: hi <<Greetings/Salutations>>
+DRIVER: how can i help you? <<RequestForInstruction>>
+COMMANDER: can you put the alarm on my bed please <<Instruction>>
+DRIVER: <observe>
+COMMANDER: it is on the set of drawers by the window <<InformationOnObjectDetails>>
+DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: what should I do <<RequestForInstruction>>
-COMMANDER: We need to water the plant <<Instruction>>
-DRIVER: <observe>
-COMMANDER: container is left of toaster <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: take container and place fill water <<Instruction>>
-DRIVER: <observe>
+DRIVER: <pickup AlarmClock>
+COMMANDER: <observe>
+DRIVER: <putdown Bed>
+COMMANDER: <observe>
+DRIVER: it is on the bed <<InformationOnObjectDetails>>
 COMMANDER response:
-Instruction
-
-Example :
-Goal: Put all Newspaper on one Sofa.
-COMMANDER: <observe>
-DRIVER: Hi! <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Boil Potato.
-COMMANDER: <observe>
-DRIVER: what can i do today <<RequestForInstruction>>
-COMMANDER: hello please boil a potato <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Potato>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <pickup Pot>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER: <observe>
-DRIVER: <pickup Pan>
-COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
-COMMANDER response:
-OBSERVE
+Affirm
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.

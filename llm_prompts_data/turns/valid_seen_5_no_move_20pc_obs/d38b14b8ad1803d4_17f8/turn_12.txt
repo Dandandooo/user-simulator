@@ -28,55 +28,22 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Serve 1 slice(s) of Tomato in a Bowl.
+Goal: Make a plate of toast.
 COMMANDER: hello <<Greetings/Salutations>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Hi <<Greetings/Salutations>>
-COMMANDER: <observe>
-DRIVER: What should I do today? <<RequestForInstruction>>
-COMMANDER: Please slice a tomato and put in a bowl. <<Instruction>>
+DRIVER: hi <<Greetings/Salutations>>
+COMMANDER: today we slice bread <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: Okay, where should I start? <<RequestForInstruction>>
-COMMANDER: find and slice the tomato <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-OBSERVE
-
-Example :
-Goal: Prepare breakfast.
-COMMANDER: <observe>
-DRIVER: What tasks do I today? <<RequestForInstruction>>
-COMMANDER: grab the mug from the coffee maker <<Instruction>>
-DRIVER: <observe>
-COMMANDER response:
-Instruction
-
-Example :
-Goal: Serve 2 slice(s) of Tomato on a Plate.
-COMMANDER: <observe>
-DRIVER: how can I help today <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <toggle on LightSwitch>
-COMMANDER: 2 slices of tomato please <<Instruction>>
-DRIVER: <observe>
-COMMANDER: it is inside the fridge <<InformationOnObjectDetails>>
+DRIVER: what where is the knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER: bread is on the brown shelf <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: okay <<Acknowledge>>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Cook 1 slice(s) of Potato and serve on a Plate.
-COMMANDER: <observe>
-DRIVER: Hi, first task? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER: make 1 slice of potato and cook it <<Instruction>>
+DRIVER: <pickup Bread>
+COMMANDER: knife is in the sink <<InformationOnObjectDetails>>
 DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup Knife>
-COMMANDER: the potato is in the sink <<InformationOnObjectDetails>>
+COMMANDER: in the sink <<InformationOnObjectDetails>>
 DRIVER: <observe>
 COMMANDER: <observe>
 DRIVER: <putdown CounterTop>
@@ -85,22 +52,57 @@ OBSERVE
 
 Example :
 Goal: Clean all the Plates.
-COMMANDER: <observe>
-DRIVER: What can I do for you? <<RequestForInstruction>>
-COMMANDER: clean the plate <<Instruction>>
+COMMANDER: hello how are you today <<Greetings/Salutations>>
 DRIVER: <observe>
-COMMANDER: plate is in the table <<InformationOnObjectDetails>>
+COMMANDER: our task is to clean all plates <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Plate>
+DRIVER: ok <<Acknowledge>>
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: where are the plates? <<RequestForObjectLocationAndOtherDetails>>
 COMMANDER: <observe>
-DRIVER: <pickup Lettuce>
+DRIVER: <toggle off Faucet>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Serve 1 slice(s) of Tomato in a Bowl.
 COMMANDER: <observe>
-DRIVER: <putdown CounterTop>
+DRIVER: hi <<Greetings/Salutations>>
 COMMANDER: <observe>
-DRIVER: <pickup Plate>
+DRIVER: what can I do? <<RequestForInstruction>>
+COMMANDER: Hi! We need to serve 1 slice of a tomato in a bowl, but we can start with just slicing the tomato with a knife <<Greetings/Salutations,Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: where is the knife? <<RequestForObjectLocationAndOtherDetails>>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: how ocan i help you? <<RequestForInstruction>>
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: your task is to water the plant <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Prepare coffee in a clean mug.
+COMMANDER: <observe>
+DRIVER: what first <<RequestForInstruction>>
+COMMANDER: Find mug <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Mug>
+COMMANDER: mug is beside toaster <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: got it <<Acknowledge>>
 COMMANDER response:
 Instruction
 

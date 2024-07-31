@@ -28,75 +28,85 @@ utterance may have one or more dialogue acts (most have only one). The possible 
 ]
 
 Example :
-Goal: Prepare breakfast.
+Goal: Put all Newspaper on any Chairs.
 COMMANDER: <observe>
-DRIVER: Hello <<Greetings/Salutations>>
-COMMANDER: Hi. Could you prepare breakfast? First we need coffee in a clean mug. <<Greetings/Salutations,Instruction>>
+DRIVER: Hello, what is my task? <<Greetings/Salutations,RequestForInstruction>>
+COMMANDER: Put three newspapers on a chair <<Instruction>>
 DRIVER: <observe>
 COMMANDER: <observe>
-DRIVER: <pickup Mug>
+DRIVER: <pickup Newspaper>
+COMMANDER: <observe>
+DRIVER: <putdown ArmChair>
+COMMANDER: <observe>
+DRIVER: <pickup TissueBox>
+COMMANDER: There is one next to a box on the long borwn table <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <putdown Sofa>
+COMMANDER response:
+InformationOnObjectDetails
+
+Example :
+Goal: Water the plant.
+COMMANDER: <observe>
+DRIVER: What shall I do today? <<RequestForInstruction>>
+COMMANDER: water the plant <<Instruction>>
+DRIVER: <observe>
+COMMANDER: grab a bowl <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Bottle>
+COMMANDER: <observe>
+DRIVER: <putdown CounterTop>
+COMMANDER: <observe>
+DRIVER: <toggle off Faucet>
+COMMANDER: <observe>
+DRIVER: <pickup Lettuce>
+COMMANDER response:
+Instruction
+
+Example :
+Goal: Make a salad.
+COMMANDER: hello <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER response:
+OBSERVE
+
+Example :
+Goal: Clean all the Drinkwares.
+COMMANDER: Hi <<Greetings/Salutations>>
+DRIVER: <observe>
+COMMANDER: Drinkwares are dirty, rinse with water <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: what should i do today? <<RequestForInstruction>>
+COMMANDER: One is on the dining chair <<InformationOnObjectDetails>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: <pickup Cup>
 COMMANDER: <observe>
 DRIVER: <putdown Sink>
 COMMANDER response:
 OBSERVE
 
 Example :
-Goal: Water the plant.
+Goal: Prepare breakfast.
 COMMANDER: <observe>
-DRIVER: Hello. How may I assist you, today? <<Greetings/Salutations,RequestForInstruction>>
-COMMANDER response:
-Greetings/Salutations
-
-Example :
-Goal: Water the plant.
-COMMANDER: Hello, water the plant <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
+DRIVER: what work can i help with today? <<RequestForInstruction>>
 COMMANDER: <observe>
-DRIVER: <pickup Bowl>
+DRIVER: <pickup ButterKnife>
 COMMANDER: <observe>
-DRIVER: <pour HousePlant>
+DRIVER: <slice Potato>
 COMMANDER: <observe>
 DRIVER: <putdown CounterTop>
+COMMANDER: lets make breakfast <<Instruction>>
+DRIVER: <observe>
+COMMANDER: <observe>
+DRIVER: ok <<Acknowledge>>
+COMMANDER: <observe>
+DRIVER: <pickup Cup>
 COMMANDER response:
-FeedbackPositive
-
-Example :
-Goal: Put all RemoteControl in one Box.
-COMMANDER: <observe>
-DRIVER: what can i do for you? <<RequestForInstruction>>
-COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
-COMMANDER: <observe>
-DRIVER: <putdown CoffeeTable>
-COMMANDER: <observe>
-DRIVER: <pickup RemoteControl>
-COMMANDER: <observe>
-DRIVER: <putdown CoffeeTable>
-COMMANDER: hi <<Greetings/Salutations>>
-DRIVER: <observe>
-COMMANDER: put remote controls in single box <<Instruction>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup CreditCard>
-COMMANDER response:
-InformationOnObjectDetails
-
-Example :
-Goal: Put all TissueBox on one Tables.
-COMMANDER: <observe>
-DRIVER: first task? <<RequestForInstruction>>
-COMMANDER: Hi. Please place a tissue box on a table. <<Greetings/Salutations,Instruction>>
-DRIVER: <observe>
-COMMANDER: It is on the white shelf. <<InformationOnObjectDetails>>
-DRIVER: <observe>
-COMMANDER: <observe>
-DRIVER: <pickup TissueBox>
-COMMANDER: <observe>
-DRIVER: <putdown SideTable>
-COMMANDER: <observe>
-DRIVER: <pickup TissueBox>
-COMMANDER response:
-OBSERVE
+Instruction
 
 Your job is to respond to a given dialogue/action history with only one Dialogue act or OBSERVE.
 Either return the dialogue act, or return the OBSERVE action. Return only one word/phrase.
