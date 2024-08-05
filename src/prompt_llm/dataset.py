@@ -3,7 +3,7 @@ import os
 
 from gpt4_entire_eval import get_task
 
-from datasets import Dataset, BuilderConfig
+from datasets import Dataset
 
 
 class LLMData:

@@ -1,44 +1,49 @@
+import os
+
 import click
 import json
 import random
+from datasets import Dataset, DatasetDict, NamedSplit
+from tqdm import tqdm
 
 
 # TODO: export prompts as jsonl (new-line delimited json)
-# TODO: auto generate names: "<dataset>__<file_id>__<turn_id>"
 # TODO: generate datasets for all combinations
 class PromptMaker:
-    def __init__(self, **kwargs):
-        def kwargs_that_are(of_type):
-            return {k: v for k, v in kwargs.items() if of_type == type(v)}  # isinstance said True is of type int
-        flags = kwargs_that_are(bool)
-        n_choices = kwargs_that_are(int)
-
+    def __init__(self, example_source: list[dict], **kwargs):
         self.kwargs = kwargs
+        self.example_source = example_source
 
-        dataset_id = '_'.join([*filter(flags.__getitem__, flags), *[k.replace('n', str(v), 1) for k, v in n_choices.items()]])
-        if not dataset_id:
-            dataset_id = 'default'
+        # Defining which function to use for prompt
+        match kwargs["format"]:
+            case "chat":
+                self.prompt_format = self.chat_prompt
+            case "instruct":
+                self.prompt_format = self.instruct_prompt
+            case _:
+                raise ValueError(f"'{kwargs['format']}' is not a recognized format.")
 
-        print("Dataset ID:", dataset_id)
-
-        self.train_source = json.load(open(f"teach-data-parsed/train_turn.json"))
-        self.valid_source = json.load(open(f"teach-data-parsed/valid_turn.json"))
-        self.test_source = json.load(open(f"teach-data-parsed/test_turn.json"))
-
-        self.example_source = self.train_source + self.valid_source
+    def __call__(self, task: dict, length: int = None, ignore_pc: bool = False):
+        if self.kwargs["no-move"]:
+            task["turns"] = [turn for turn in task["turns"] if turn["turn_action"] != "move"]
+        if isinstance(length, int):
+            user_, answer_ = self.user_prompt(task, length)
+            return self.prompt_format(user_, answer_)
+        for i in range(len(task["turns"])-1):
+            user_, answer_ = self.user_prompt(task, i)
+            if not ignore_pc and 100 * random.random() > self.kwargs["npc-obs"] and "OBSERVE" in answer_:
+                continue
+            yield self.prompt_format(user_, answer_)
 
     def system_prompt(self):
-        prompt = open("src/user_sim2/system_prompt.txt").read()
-        if self.kwargs["das_expl"]:
-            prompt += open("src/user_sim2/das_expl.txt").read()
-        else:
-            prompt += open("src/user_sim2/das_list.txt").read()
+        prompt = open("src/user_sim2/segments/system_prompt.txt").read()
+        prompt += open(f"src/user_sim2/segments/das_{'expl' if self.kwargs['das-expl'] else 'list'}.txt").read()
         return prompt
 
-    def history(self, example, length) -> (str, str):
+    def history(self, example: dict, length: int) -> tuple[str, str]:
         hist = example["goal"] + '\n'
         for turn in example["turns"][:length]:
-            if turn["turn_action"] == "move" and not self.kwargs["move"]:
+            if turn["turn_action"] == "move" and self.kwargs["no-move"]:
                 continue
             elif turn["DRIVER"]["action"] == "dialogue":
                 hist += f"COMMANDER: <observe>\n"
@@ -51,36 +56,35 @@ class PromptMaker:
                 hist += f"DRIVER: {turn['DRIVER']['action']}\n"
 
         hist += "COMMANDER response:\n"
-        answer = "OBSERVE" if example["turns"][length]["COMMANDER"]["action"] != "dialogue" else example["turns"][length]["COMMANDER"]["das"][0]
-
+        final = example["turns"][length]["COMMANDER"]
+        answer = "OBSERVE" if final["action"] != "dialogue" else final["das"][0]
         return hist, answer
 
     def examples(self, num_to_make: int):
         def choose_example():
             choice = random.choice(self.example_source)
             length = random.randint(1, len(choice["turns"]) - 1)
-            if choice["turns"][length]["COMMANDER"]["action"] == "<observe>" and random.random() < self.kwargs["pc_ex_obs_keep"]:
+            if choice["turns"][length]["COMMANDER"]["action"] == "<observe>" and 100 * random.random() < self.kwargs["nex_obs"]:
                 return choice, length
             return choose_example()
         for i in range(num_to_make):
-            choice, length = choose_example()
+            choice_, length_ = choose_example()
             example = f'Example{f" {i}" * self.kwargs["enumerate"]}:\n'
-            example += "\n".join(self.history(choice, length))
+            example += "\n".join(self.history(choice_, length_))
             yield example
 
     def user_prompt(self, task: dict, length: int) -> (str, str):
-        prompt = open("src/user_sim2/user_prompt.txt").read()
-        if self.kwargs["n_shot"]:
+        prompt = open("src/user_sim2/segments/user_prompt.txt").read()
+        if n := self.kwargs["n-shot"]:
             prompt += "\nHere are some examples:\n\n"
-            prompt += "\n\n".join(self.examples(self.kwargs["n_shot"]))
+            prompt += "\n\n".join(self.examples(n))
             prompt += "\n"
         prompt += "\nHere is your task:\n\n"
         task_, answer_ = self.history(task, length)
         prompt += task_
         return prompt, answer_
 
-    def chat_prompt(self, task, length):
-        user_, answer_ = self.user_prompt(task, length)
+    def chat_prompt(self, user_: str, answer_: str):
         return {
             "messages": [
                 {"role": "system", "content": self.system_prompt()},
@@ -89,54 +93,134 @@ class PromptMaker:
             ]
         }
 
-    def instruct_prompt(self, task, length):
-        user_, answer_ = self.user_prompt(task, length)
+    def instruct_prompt(self, user_: str, answer_: str):
         return {
             "prompt": self.system_prompt() + "\n" + user_,
             "completion": answer_
         }
 
-    def jsonl_batch(self, task, length):
-        match self.kwargs["format"]:
-            case "chat":
-                message = self.chat_prompt(task, length)
-            case "instruct":
-                message = self.instruct_prompt(task, length)
-            case _:
-                raise ValueError()
-
-        entry_name = f'{task["file_id"]}-turn{length}'
-        entry = {
-            "custom_id": entry_name,
-            "method": "POST",
-            "url": "/v1/chat/completions",
-
-        }
-        return json.dumps(entry)
-
-    def generate_file(self, file):
-        turns = [turn for turn in file["turns"] if (turn["turn_action"] != "move") or not self.kwargs["move"]]
-        for length, turn in enumerate(file["turns"]):
-            pass
 
 class DatasetMaker:
     def __init__(self, **kwargs):
-        self.kwargs = kwargs
+        def kwargs_that_are(of_type):
+            return {k: v for k, v in kwargs.items() if of_type == type(v)}  # isinstance said True is of type int
+        flags = kwargs_that_are(bool)
+        n_choices = kwargs_that_are(int)
 
-        self.pm = PromptMaker(**kwargs)
+        dataset_id = '_'.join([kwargs["format"],
+                               *filter(flags.__getitem__, flags),
+                               *[k.replace('n', str(v), 1) for k, v in n_choices.items()]])
+        if not dataset_id:
+            dataset_id = f'{kwargs["format"]}_default'
+
+        print("Dataset ID:", dataset_id)
+
+        self.id = dataset_id
+
+        self.train_source = json.load(open(f"teach-dataset-parsed/train_turn.json"))
+        self.valid_source = json.load(open(f"teach-dataset-parsed/valid_unseen_turn.json"))
+        self.test_source = json.load(open(f"teach-dataset-parsed/valid_seen_turn.json"))
+
+        self.pm = PromptMaker(example_source=self.train_source, **kwargs)
+
+    def generate(self, source, ignore_pc: bool = False):
+        for file in source:
+            yield from self.pm(file, ignore_pc=ignore_pc)
+
+    def jsonl_batch(self, task: dict):
+        for i, content in self.generate(task):
+            entry = {
+                "custom_id": f'{task["file_id"]}-turn{i}',
+                "method": "POST",
+                "url": "/v1/chat/completions",
+                # TODO: figure out api I have access to
+            }
+            yield json.dumps(entry)
+
+    def generate_dataset(self) -> DatasetDict:
+        train = Dataset.from_list(list(tqdm(self.generate(self.train_source))))
+        valid = Dataset.from_list(list(tqdm(self.generate(self.valid_source, ignore_pc=True))))
+        test = Dataset.from_list(list(tqdm(self.generate(self.test_source, ignore_pc=True))))
+        # train = Dataset.from_generator(self.generate, gen_kwargs={"source": self.train_source})
+        # valid = Dataset.from_generator(self.generate, gen_kwargs={"source": self.valid_source, "ignore_pc": True})
+        # test = Dataset.from_generator(self.generate, gen_kwargs={"source": self.test_source, "ignore_pc": True})
+        dd = DatasetDict({"train": train, "valid": valid, "test": test})
+        return dd
+
+
+class DatasetManager:
+    def __init__(self, variations_: dict[str, list]):
+        self.datasets = {}
+
+        for variation in DatasetManager.get_variations(list(variations_.items())):
+            id_, _ = self.make_dataset(variation)
+            # self.save_dataset(id_)
+
+        self.upload()
+
+    @staticmethod
+    def get_variations(variation_items: list[tuple]):
+        if not variation_items:
+            return {}
+        key, values = variation_items[0]
+        for value in values:
+            yielded = False
+            for rest in DatasetManager.get_variations(variation_items[1:]):
+                yielded = True
+                yield {key: value, **rest}
+            if not yielded:
+                yield {key: value}
+
+    def make_dataset(self, variation) -> tuple[str, DatasetDict]:
+        dm = DatasetMaker(**variation)
+        dataset = dm.generate_dataset()
+        self.datasets[dm.id] = dataset
+        return dm.id, dataset
+
+    def upload(self):
+        hub_id = "Dandandooo/user-sim2"
+        for id_, dataset in self.datasets.items():
+            print(f"Uploading dataset: {id_}")
+            dataset.push_to_hub(hub_id, id_, private=True)
+
+    def save(self):
+        folder = "llm_prompts_data/user_sim2"
+        for id_, dataset in self.datasets.items():
+            self.save_dataset(id_, folder)
+
+    def save_dataset(self, id_: str, folder="llm_prompts_data/user_sim2"):
+        print(f"Saving dataset: {id_}")
+        dataset = self.datasets[id_]
+        with open(os.path.join(folder, f"{id_}_train.jsonl"), "w") as file:
+            file.writelines(map(json.dumps, dataset["train"]))
+        with open(os.path.join(folder, f"{id_}_valid.jsonl"), "w") as file:
+            file.writelines(map(json.dumps, dataset["valid"]))
+        with open(os.path.join(folder, f"{id_}_test.jsonl"), "w") as file:
+            file.writelines(map(json.dumps, dataset["test"]))
 
 
 @click.command()
 @click.option("--das-expl", is_flag=True, help="Whether to include the DAS explanation in the system prompt.")
-@click.option("--move/--no_move", default=False, help="Whether to include move turns in user prompt")
+@click.option("--no_move", is_flag=True, help="Whether to include move turns in user prompt")
 @click.option("--n-shot", type=int, default=0, help="The number of examples to include in the prompt.")
-@click.option("--ex-obs", type=float, default=.2, help="The percentage of observe examples generated to keep.")
-@click.option("--npc-obs", type=int, default=40, help="The percentage of observe tasks to keep (out of 100)")
+@click.option("--nex-obs", type=int, default=20, help="The percentage of observe examples generated to keep.")
+@click.option("--npc-obs", type=int, default=40, help="The percentage of observe tasks to keep in training dataset.")
 @click.option("--enumerate", is_flag=True, help="Whether to enumerate the examples in the prompt.")
-@click.option("--format", type=click.Choice(["chat", "instruct"], case_sensitive=False), default="chat", help='Type of prompt format')
+@click.option("--format", type=click.Choice(["chat", "instruct"]), default="chat", help='Type of prompt format')
 def main(**kwargs):
-    pm = PromptMaker(**kwargs)
+    dm = DatasetManager(**kwargs)
+    dm.save()
 
 
 if __name__ == "__main__":
-    main()
+    variations = {
+        "das-expl": [False, True],
+        "no-move": [False, True],
+        "n-shot": [0],
+        "nex-obs": [20],
+        "npc-obs": [20, 40, 100],
+        "enumerate": [False],
+        "format": ["chat", "instruct"],
+    }
+
+    manager = DatasetManager(variations)
