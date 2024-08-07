@@ -16,6 +16,8 @@ model_name = "unsloth/llama-3-8b-Instruct-bnb-4bit"
 # Promising alternative?
 # model_name = "unsloth/Qwen2-7B-Instruct-bnb-4bit"
 
+# TODO: train for multiple epochs for 0_no_move
+# TODO: evaluate 0_no_move_40pc_obs
 print("Loading dataset")
 dataset = "0_no_move_40pc_obs"
 data = load_dataset("Dandandooo/user-sim", dataset)

@@ -267,6 +267,7 @@ class LoraLM(HugLM):
             # torch_compile=True,
             push_to_hub=True,
             hub_model_id=save_model,
+            hub_private_repo=True,
             per_device_train_batch_size=2,  # Hopefully this won't overflow the memory
             **sft_extras,
         )

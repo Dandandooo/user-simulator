@@ -7,8 +7,7 @@ from datasets import Dataset, DatasetDict, NamedSplit
 from tqdm import tqdm
 
 
-# TODO: export prompts as jsonl (new-line delimited json)
-# TODO: generate datasets for all combinations
+# TODO: implement ALFWORLD
 class PromptMaker:
     def __init__(self, example_source: list[dict], **kwargs):
         self.kwargs = kwargs
