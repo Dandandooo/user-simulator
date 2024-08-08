@@ -6,7 +6,7 @@ import os
 
 
 def get_task(prompt: str) -> str:
-    goal_re = re.compile(r"(?<=\n\n\n)Goal: (?:(?!COMMANDER response:).)+", re.MULTILINE + re.DOTALL)
+    goal_re = re.compile(r"(?<=\n\n)Goal: (?!\w*Goal: ).+", re.MULTILINE + re.DOTALL)
     return goal_re.search(prompt).group().strip() + "\nCOMMANDER response:"
 
 

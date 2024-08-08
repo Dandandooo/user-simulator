@@ -2,10 +2,9 @@ from transformers import AutoModelForSequenceClassification
 from transformers import AutoTokenizer
 from transformers import Trainer, TrainingArguments
 from transformers import BitsAndBytesConfig
-from src.grokking_bert.prompt_process import stripped_generator
+from src.grokking_bert.prompt_process import stripped_generator, stripped_list
 from datasets import Dataset
 import torch
-import os
 
 LABELS = [
     "OBSERVE", "Acknowledge", "Affirm", "AlternateQuestions",
@@ -17,20 +16,34 @@ LABELS = [
     "RequestOtherInfo"
 ]
 
+# model_name = "FacebookAI/roberta-large"  # Token window too small
+# model_name = "distilbert/distilbert-base-cased"  # Token window too small
+# model_name = "distilbert/distilgpt2"
+# model_name = "unsloth/tinyllama-bnb-4bit"
+# model_name = "google-t5/t5-small"  # Token window too small
+# model_name = "google-t5/t5-base"  # Token window too small
+model_name = "google/gemma-2-2b-it"
+
+
+# Todo: try padding_side="right" and evaluate results
+tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left", use_fast=True)
+
 config_name = "0_no_move"
-train_dataset = Dataset.from_generator(stripped_generator, gen_kwargs={"config_name": config_name, "split": "train"})
+
+gen_kwargs = {
+    "config_name": config_name,
+    "tokenizer": tokenizer,
+    "labels": LABELS,
+}
+
+train_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="train"))
 print("Train dataset downloaded")
-valid_dataset = Dataset.from_generator(stripped_generator, gen_kwargs={"config_name": config_name, "split": "validation"})
+valid_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="validation"))
 print("Validation dataset downloaded")
-test_dataset = Dataset.from_generator(stripped_generator, gen_kwargs={"config_name": config_name, "split": "test"})
+test_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="test"))
 print("Test dataset downloaded")
 
-# Todo: try RoBERTa, T5, DistilGPT2, DistilBert?,
-# Todo: research about Seq2SeqLM or MaskedLM (if Sequence Classification is not enough)
-model_name = "FacebookAI/roberta-base"
-# model_name = "distilbert/DistilGPT2"
-# model_name = "t5-small"
-# model_name = "t5-base"
+
 save_name = f'{model_name.split("/")[-1]}_{config_name}'
 
 model = AutoModelForSequenceClassification.from_pretrained(
@@ -46,8 +59,7 @@ print("\x1b[35mModel\x1b[90m:\x1b[0m")
 print(" \x1b[33m->\x1b[0;1;34m name\x1b[90m:\x1b[0m", model_name)
 print(" \x1b[33m->\x1b[0;1;34m dtype\x1b[90m:\x1b[0m", model.dtype)
 print(" \x1b[33m->\x1b[0;1;34m device\x1b[90m:\x1b[0m", model.device)
-# Todo: try padding_side="right" and evaluate results
-tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left", use_fast=True)
+
 
 BATCH_SIZE = 16
 EPOCHS = 10
@@ -85,7 +97,7 @@ trainer = Trainer(
     tokenizer=tokenizer,
 )
 
-evaluate = False
+evaluate = True
 if not evaluate:
     print("\x1b[35mTraining\x1b[90m...\x1b[0m")
     trainer.train()
