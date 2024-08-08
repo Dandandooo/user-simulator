@@ -11,10 +11,9 @@ This script is designed for trl < 9.0.0
 # device_string = PartialState().process_index
 
 model_name = "unsloth/llama-3-8b-Instruct-bnb-4bit"
+# model_name = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit"
 # model_name = "meta-llama/Meta-Llama-3-8b-Instruct"
 
-# Promising alternative?
-# model_name = "unsloth/Qwen2-7B-Instruct-bnb-4bit"
 
 # TODO: train for multiple epochs for 0_no_move
 # TODO: evaluate 0_no_move_40pc_obs
@@ -50,6 +49,7 @@ args = TrainingArguments(
     gradient_accumulation_steps=3,
     bf16=True,
     save_steps=5000,
+    num_train_epochs=1,
 )
 
 
