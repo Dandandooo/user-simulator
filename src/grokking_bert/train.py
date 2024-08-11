@@ -1,10 +1,12 @@
-from transformers import AutoModelForSequenceClassification
+from transformers import AutoModelForSequenceClassification, EvalPrediction
 from transformers import AutoTokenizer
 from transformers import Trainer, TrainingArguments
 from transformers import BitsAndBytesConfig
 from src.grokking_bert.prompt_process import stripped_generator, stripped_list
 from datasets import Dataset
+from sklearn.metrics import f1_score
 import torch
+import numpy as np
 
 LABELS = [
     "OBSERVE", "Acknowledge", "Affirm", "AlternateQuestions",
@@ -16,31 +18,34 @@ LABELS = [
     "RequestOtherInfo"
 ]
 
-# model_name = "FacebookAI/roberta-large"  # Token window too small
+label2id = {label: i for i, label in enumerate(LABELS)}
+id2label = {i: label for i, label in enumerate(LABELS)}
+
+model_name = "FacebookAI/roberta-base"  # Token window too small
 # model_name = "distilbert/distilbert-base-cased"  # Token window too small
 # model_name = "distilbert/distilgpt2"
 # model_name = "unsloth/tinyllama-bnb-4bit"
 # model_name = "google-t5/t5-small"  # Token window too small
 # model_name = "google-t5/t5-base"  # Token window too small
-model_name = "google/gemma-2-2b-it"
+# model_name = "google/gemma-2-2b-it"
 
 
 # Todo: try padding_side="right" and evaluate results
-tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left", use_fast=True)
+tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left", use_fast=True, truncation_side="left")
 
 config_name = "0_no_move"
 
 gen_kwargs = {
     "config_name": config_name,
     "tokenizer": tokenizer,
-    "labels": LABELS,
+    "label2id": label2id,
 }
 
 train_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="train"))
 print("Train dataset downloaded")
 valid_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="validation"))
 print("Validation dataset downloaded")
-test_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="test"))
+test_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="test"), )
 print("Test dataset downloaded")
 
 
@@ -53,7 +58,9 @@ model = AutoModelForSequenceClassification.from_pretrained(
     # quantization_config=BitsAndBytesConfig(load_in_4bit=True),
     num_labels=len(LABELS),
     torch_dtype=torch.bfloat16,
-    device_map="auto"
+    device_map="auto",
+    label2id=label2id,
+    id2label=id2label,
 )
 print("\x1b[35mModel\x1b[90m:\x1b[0m")
 print(" \x1b[33m->\x1b[0;1;34m name\x1b[90m:\x1b[0m", model_name)
@@ -85,17 +92,43 @@ args = TrainingArguments(
     push_to_hub=True,
     hub_model_id=f"Dandandooo/user_sim__{save_name}",
     hub_private_repo=True,
+    hub_always_push=False,
 
     label_names=LABELS,
+    metric_for_best_model="eval_f1",
 )
+
+
+def eval_metrics(p: EvalPrediction) -> dict:
+    confusion_matrix = np.zeros((len(LABELS), len(LABELS)))
+    true = p.label_ids
+    pred = p.predictions.argmax(-1)
+    for t, p in zip(true, pred):
+        confusion_matrix[t, p] += 1
+
+    speak_confusion = np.array([[confusion_matrix[0, 0], confusion_matrix[0, 1:].sum()],
+                                [confusion_matrix[1:, 0].sum(), confusion_matrix[1:, 1:].sum()]])
+
+    speak_f1 = 2 * speak_confusion[1, 1] / (2 * speak_confusion[1, 1] + speak_confusion[0, 1] + speak_confusion[1, 0])
+
+    da_f1 = f1_score(true[1:, 1:], pred[1:, 1:], average="weighted")
+
+    return {
+        "speak_f1": speak_f1,
+        "da_f1": da_f1,
+    }
+
 
 trainer = Trainer(
     model,
     args=args,
     train_dataset=train_dataset,
     eval_dataset=valid_dataset,
-    tokenizer=tokenizer,
+    compute_metrics=eval_metrics,
+    # tokenizer=tokenizer,
 )
+
+del tokenizer
 
 evaluate = True
 if not evaluate:

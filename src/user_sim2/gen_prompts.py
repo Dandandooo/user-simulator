@@ -101,10 +101,10 @@ class PromptMaker:
 
 class DatasetMaker:
     def __init__(self, **kwargs):
-        def kwargs_that_are(of_type):
-            return {k: v for k, v in kwargs.items() if of_type == type(v)}  # isinstance said True is of type int
+        def kwargs_that_are(of_type, exceptions=()):
+            return {k: v for k, v in kwargs.items() if of_type == type(v) and k not in exceptions}
         flags = kwargs_that_are(bool)
-        n_choices = kwargs_that_are(int)
+        n_choices = kwargs_that_are(int, exceptions=["nex-obs"])
 
         dataset_id = '_'.join([kwargs["format"],
                                *filter(flags.__getitem__, flags),
@@ -126,20 +126,10 @@ class DatasetMaker:
         for file in source:
             yield from self.pm(file, ignore_pc=ignore_pc)
 
-    def jsonl_batch(self, task: dict):
-        for i, content in self.generate(task):
-            entry = {
-                "custom_id": f'{task["file_id"]}-turn{i}',
-                "method": "POST",
-                "url": "/v1/chat/completions",
-                # TODO: figure out api I have access to
-            }
-            yield json.dumps(entry)
-
     def generate_dataset(self) -> DatasetDict:
-        train = Dataset.from_list(list(tqdm(self.generate(self.train_source))))
-        valid = Dataset.from_list(list(tqdm(self.generate(self.valid_source, ignore_pc=True))))
-        test = Dataset.from_list(list(tqdm(self.generate(self.test_source, ignore_pc=True))))
+        train = Dataset.from_list(list(tqdm(self.generate(self.train_source), desc="Train")))
+        valid = Dataset.from_list(list(tqdm(self.generate(self.valid_source, ignore_pc=True), desc="Valid")))
+        test = Dataset.from_list(list(tqdm(self.generate(self.test_source, ignore_pc=True), desc="Test")))
         # train = Dataset.from_generator(self.generate, gen_kwargs={"source": self.train_source})
         # valid = Dataset.from_generator(self.generate, gen_kwargs={"source": self.valid_source, "ignore_pc": True})
         # test = Dataset.from_generator(self.generate, gen_kwargs={"source": self.test_source, "ignore_pc": True})
@@ -153,7 +143,7 @@ class DatasetManager:
 
         for variation in DatasetManager.get_variations(list(variations_.items())):
             id_, _ = self.make_dataset(variation)
-            # self.save_dataset(id_)
+            self.save_dataset(id_)
 
         self.upload()
 
@@ -188,14 +178,17 @@ class DatasetManager:
             self.save_dataset(id_, folder)
 
     def save_dataset(self, id_: str, folder="llm_prompts_data/user_sim2"):
+        def jsonl(dataset_):
+            return json.dumps(dataset_) + "\n"
         print(f"Saving dataset: {id_}")
         dataset = self.datasets[id_]
-        with open(os.path.join(folder, f"{id_}_train.jsonl"), "w") as file:
-            file.writelines(map(json.dumps, dataset["train"]))
-        with open(os.path.join(folder, f"{id_}_valid.jsonl"), "w") as file:
-            file.writelines(map(json.dumps, dataset["valid"]))
-        with open(os.path.join(folder, f"{id_}_test.jsonl"), "w") as file:
-            file.writelines(map(json.dumps, dataset["test"]))
+        form, _id = id_.split("_", 1)
+        with open(os.path.join(folder, form, f"{_id}_train.jsonl"), "w") as file:
+            file.writelines(map(jsonl, dataset["train"]))
+        with open(os.path.join(folder, form, f"{_id}_valid.jsonl"), "w") as file:
+            file.writelines(map(jsonl, dataset["valid"]))
+        with open(os.path.join(folder, form, f"{_id}_test.jsonl"), "w") as file:
+            file.writelines(map(jsonl, dataset["test"]))
 
 
 @click.command()

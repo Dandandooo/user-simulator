@@ -1,9 +1,9 @@
-from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM, pipeline
+from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM
 from transformers import pipeline, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
 from trl import SFTTrainer
-from trl.trainer import ConstantLengthDataset
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
-from openai import AzureOpenAI, RateLimitError
+from openai import AzureOpenAI, RateLimitError, FineTuningJob
+from openai.types import FileObject
 import ollama
 from datasets import Dataset, DatasetDict, load_dataset
 import time
@@ -116,26 +116,27 @@ class BaseLM:
         }
 
 
-class GPT4LM(BaseLM):
-    def __init__(self, api_key=os.getenv("AZURE_OPENAI_KEY_4"),
-                 azure_endpoint="https://uiuc-convai-sweden.openai.azure.com/", role="user"):
+class AzureLM(BaseLM):
+    def __init__(self, model="UIUC-ConvAI-Sweden-GPT4", api_key=os.getenv("AZURE_OPENAI_KEY_4"),
+                 endpoint="https://uiuc-convai-sweden.openai.azure.com/"):
         super().__init__()
         self.client = AzureOpenAI(
-            azure_endpoint=azure_endpoint,
+            azure_endpoint=endpoint,
             api_key=api_key,
-            api_version="2024-02-15-preview"
+            api_version="2024-07-01-preview"
         )
+        self.model = model
 
-        self.role = "user"
+        print("\x1b[35;1m Client Details:\x1b[0m")
+        print("\x1b[90m-> \x1b[33;1mModel:\x1b[0m", model)
+        print("\x1b[90m-> \x1b[33;1mEndpoint:\x1b[0m", endpoint)
+        print()
 
-    def answer(self, user_prompt: str, system_prompt: str = None) -> str:
-        messages = [{"role": "user", "content": user_prompt}]
-        if system_prompt is not None:
-            messages = [{"role": "system", "content": system_prompt}, *messages]
+    def api_call(self, messages: list[dict]):
         while True:
             try:
                 completion = self.client.chat.completions.create(
-                    model="UIUC-ConvAI-Sweden-GPT4",  # model = "deployment_name"
+                    model=self.model,
                     messages=messages,
                     temperature=0.7,
                     max_tokens=1024,
@@ -147,6 +148,70 @@ class GPT4LM(BaseLM):
                 return completion.choices[0].message.content
             except RateLimitError:
                 time.sleep(1)
+
+    # Generator wrapping the content for the BATCH API
+    def _batch_dataset(self, dataset_name: str) -> dict:
+        dataset_location = "llm_prompts_data/user_sim2/chat"
+        dataset_path = os.path.join(dataset_location, f"{dataset_name}.jsonl")
+        dataset = map(json.loads, open(dataset_path).readlines())
+        for i, messages in enumerate(dataset):
+            yield {
+                "custom_id": f"{dataset_name}--{i}",
+                "method": "POST",
+                "url": "/chat/completions",
+                "content": {
+                    "model": self.model,
+                    "messages": messages
+                }
+            }
+
+    def _get_dataset_ids(self, dataset_name):
+        train_name = f"{dataset_name}_train.jsonl"
+        valid_name = f"{dataset_name}_valid.jsonl"
+        test_name = f"{dataset_name}_test.jsonl"
+        for file in self.client.files.list(purpose="fine-tune").to_dict()["data"]:
+            if file["filename"] == train_name:
+                train_id = file["id"]
+            elif file["filename"] == valid_name:
+                valid_id = file["id"]
+            elif file["filename"] == test_name:
+                test_id = file["id"]
+        return train_id, valid_id, test_id
+
+    def upload_dataset(self, dataset_name: str) -> list[FileObject]:
+        responses = []
+        for i, split in enumerate(["train", "valid", "test"]):
+            print(f"Uploading datasets: {i}/3", end="\r")
+            dataset_path = f"llm_prompts_data/user_sim2/chat/{dataset_name}_{split}.jsonl"
+            response = self.client.files.create(file=open(dataset_path, "rb"), purpose="fine-tune")
+            responses.append(response)
+        print(f"Uploading datasets: 3/3")
+        return responses
+
+    def submit_finetune(self, dataset_name, epochs: int = 1) -> FineTuningJob:
+        print("Submitting fine-tuning job...", end=" ")
+        train_id, valid_id, test_id = self._get_dataset_ids(dataset_name)
+        response = self.client.fine_tuning.jobs.create(
+            model=self.model,
+            training_file=train_id,
+            validation_file=valid_id,
+            hyperparameters={
+                "batch_size": 4,
+                "n_epochs": epochs
+            }
+        )
+        print("done!")
+        return response
+
+    def answer_chat(self, chat_log: dict):
+        messages = [chat_log]
+        return self.api_call(messages)
+
+    def answer(self, user_prompt: str, system_prompt: str = None) -> str:
+        messages = [{"role": "user", "content": user_prompt}]
+        if system_prompt is not None:
+            messages = [{"role": "system", "content": system_prompt}, *messages]
+        return self.api_call(messages)
 
 
 class OllamaLM(BaseLM):
