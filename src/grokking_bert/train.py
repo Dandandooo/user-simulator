@@ -55,7 +55,7 @@ model = AutoModelForSequenceClassification.from_pretrained(
     model_name,
     cache_dir=".cache",
     use_cache=True,
-    # quantization_config=BitsAndBytesConfig(load_in_4bit=True),
+    quantization_config=BitsAndBytesConfig(load_in_4bit=True),
     num_labels=len(LABELS),
     torch_dtype=torch.bfloat16,
     device_map="auto",
@@ -68,7 +68,7 @@ print(" \x1b[33m->\x1b[0;1;34m dtype\x1b[90m:\x1b[0m", model.dtype)
 print(" \x1b[33m->\x1b[0;1;34m device\x1b[90m:\x1b[0m", model.device)
 
 
-BATCH_SIZE = 16
+BATCH_SIZE = 32
 EPOCHS = 10
 
 RESUME = False
@@ -130,10 +130,10 @@ trainer = Trainer(
 
 del tokenizer
 
-evaluate = True
+evaluate = False
 if not evaluate:
     print("\x1b[35mTraining\x1b[90m...\x1b[0m")
     trainer.train()
 else:
     print("\x1b[35mEvaluating\x1b[90m...\x1b[0m")
-    trainer.evaluate(test_dataset)
+    print(trainer.evaluate(test_dataset))
