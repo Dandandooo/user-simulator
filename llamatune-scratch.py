@@ -16,7 +16,6 @@ model_name = "unsloth/llama-3-8b-Instruct-bnb-4bit"
 
 
 # TODO: train for multiple epochs for 0_no_move
-# TODO: evaluate 0_no_move_40pc_obs
 print("Loading dataset")
 dataset = "0_no_move_40pc_obs"
 data = load_dataset("Dandandooo/user-sim", dataset)
@@ -27,10 +26,10 @@ tokenizer.pad_token = tokenizer.eos_token
 
 
 model = AutoModelForCausalLM.from_pretrained(
-    model_name, 
-    cache_dir=".cache", 
-    use_cache=True, 
-    force_download=False, 
+    model_name,
+    cache_dir=".cache",
+    use_cache=True,
+    force_download=False,
     device_map="auto",
     quantization_config=BitsAndBytesConfig(load_in_4bit=True,)
 )
@@ -54,6 +53,7 @@ args = TrainingArguments(
 
 
 def format_func(data):
+    # TODO: Is this correct?
     return [f"### Instruction: {prompt}\n ### Response: {answer}" for prompt, answer in zip(data["prompt"], data["answer"])]
 
 
