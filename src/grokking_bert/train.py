@@ -1,7 +1,6 @@
 from transformers import AutoModelForSequenceClassification, EvalPrediction
 from transformers import AutoTokenizer
 from transformers import Trainer, TrainingArguments
-from transformers import BitsAndBytesConfig
 from src.grokking_bert.prompt_process import stripped_generator, stripped_list
 from datasets import Dataset
 from sklearn.metrics import f1_score
@@ -41,11 +40,11 @@ gen_kwargs = {
     "label2id": label2id,
 }
 
-train_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="train"))
+train_dataset = Dataset.from_generator(stripped_generator, gen_kwargs={**gen_kwargs, "split": "train"})
 print("Train dataset downloaded")
-valid_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="validation"))
+valid_dataset = Dataset.from_generator(stripped_generator, gen_kwargs={**gen_kwargs, "split": "validation"})
 print("Validation dataset downloaded")
-test_dataset = Dataset.from_list(stripped_list(**gen_kwargs, split="test"), )
+test_dataset = Dataset.from_generator(stripped_generator, gen_kwargs={**gen_kwargs, "split": "test"})
 print("Test dataset downloaded")
 
 
@@ -55,7 +54,6 @@ model = AutoModelForSequenceClassification.from_pretrained(
     model_name,
     cache_dir=".cache",
     use_cache=True,
-    quantization_config=BitsAndBytesConfig(load_in_4bit=True),
     num_labels=len(LABELS),
     torch_dtype=torch.bfloat16,
     device_map="auto",
@@ -68,7 +66,7 @@ print(" \x1b[33m->\x1b[0;1;34m dtype\x1b[90m:\x1b[0m", model.dtype)
 print(" \x1b[33m->\x1b[0;1;34m device\x1b[90m:\x1b[0m", model.device)
 
 
-BATCH_SIZE = 32
+BATCH_SIZE = 40
 EPOCHS = 10
 
 RESUME = False
@@ -79,8 +77,7 @@ args = TrainingArguments(
     resume_from_checkpoint=output_dir if RESUME else None,
     per_device_train_batch_size=BATCH_SIZE,
     per_device_eval_batch_size=BATCH_SIZE,
-    # bf16=True,
-    # fp16=True, # TODO: figure out why neither work on mac, despite model being loaded in bfloat16
+    bf16=True,
 
     num_train_epochs=EPOCHS,
     eval_strategy="epoch",
@@ -95,7 +92,7 @@ args = TrainingArguments(
     hub_always_push=False,
 
     label_names=LABELS,
-    metric_for_best_model="eval_f1",
+    metric_for_best_model="speak_f1",
 )
 
 

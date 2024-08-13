@@ -7,8 +7,6 @@ from peft import LoraConfig
 This script is designed for trl < 9.0.0
 """
 
-# from accelerate import PartialState
-# device_string = PartialState().process_index
 
 model_name = "unsloth/llama-3-8b-Instruct-bnb-4bit"
 # model_name = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit"
@@ -17,7 +15,7 @@ model_name = "unsloth/llama-3-8b-Instruct-bnb-4bit"
 
 # TODO: train for multiple epochs for 0_no_move
 print("Loading dataset")
-dataset = "0_no_move_40pc_obs"
+dataset = "0_no_move_20pc_obs"
 data = load_dataset("Dandandooo/user-sim", dataset)
 
 print("Initializing Model")
@@ -53,7 +51,6 @@ args = TrainingArguments(
 
 
 def format_func(data):
-    # TODO: Is this correct?
     return [f"### Instruction: {prompt}\n ### Response: {answer}" for prompt, answer in zip(data["prompt"], data["answer"])]
 
 
