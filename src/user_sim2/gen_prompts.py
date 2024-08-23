@@ -100,7 +100,7 @@ class PromptMaker:
 
 
 class DatasetMaker:
-    def __init__(self, **kwargs):
+    def __init__(self, prompt_maker=PromptMaker, **kwargs):
         def kwargs_that_are(of_type, exceptions=()):
             return {k: v for k, v in kwargs.items() if of_type == type(v) and k not in exceptions}
         flags = kwargs_that_are(bool)
@@ -120,7 +120,7 @@ class DatasetMaker:
         self.valid_source = json.load(open(f"teach-dataset-parsed/valid_unseen_turn.json"))
         self.test_source = json.load(open(f"teach-dataset-parsed/valid_seen_turn.json"))
 
-        self.pm = PromptMaker(example_source=self.train_source, **kwargs)
+        self.pm = prompt_maker(example_source=self.train_source, **kwargs)
 
     def generate(self, source, ignore_pc: bool = False):
         for file in source:

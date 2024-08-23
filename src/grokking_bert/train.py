@@ -80,7 +80,8 @@ args = TrainingArguments(
     bf16=True,
 
     num_train_epochs=EPOCHS,
-    eval_strategy="epoch",
+    eval_strategy="steps",
+    eval_steps=10,
     save_strategy="epoch",
     logging_dir=f"logs/{save_name}/",
     logging_strategy="epoch",
@@ -93,6 +94,7 @@ args = TrainingArguments(
 
     label_names=LABELS,
     metric_for_best_model="speak_f1",
+    greater_is_better=True,
 )
 
 

@@ -2,7 +2,8 @@ import numpy as np
 import os
 import sys
 
-from src.prompt_llm.gpt4_entire import run_gpt
+# from src.prompt_llm.gpt4_entire import run_gpt
+from src.prompt_llm.gpt4o_entire import run_gpt
 from src.prompt_llm.gpt4_entire_eval import conf_matrix, metric_string, all_matrix, das_confusion, das_stats
 
 if not os.path.exists("llm_prompt_sessions/gpt4_valid/temp"):

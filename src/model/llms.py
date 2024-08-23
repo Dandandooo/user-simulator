@@ -1,6 +1,6 @@
 from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM
 from transformers import pipeline, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig, DataCollatorForCompletionOnlyLM
 from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
 from openai import AzureOpenAI, RateLimitError, FineTuningJob
 from openai.types import FileObject
@@ -33,8 +33,8 @@ class LLMDataset:
     def __contains__(self, key):
         return key in self.data
 
-    def load(self, dataset_name):
-        self.data[dataset_name] = load_dataset("Dandandooo/user-sim", dataset_name)
+    def load(self, dataset_name, dataset_version="user-sim"):
+        self.data[dataset_name] = load_dataset(f"Dandandooo/{dataset_version}", dataset_name)
 
 
 class BaseLM:
@@ -251,13 +251,12 @@ class HugLM(BaseLM):
             "force_download": False,
         }
 
-        # if torch.cuda.is_available() and not no_flash:
-        #     config["attn_implementation"] = "flash_attention_2"
+        if torch.cuda.is_available() and not no_flash:
+            config["attn_implementation"] = "flash_attention_2"
 
         # moved behind to allow for overrides
         config |= model_kwargs
 
-        # todo: try adding some Seq2SeqLM models because GPT4 said it fits better
         match backend:
             case "torch" | "pt":
                 self.model = AutoModelForCausalLM.from_pretrained(model_name, **config)
@@ -284,9 +283,10 @@ class HugLM(BaseLM):
 
 # To use the LoRA fine-tuning method for huggingface models
 class LoraLM(HugLM):
-    def __init__(self, model_name="google/gemma-1.1-2b-it", dataset_name="0_no_move", resume=False, no_flash=False, **extra_kwargs):
+    def __init__(self, model_name="google/gemma-2-2b-it", dataset_version="user-sim",
+                 dataset_name="0_no_move", resume=False, no_flash=True, **extra_kwargs):
         save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
-        save_model = f"Dandandooo/user-sim__{model_name.split('/')[-1]}__{dataset_name}"
+        save_model = f"Dandandooo/{dataset_version}__{model_name.split('/')[-1]}__{dataset_name}"
 
         self.lora_config = LoraConfig(
             r=16,
@@ -300,11 +300,9 @@ class LoraLM(HugLM):
         extra_config = {
             "model_name": model_name,
             "torch_dtype": "auto",
-            "device_map": {'': torch.cuda.current_device()}
+            "device_map": "auto",
+            "no_flash": no_flash,
         }
-
-        if not no_flash and torch.cuda.is_available():
-            extra_config["attn_implementation"] = "flash_attention_2"
 
         sft_extras = {}
 
@@ -314,7 +312,6 @@ class LoraLM(HugLM):
         if torch.cuda.is_available():
             extra_config["torch_dtype"] = torch.bfloat16
             sft_extras["bf16"] = True
-
 
         # Implement extra config after manual configs
         extra_config |= extra_kwargs
@@ -326,7 +323,7 @@ class LoraLM(HugLM):
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
         super().__init__(**extra_config)
 
-        self.args = TrainingArguments(
+        self.args = SFTConfig(
             output_dir=save_name,
             resume_from_checkpoint=save_model if resume else None,
             # torch_compile=True,
@@ -342,6 +339,12 @@ class LoraLM(HugLM):
         def format_func(data: Dataset):
             return [f"### Instruction: {prompt}\n ### Response: {answer}" for prompt, answer in zip(data["prompt"], data["answer"])]
 
+        collator = DataCollatorForCompletionOnlyLM(
+            response_template="### Response",
+            instruction_template="### Instruction",
+            tokenizer=self.tokenizer,
+        )
+
         self.tokenizer.padding_side = "right"
 
         self.trainer = SFTTrainer(
@@ -350,6 +353,7 @@ class LoraLM(HugLM):
             eval_dataset=self.data[dataset_name]["validation"],
             tokenizer=self.tokenizer,
             peft_config=self.lora_config,
+            data_collator=collator,
             formatting_func=format_func,
             args=self.args,
         )
