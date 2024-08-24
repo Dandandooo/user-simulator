@@ -6,7 +6,7 @@ import torch
 
 
 def _strip_not_history(prompt: str) -> str:
-    return get_task(prompt)
+    return get_task(prompt).removesuffix("COMMANDER response:")
 
 
 def stripped_generator(config_name: str, tokenizer: PreTrainedTokenizer, label2id, split: str):
