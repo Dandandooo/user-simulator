@@ -2,7 +2,6 @@ from src.prompt_llm.gpt4_entire_eval import get_task
 from transformers.tokenization_utils import PreTrainedTokenizer
 from datasets import load_dataset
 from tqdm import tqdm
-import torch
 
 
 def _strip_not_history(prompt: str) -> str:

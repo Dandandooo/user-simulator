@@ -28,9 +28,13 @@ model_name = "FacebookAI/roberta-base"  # Token window too small
 # model_name = "google-t5/t5-base"  # Token window too small
 # model_name = "google/gemma-2-2b-it"
 
+# MY model names
+tokenizer_name = model_name
+model_name = "Dandandooo/user_sim__roberta-base_0_no_move"
+
 
 # Todo: try padding_side="right" and evaluate results
-tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side="left", use_fast=True, truncation_side="left")
+tokenizer = AutoTokenizer.from_pretrained(tokenizer_name, padding_side="left", use_fast=True, truncation_side="left")
 
 config_name = "0_no_move"
 
@@ -66,7 +70,7 @@ print(" \x1b[33m->\x1b[0;1;34m dtype\x1b[90m:\x1b[0m", model.dtype)
 print(" \x1b[33m->\x1b[0;1;34m device\x1b[90m:\x1b[0m", model.device)
 
 
-BATCH_SIZE = 40
+BATCH_SIZE = 32
 EPOCHS = 10
 
 RESUME = False
@@ -80,12 +84,12 @@ args = TrainingArguments(
     bf16=True,
 
     num_train_epochs=EPOCHS,
-    eval_strategy="steps",
-    eval_steps=10,
+    eval_strategy="epoch",
     save_strategy="epoch",
     logging_dir=f"logs/{save_name}/",
     logging_strategy="epoch",
     run_name=f"grokking-{save_name}",
+    report_to=["wandb"],
 
     push_to_hub=True,
     hub_model_id=f"Dandandooo/user_sim__{save_name}",
@@ -93,8 +97,8 @@ args = TrainingArguments(
     hub_always_push=False,
 
     label_names=LABELS,
-    metric_for_best_model="speak_f1",
-    greater_is_better=True,
+    # metric_for_best_model="speak_f1",
+    # greater_is_better=True,
 )
 
 
@@ -120,19 +124,20 @@ def eval_metrics(p: EvalPrediction) -> dict:
 
 trainer = Trainer(
     model,
-    args=args,
     train_dataset=train_dataset,
     eval_dataset=valid_dataset,
     compute_metrics=eval_metrics,
+    args=args,
     # tokenizer=tokenizer,
 )
 
-del tokenizer
+del tokenizer  # To avoid tokenizer parallelism
 
-evaluate = False
-if not evaluate:
-    print("\x1b[35mTraining\x1b[90m...\x1b[0m")
-    trainer.train()
-else:
-    print("\x1b[35mEvaluating\x1b[90m...\x1b[0m")
-    print(trainer.evaluate(test_dataset))
+if __name__ == "__main__":
+    evaluate = True
+    if not evaluate:
+        print("\x1b[35mTraining\x1b[90m...\x1b[0m")
+        trainer.train()
+    else:
+        print("\x1b[35mEvaluating\x1b[90m...\x1b[0m")
+        print(trainer.evaluate(test_dataset))
