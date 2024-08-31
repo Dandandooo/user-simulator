@@ -6,8 +6,7 @@ model_name = "meta-llama/Meta-Llama-3.1-8B-Instruct"
 
 llama3 = HugLM(model_name)
 
-llama3.data.load("0_no_move")
-llama3.save_answers("0_no_move", "test", "llm_prompt_sessions/llama_no-train/0_no_move_3_1.json")
+dataset = "0_no_move"
 
-# llama3.data.load("0_no_move")
-# llama3.save_answers("0_no_move", "test", "llm_prompt_sessions/llama_no-train/0_no_move.json")
+llama3.data.load(dataset)
+llama3.save_answers(dataset, "test", f"llm_prompt_sessions/llama31_no-train/{dataset}.json")

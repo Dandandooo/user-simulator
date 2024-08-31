@@ -81,11 +81,12 @@ args = TrainingArguments(
 
     num_train_epochs=EPOCHS,
     eval_strategy="steps",
-    eval_steps=10,
     save_strategy="epoch",
     logging_dir=f"logs/{save_name}/",
     logging_strategy="epoch",
     run_name=f"grokking-{save_name}",
+
+    report_to="wandb",
 
     push_to_hub=True,
     hub_model_id=f"Dandandooo/user_sim__{save_name}",
@@ -93,8 +94,8 @@ args = TrainingArguments(
     hub_always_push=False,
 
     label_names=LABELS,
-    metric_for_best_model="speak_f1",
-    greater_is_better=True,
+    # metric_for_best_model="speak_f1",
+    # greater_is_better=True,
 )
 
 
