@@ -22,7 +22,6 @@ class TeachModel:
                  log=True,
                  ):
         print(f"\x1b[34mInitializing TeachModel (\x1b[3{1+UTT}mUtt, \x1b[3{1+ST}mST, \x1b[3{1+DH}mDH, \x1b[3{1+DA_E}mDA-E\x1b[34m) for experiment \x1b[34m{experiment}\x1b[0m")
-        # ]]]]]]]])  Neovim LSP problems
 
         if data is None:
             data = TeachData(model_name, UTT=UTT, ST=ST, DH=DH, DA_E=DA_E, experiment=experiment)
@@ -127,7 +126,7 @@ class TeachModel:
             "valid_unseen_commander": self.test("valid_unseen_commander"),
             "valid_unseen_driver": self.test("valid_unseen_driver"),
         }
-        return results 
+        return results
 
 if __name__ == "__main__":
     model = TeachModel("t5-small", UTT=False, ST=False, DH=True, DA_E=False, experiment="TR-V-V", log=False)

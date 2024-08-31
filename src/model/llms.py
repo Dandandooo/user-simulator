@@ -335,7 +335,7 @@ class LoraLM(HugLM):
         )
 
         self.data.load(dataset_name)
-        
+
         def format_func(data: Dataset):
             return [f"### Instruction: {prompt}\n ### Response: {answer}" for prompt, answer in zip(data["prompt"], data["answer"])]
 
@@ -345,7 +345,7 @@ class LoraLM(HugLM):
             tokenizer=self.tokenizer,
         )
 
-        self.tokenizer.padding_side = "right"
+        self.tokenizer.padding_side = "left"  # The library recommends right for some reason, but I evaluate left
 
         self.trainer = SFTTrainer(
             model=self.model,
