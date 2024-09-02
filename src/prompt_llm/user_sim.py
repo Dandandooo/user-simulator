@@ -364,11 +364,11 @@ class TurnMaker:
 @click.option("--no_obs", is_flag=True, help="Whether to omit observes in the examples provided, but not the task")
 @click.option("--entire_file", "-e", is_flag=True, help="Whether to generate prompts for an entire game file")
 @click.option("--split_dataset", is_flag=True, help="Whether to split the dataset")
-@click.option("--split", default="test", help="Which dataset to split")
+@click.option("--split", default="test", help="Which dataset to split")  # TODO: check the distribution of goals between training/validation/testing
 @click.option("--train", is_flag=True, help="Whether to generate prompts for the training set, not the entire dataset")
 @click.option("--entire_dataset", is_flag=True, help="Whether to generate prompts for the entire dataset. Save path should be a folder for this one.")
-@click.option("--no_move", is_flag=True, help="Whether to not remove the move actions")
-@click.option("--image_stamps", is_flag=True, help="Whether to use image time stamps")
+@click.option("--no_move", is_flag=True, help="Whether to not remove the move actions")  # TODO: Denoise instead of removing moves. Idea: if ReqFor... or Confirm or FeedbackNegative or NotifyFailure or InformationOther or Alternate Question dialogue act, remove move then.
+@click.option("--image_stamps", is_flag=True, help="Whether to use image time stamps")  # TODO: Selectively put images to save time and money: e.g. when driver asks location or what to do. After DAs above maybe.
 @click.option("--similarity_threshold", default=0.0, help="Threshold for how similar given examples must be")
 @click.option("--max_task_obs", default=1.0, help="Maximum percentage of observe tasks to be kept (to balance the data)")
 def main(**kwargs):
