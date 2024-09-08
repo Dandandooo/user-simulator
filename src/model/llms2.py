@@ -1,47 +1,194 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from trl import SFTTrainer, SFTConfig, DataCollatorForCompletionOnlyLM
-from datasets import load_dataset, Dataset
+from datasets import load_dataset, Dataset, DatasetDict
+from typing import Generator, Iterable, NoReturn
+import json
+import os
+from tqdm import tqdm
+
+"""
+This script is made for the second version of my User-Sim dataset.
+It is typically a chat format dataset, but I have instruct format
+as well. This dataset doesn't explain dialogue acts by default,
+but there is an option for it.
+"""
+
 
 class BaseLM:
-    def __init__(self):
+    def __init__(self, model_name: str = None, prompt_format: str = "chat"):
         self.datasets = {}
+        self.model_name = model_name
+        self.prompt_format = prompt_format.lower()
 
-    def answer(self, prompt: dict) -> str:
+    def answer(self, prompt: dict, chat: bool = True) -> str:
+        """
+        @param prompt: A dictionary that follows either the:
+        - chat format: {"messages": [{"role": "user", "content": "Hello!"}, ...]}
+        - instruct format: {"prompt": "Ask a question", "completion": "What is your name?"}
+        @param chat: If True, the prompt is in chat format. If False, the prompt is in instruct format.
+        """
+        raise NotImplementedError("Use a child of the base class!")
+
+    def answer_batch(self, prompts: Iterable[dict], filename: str = None) -> Generator[str, None, None]:
+        answered_number = 0
+
+
+        if filename is not None:
+            with open(filename, "r") as f:
+                lines = f.readlines()
+                answered_number = len(lines)
+                yield from tqdm(map(json.loads, lines), total=answered_number, desc="Reading answers")
+                for _ in range(answered_number):
+                    next(prompts)
+
+        try:
+            total_num = len(prompts)
+        except TypeError:
+            total_num = None
+
+        yield from tqdm(map(self.answer, prompts), total=total_num, initial=answered_number, desc="Answering remaining")
+
+    def answer_dataset(self, filename: str, dataset_name: str, split: str = "test") -> NoReturn:
+        dataset = self.datasets[dataset_name][split]
+
+        if not os.path.exists(os.path.dirname(filename)):
+            os.mkdir(os.path.dirname(filename))
+
+        with open(filename, "w") as f:
+            for prompt, response in zip(dataset, self.answer_batch(dataset, filename=filename)):
+                match self.prompt_format:
+                    case "chat":
+                        to_write = {
+                            "input": prompt["messages"][:-1],
+                            "truth": prompt["messages"][-1]["content"]
+                        }
+                    case "instruct":
+                        to_write = {
+                            "input": prompt["prompt"],
+                            "truth": prompt["completion"]
+                        }
+                to_write["response"] = response
+                f.write(json.dumps(to_write) + "\n")
+
+    def fetch_dataset(self, dataset_name: str, streaming: bool = True):
+        match self.prompt_format:
+            case "chat" | "instruct":
+                self.datasets[dataset_name] = DatasetDict({
+                    "train": load_dataset("Dandandooo/user-sim2", f"{self.prompt_format}_{dataset_name}", streaming=streaming, split="train"),
+                    "valid": load_dataset("Dandandooo/user-sim2", f"{self.prompt_format}_{dataset_name}", streaming=streaming, split="valid"),
+                    "test": load_dataset("Dandandooo/user-sim2", f"{self.prompt_format}_{dataset_name}", streaming=streaming, split="test")
+                })
+            case _:
+                raise ValueError("Invalid prompt format")
+
+
+    def fine_tune(self, dataset_name: str, num_epochs: int, batch_size: int, save_dir: str = None):
         raise NotImplementedError()
 
-    def answer_batch(self, prompts: list[dict]) -> list[str]:
-        yield from map(self.answer, prompts)
 
-    def fetch_dataset(self, dataset_name: str, split: str, streaming: bool = True):
-        self.datasets[dataset_name] = load_dataset("Dandandooo/user-sim2", dataset_name, streaming=streaming)[split]
-
-
+from openai import AzureOpenAI, RateLimitError
+import time
 class AzureLM(BaseLM):
-    def __init__(self, endpoint: str, key: str, model: str):
-        super().__init__()
-        raise NotImplementedError()
+    def __init__(self, endpoint: str, api_key: str, model: str):
+        super().__init__(model_name = model, prompt_format = "chat")
+        self.prompt_format = "chat"
+
+        self.client = AzureOpenAI(
+            azure_endpoint=endpoint,
+            api_key=api_key,
+            api_version="2024-07-01-preview"
+        )
+
 
     def answer(self, prompt: dict) -> str:
-        raise NotImplementedError()
+        while True:
+            try:
+                response = self.client.chat.completions.create(
+                    model = self.model_name,
+                    messages = prompt["messages"][:-1]  # Exclude the answer of course
+                )
+                return response.choices[0].message.content
+            except RateLimitError:
+                time.sleep(1)
 
+    def _batch_format(self, prompts: list[dict]) -> Generator[dict, None, None]:
+        for i, prompt in enumerate(prompts):
+            yield {"custom_id": f'task_{i}', "url": "/chat/completions", "method": "POST", "body": {"model": self.model_name, **prompt}}
+
+
+    # TODO: Implement this specifically for Azure OpenAI Batch API
+    # def answer_batch(...)
+
+
+    def fine_tune(self, dataset_name: str, num_epochs: int, batch_size: int, save_dir: str = None):
+        print("Submitting fine-tuning job...", end=" ")
+        train_id, valid_id, test_id = self._get_dataset_ids(dataset_name)
+        response = self.client.fine_tuning.jobs.create(
+            model=self.model,
+            training_file=train_id,
+            validation_file=valid_id,
+            hyperparameters={
+                "batch_size": batch_size,
+                "n_epochs": num_epochs
+            }
+        )
+        print("done!")
+        return response
+
+
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, pipeline
 class HugLM(BaseLM):
-    def __init__(self, model_name: str, tokenizer: str = None):
-        super().__init__()
-        if tokenizer is None:
-            tokenizer = model_name
-        raise NotImplementedError()
+    def __init__(self, model_name: str = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit", tokenizer_name: str = None, prompt_format="chat", **model_kwargs):
+        super().__init__(model_name, prompt_format)
+        if tokenizer_name is None:
+            tokenizer_name = model_name
+
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            tokenizer_name,
+            use_fast = True,
+            padding_side = "right",
+        )
+        match self.tokenizer.padding_side:
+            case "right":
+                self.tokenizer.pad_token = self.tokenizer.eos_token
+            case "left":
+                self.tokenizer.pad_token = self.tokenizer.bos_token
+
+        model_config = {
+            "use_cache": True,
+            "cache_dir": ".cache",
+            "device_map": "auto",
+            "force_download": False,
+            **model_kwargs,
+        }
+
+        if torch.cuda.is_available():
+            model_config |= {
+                # "attn_implementation": "flash_attention_2",
+                "torch_dtype": torch.bfloat16,
+            }
+            if "bnb" not in model_name:
+                model_config["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
+
+        self.pipeline = pipeline("text-generation", model=model_name, tokenizer=self.tokenizer, model_kwargs=model_config)
 
     def answer(self, prompt: dict) -> str:
-        raise NotImplementedError()
+        match self.prompt_format:
+            case "chat":
+                return self.pipeline(prompt["messages"][:-1], return_full_text=False)[0]["generated_text"]
+            case "instruct":
+                return self.pipeline(prompt["prompt"], return_full_text=False)[0]["generated_text"]
 
+
+from trl import SFTTrainer, SFTConfig, DataCollatorForCompletionOnlyLM
+from peft import LoraConfig, PeftModel
 class LoraLM(HugLM):
-    def __init__(self, model_name: str, tokenizer: str, dataset_name: str):
-        super().__init__(model_name, tokenizer)
+    def __init__(self, model_name: str = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit", dataset_name="no-move_0-shot_100pc-obs", tokenizer: str = None):
+        super().__init__(model_name, tokenizer, prompt_format="instruct")
 
         save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
         save_model = f"Dandandooo/user_sim2__{model_name.split('/')[-1]}__{dataset_name}"
 
-        self.fetch_dataset(dataset_name, "train")
+        self.fetch_dataset(dataset_name)
         del self.fetch_dataset  # To prevent accidental contamination
 
         self.instruct_template = "### Instruction:"
@@ -49,9 +196,35 @@ class LoraLM(HugLM):
 
         collator = DataCollatorForCompletionOnlyLM(self.response_template, self.instruct_template)
         config = SFTConfig(
-            output_dir=save_name
+            output_dir=save_name,
+            per_device_train_batch_size=1,
+            max_seq_length=self.tokenizer.model_max_length - 1, # It's given errors before
+            num_train_epochs=1,
         )
 
-    def format_func(self, data: Dataset):
+        lora_config = LoraConfig(
+            r=16,
+            lora_alpha=8,
+            lora_dropout=0.1,
+            bias='none',
+            task_type="CAUSAL_LM",
+            use_rslora=True,  # Huggingface said "shown to work better"
+        )
+
+        self.trainer = SFTTrainer(
+            model=PeftModel.from_pretrained(self.model),
+            args=config,
+            data_collator=collator,
+            train_dataset=self.datasets[dataset_name]["train"],
+            eval_dataset=self.datasets[dataset_name]["valid"],
+            formatting_func=self._format_func,
+            peft_config=lora_config,
+        )
+
+    def fine_tune(self,  num_epochs: int, batch_size: int, save_dir: str = None):
+        raise NotImplementedError()
+
+
+    def _format_func(self, data: Dataset):
         return [f"{self.instruct_template} {prompt}\n {self.response_template} {answer}"
                 for prompt, answer in zip(data["prompt"], data["answer"])]

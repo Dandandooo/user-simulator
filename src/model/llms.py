@@ -1,7 +1,7 @@
 from transformers import AutoModelForCausalLM, TFAutoModelForCausalLM, FlaxAutoModelForCausalLM
 from transformers import pipeline, AutoTokenizer, BitsAndBytesConfig, TrainingArguments
 from trl import SFTTrainer, SFTConfig, DataCollatorForCompletionOnlyLM
-from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training
+from peft import LoraConfig, get_peft_model, AutoPeftModelForCausalLM, prepare_model_for_kbit_training, PeftModel
 from openai import AzureOpenAI, RateLimitError, FineTuningJob
 from openai.types import FileObject
 import ollama
@@ -287,15 +287,7 @@ class LoraLM(HugLM):
                  dataset_name="0_no_move", resume=False, no_flash=True, **extra_kwargs):
         save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
         save_model = f"Dandandooo/{dataset_version}__{model_name.split('/')[-1]}__{dataset_name}"
-
-        self.lora_config = LoraConfig(
-            r=16,
-            lora_alpha=8,
-            lora_dropout=0.1,
-            bias='none',
-            task_type="CAUSAL_LM",
-            use_rslora=True,  # Huggingface said "shown to work better"
-        )
+        self.dataset_name = dataset_name
 
         extra_config = {
             "model_name": model_name,
@@ -323,6 +315,27 @@ class LoraLM(HugLM):
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
         super().__init__(**extra_config)
 
+        self.lora_config = LoraConfig(
+            r=16,
+            lora_alpha=8,
+            lora_dropout=0.1,
+            bias='none',
+            task_type="CAUSAL_LM",
+            use_rslora=True,  # Huggingface said "shown to work better"
+            target_modules=[
+                "q_proj",
+                "k_proj",
+                "v_proj",
+                "o_proj",
+                "gate_proj",
+                "up_proj",
+                "down_proj",
+                "lm_head",
+            ],
+        )
+
+        self.model = PeftModel(self.model, self.lora_config)
+
         self.args = SFTConfig(
             output_dir=save_name,
             resume_from_checkpoint=save_model if resume else None,
@@ -330,7 +343,11 @@ class LoraLM(HugLM):
             push_to_hub=True,
             hub_model_id=save_model,
             hub_private_repo=True,
-            per_device_train_batch_size=2,  # Hopefully this won't overflow the memory
+            per_device_train_batch_size=1,
+
+            max_seq_length=8000,
+            packing=False,
+
             **sft_extras,
         )
 
@@ -345,7 +362,8 @@ class LoraLM(HugLM):
             tokenizer=self.tokenizer,
         )
 
-        self.tokenizer.padding_side = "left"  # The library recommends right for some reason, but I evaluate left
+        self.tokenizer.padding_side = "right"  # The library recommends right for some reason, but I evaluate left
+
 
         self.trainer = SFTTrainer(
             model=self.model,
@@ -363,6 +381,10 @@ class LoraLM(HugLM):
     def train(self):
         self.model.train()
         self.trainer.train()
+
+    def test(self):
+        self.model.eval()
+        self.trainer.predict(self.datasets[dataset_name]["test"])
 
 
 if __name__ == "__main__":
