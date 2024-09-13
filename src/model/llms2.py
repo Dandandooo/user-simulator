@@ -54,7 +54,10 @@ class BaseLM:
 
         dataset_length = get_dataset_config_info("Dandandooo/user-sim2", f"{self.prompt_format}_{dataset_name}").splits[split].num_examples
 
-        lines = open(filename).readlines()
+        if os.path.exists(filename):
+            lines = open(filename).readlines()
+        else:
+            lines = []
 
         with open(filename, "w") as f:
             for prompt, response in zip(dataset, self.answer_batch(dataset, lines=lines, total_num=dataset_length)):

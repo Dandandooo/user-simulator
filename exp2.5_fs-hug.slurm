@@ -20,7 +20,7 @@ sys.path.append("/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator")
 
 from src.model.llms2 import HugLM
 
-dataset_name = "no-move_5-shot_100pc-obs"
+dataset_name = "sel-move_5-shot_100pc-obs"
 model_name = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit"
 
 model = HugLM(model_name)
