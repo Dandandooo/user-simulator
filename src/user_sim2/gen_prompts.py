@@ -3,7 +3,7 @@ import os
 import click
 import json
 import random
-from datasets import Dataset, DatasetDict, NamedSplit
+from datasets import Dataset, DatasetDict, get_dataset_config_names, load_dataset
 from tqdm import tqdm
 
 
@@ -39,11 +39,17 @@ class PromptMaker:
         prompt += open(f"src/user_sim2/segments/das_{'expl' if self.kwargs['das-expl'] else 'list'}.txt").read()
         return prompt
 
+    def _last_da(self, turn):
+        return turn["DRIVER"]["das"][-1] if turn["DRIVER"]["action"] == "dialogue" else turn["COMMANDER"]["das"][-1]
+
     def history(self, example: dict, length: int) -> tuple[str, str]:
         hist = example["goal"] + '\n'
-        for turn in example["turns"][:length]:
+        for last, turn in zip([None, *example["turns"][:length-1]], example["turns"][:length]):
             if turn["turn_action"] == "move" and self.kwargs["no-move"]:
                 continue
+            if last is not None and turn["turn_action"] == "move" and self.kwargs["sel-move"] and last["turn_action"] == "dialogue":
+                if self._last_da(last)[:3] in ["Req", "Alt", "Con"]:
+                    continue
             elif turn["DRIVER"]["action"] == "dialogue":
                 hist += f"COMMANDER: <observe>\n"
                 hist += f"DRIVER: {turn['DRIVER']['utterance']} <<{','.join(turn['DRIVER']['das'])}>>\n"
@@ -63,7 +69,7 @@ class PromptMaker:
         def choose_example():
             choice = random.choice(self.example_source)
             length = random.randint(1, len(choice["turns"]) - 1)
-            if choice["turns"][length]["COMMANDER"]["action"] == "<observe>" and 100 * random.random() < self.kwargs["nex_obs"]:
+            if choice["turns"][length]["COMMANDER"]["action"] == "<observe>" and 100 * random.random() < self.kwargs["nex-obs"]:
                 return choice, length
             return choose_example()
         for i in range(num_to_make):
@@ -138,12 +144,13 @@ class DatasetMaker:
 
 
 class DatasetManager:
-    def __init__(self, variations_: dict[str, list]):
+    def __init__(self, variations_: dict[str, list], OVERWRITE_EXISTING: bool = False):
         self.datasets = {}
+        self.overwrite = OVERWRITE_EXISTING
 
         for variation in DatasetManager.get_variations(list(variations_.items())):
             id_, _ = self.make_dataset(variation)
-            self.save_dataset(id_)
+            # self.save_dataset(id_)
 
         self.upload()
 
@@ -162,6 +169,8 @@ class DatasetManager:
 
     def make_dataset(self, variation) -> tuple[str, DatasetDict]:
         dm = DatasetMaker(**variation)
+        if not self.overwrite and dm.id in get_dataset_config_names("Dandandooo/user-sim2"):
+            return dm.id, load_dataset("Dandandooo/user-sim2", dm.id, streaming=True)  # Streaming so I don't have to download the whole thing right now
         dataset = dm.generate_dataset()
         self.datasets[dm.id] = dataset
         return dm.id, dataset
@@ -169,6 +178,9 @@ class DatasetManager:
     def upload(self):
         hub_id = "Dandandooo/user-sim2"
         for id_, dataset in self.datasets.items():
+            if not self.overwrite and id_ in get_dataset_config_names(hub_id):
+                print(f"Dataset already exists: {id_}")
+                continue
             print(f"Uploading dataset: {id_}")
             dataset.push_to_hub(hub_id, id_, private=True)
 
@@ -194,6 +206,7 @@ class DatasetManager:
 @click.command()
 @click.option("--das-expl", is_flag=True, help="Whether to include the DAS explanation in the system prompt.")
 @click.option("--no_move", is_flag=True, help="Whether to include move turns in user prompt")
+@click.option("--sel-move", is_flag=True, help="Whether to selectively include move turns in user prompt")
 @click.option("--n-shot", type=int, default=0, help="The number of examples to include in the prompt.")
 @click.option("--nex-obs", type=int, default=20, help="The percentage of observe examples generated to keep.")
 @click.option("--npc-obs", type=int, default=40, help="The percentage of observe tasks to keep in training dataset.")
@@ -207,12 +220,15 @@ def main(**kwargs):
 if __name__ == "__main__":
     variations = {
         "das-expl": [False, True],
-        "no-move": [False, True],
-        "n-shot": [0],
+        "no-move": [False],
+        "sel-move": [True],
+        "n-shot": [0, 5],
         "nex-obs": [20],
         "npc-obs": [20, 40, 100],
         "enumerate": [False],
         "format": ["chat", "instruct"],
     }
 
-    manager = DatasetManager(variations)
+    OVERWRITE_EXISTING = False
+
+    manager = DatasetManager(variations, OVERWRITE_EXISTING)

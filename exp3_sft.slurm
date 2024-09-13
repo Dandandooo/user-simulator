@@ -1,4 +1,5 @@
-#!/u/dphilipov/miniforge/envs/Tur/bin/python
+#!/u/dphilipov/miniforge3/envs/Tur/bin/python
+#SBATCH --chdir=/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator
 #SBATCH --account="bckf-delta-gpu"
 #SBATCH --job-name="exp3: sft"
 #SBATCH --output="/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/logs/exp3_sft.out"
@@ -13,3 +14,15 @@
 
 #SBATCH --exclusive
 #SBATCH -t 36:00:00
+
+import wandb
+from src.model.llms import LoraLM
+
+wandb.init(project="UserSimulator")
+
+model_name = "unsloth/llama-3.1-8b-Instruct-bnb-4bit"
+dataset = "sel-move_0_no-move_20pc-obs"
+
+model = LoraLM(model_name, dataset_name=dataset)
+
+model.train(epochs=1)

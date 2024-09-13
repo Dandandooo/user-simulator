@@ -1,5 +1,6 @@
-from datasets import load_dataset, Dataset, DatasetDict
+from datasets import load_dataset, Dataset, DatasetDict, get_dataset_config_info
 from typing import Generator, Iterable, NoReturn
+import itertools as it
 import json
 import os
 from tqdm import tqdm
@@ -27,24 +28,23 @@ class BaseLM:
         """
         raise NotImplementedError("Use a child of the base class!")
 
-    def answer_batch(self, prompts: Iterable[dict], filename: str = None) -> Generator[str, None, None]:
+    def answer_batch(self, prompts: Iterable[dict], lines: list[str] = None, total_num: int = None) -> Generator[str, None, None]:
         answered_number = 0
 
-
-        if filename is not None:
-            with open(filename, "r") as f:
-                lines = f.readlines()
-                answered_number = len(lines)
-                yield from tqdm(map(json.loads, lines), total=answered_number, desc="Reading answers")
-                for _ in range(answered_number):
-                    next(prompts)
+        if lines is not None:
+            answered_number = len(lines)
+            print(f'Found {answered_number} existing answers')
+            yield from tqdm(map(json.loads, lines), total=answered_number, desc="Reading answers")
 
         try:
-            total_num = len(prompts)
+            # will only reassign if it's None
+            total_num = total_num or len(prompts)
         except TypeError:
-            total_num = None
+            pass
 
-        yield from tqdm(map(self.answer, prompts), total=total_num, initial=answered_number, desc="Answering remaining")
+        for i, prompt in tqdm(enumerate(prompts), total=total_num, initial=0, desc="Answering"):
+            if i >= answered_number:
+                yield self.answer(prompt)
 
     def answer_dataset(self, filename: str, dataset_name: str, split: str = "test") -> NoReturn:
         dataset = self.datasets[dataset_name][split]
@@ -52,8 +52,12 @@ class BaseLM:
         if not os.path.exists(os.path.dirname(filename)):
             os.mkdir(os.path.dirname(filename))
 
+        dataset_length = get_dataset_config_info("Dandandooo/user-sim2", f"{self.prompt_format}_{dataset_name}").splits[split].num_examples
+
+        lines = open(filename).readlines()
+
         with open(filename, "w") as f:
-            for prompt, response in zip(dataset, self.answer_batch(dataset, filename=filename)):
+            for prompt, response in zip(dataset, self.answer_batch(dataset, lines=lines, total_num=dataset_length)):
                 match self.prompt_format:
                     case "chat":
                         to_write = {
@@ -109,13 +113,64 @@ class AzureLM(BaseLM):
             except RateLimitError:
                 time.sleep(1)
 
-    def _batch_format(self, prompts: list[dict]) -> Generator[dict, None, None]:
+    def _batch_format(self, prompts: Iterable[dict]) -> Generator[dict, None, None]:
         for i, prompt in enumerate(prompts):
             yield {"custom_id": f'task_{i}', "url": "/chat/completions", "method": "POST", "body": {"model": self.model_name, **prompt}}
 
+    def _save_batch_id(self, batch_id: str, exp_no: int | float, exp_name: str):
+        root_path = f"experiment_results/exp{exp_no}"
+        file_path = f"{root_path}/{exp_name}_batches.json"
+        if not os.path.exists(root_path):
+            os.mkdir(root_path)
+        if not os.path.exists(file_path):
+            existing = {}
+        else:
+            existing = json.load(open(file_path, "r"))
+
+        existing |= {time.strftime("%Y-%m-%d_%H-%M-%S"): batch_id}
+        json.dump(existing, open(file_path, "w"))
+        print(f"Batch ID ({batch_id}) saved to {file_path}")
+
+
+    # Returns the input_file_id
+    def _upload_dataset(self, dataset: Dataset, dataset_id: str, split: str = "test") -> str:
+        already_uploaded = self.client.files.list().data
+        for file in already_uploaded:
+            if file.filename == f"{dataset_id}_{split}.jsonl":
+                print("Found existing dataset file")
+                return file.id
+
+        filename = f"/tmp/{dataset_id}_{split}.jsonl"
+        with open(filename, "w") as f:
+            filename.write("\n".join(map(json.dumps, self.batch_format(dataset))))
+
+        file_response = self.client.files.create("/tmp/user_sim2_dataset")
+        status = "pending"
+        while status != "processed":
+            time.sleep(15)
+            upload_response = self.client.files.retrieve(file_response.id)
+            status = upload_response.status
+            print(f"File Upload Status: {status}")
+
+
+        return file_response.id
+
+
 
     # TODO: Implement this specifically for Azure OpenAI Batch API
-    # def answer_batch(...)
+    def send_batch(self, file_id: str) -> Generator[str, None, None]:
+        batch_response = self.client.batches.create(
+            input_file_id=file_id,
+            endpoint="/chat/completions",
+            completion_window="24h"
+        )
+        return batch_response.id
+
+
+
+    def answer_dataset(self, filename: str, dataset_name: str, split: str = "test", send_batch: bool = False) -> NoReturn:
+        if not send_batch:
+            return super().answer_dataset(filename, dataset_name, split)
 
 
     def fine_tune(self, dataset_name: str, num_epochs: int, batch_size: int, save_dir: str = None):

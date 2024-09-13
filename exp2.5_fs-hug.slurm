@@ -1,8 +1,8 @@
 #!/u/dphilipov/miniforge3/envs/Tur/bin/python
 #SBATCH --chdir=/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator
 #SBATCH --account="bckf-delta-gpu"
-#SBATCH --job-name="exp1: fs hug"
-#SBATCH --output="/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/logs/exp1_fs-hug.out"
+#SBATCH --job-name="exp2.5: fs hug"
+#SBATCH --output="/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/logs/exp2.5_fs-hug.out"
 
 #SBATCH --partition="gpuA40x4"
 #SBATCH --mem=16G
@@ -20,10 +20,10 @@ sys.path.append("/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator")
 
 from src.model.llms2 import HugLM
 
-dataset_name = "5-shot_100pc-obs"
+dataset_name = "no-move_5-shot_100pc-obs"
 model_name = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit"
 
 model = HugLM(model_name)
 model.fetch_dataset(dataset_name)
 
-model.answer_dataset(f"experiment_results/exp1/fs-hug.jsonl", dataset_name, split="test")
+model.answer_dataset(f"experiment_results/exp2.5/fs-hug.jsonl", dataset_name, split="test")

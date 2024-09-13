@@ -1,4 +1,5 @@
-#!/u/dphilipov/miniforge/envs/Tur/bin/python
+#!/u/dphilipov/miniforge3/envs/Tur/bin/python
+#SBATCH --chdir=/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator
 #SBATCH --account="bckf-delta-gpu"
 #SBATCH --job-name="exp7: sft"
 #SBATCH --output="/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/logs/exp7_sft.out"

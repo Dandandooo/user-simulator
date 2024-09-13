@@ -1,13 +1,14 @@
-#!/u/dphilipov/miniforge/envs/Tur/bin/python
+#!/u/dphilipov/miniforge3/envs/Tur/bin/python
+#SBATCH --chdir=/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator
 #SBATCH --account="bckf-delta-gpu"
 #SBATCH --job-name="exp1: fs gpt"
 #SBATCH --output="/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/logs/exp1_fs-gpt.out"
 
-#SBATCH --partition="gpuA100x4"
+#SBATCH --partition="cpu"
 #SBATCH --mem=16G
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --gpus-per-node=1
 #SBATCH --gpu-bind=closest
 

@@ -1,9 +1,10 @@
-#!/u/dphilipov/miniforge/envs/Tur/bin/python
+#!/u/dphilipov/miniforge3/envs/Tur/bin/python
+#SBATCH --chdir=/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator
 #SBATCH --account="bckf-delta-gpu"
 #SBATCH --job-name="exp2: fs hug"
 #SBATCH --output="/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/logs/exp2_fs-hug.out"
 
-#SBATCH --partition="gpuA100x4"
+#SBATCH --partition="gpuA40x4"
 #SBATCH --mem=16G
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -12,7 +13,10 @@
 #SBATCH --gpu-bind=closest
 
 #SBATCH --exclusive
-#SBATCH -t 36:00:00
+#SBATCH -t 24:00:00
+
+import sys
+sys.path.append("/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator")
 
 from src.model.llms2 import HugLM
 

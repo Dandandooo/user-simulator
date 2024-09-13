@@ -21,7 +21,7 @@ from src.model.llms import LoraLM
 wandb.init(project="UserSimulator")
 
 model_name = "unsloth/llama-3.1-8b-Instruct-bnb-4bit"
-dataset = "no-move_0-shot_100pc-obs"
+dataset = "sel-move_0_no-move_100pc-obs"
 
 model = LoraLM(model_name, dataset_name=dataset)
 
