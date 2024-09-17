@@ -18,7 +18,7 @@
 import os
 from src.model.llms2 import AzureLM
 
-dataset_name = "0-shot_no-move_100pc-obs"
+dataset_name = "no-move_0-shot_100pc-obs"
 model_name = "gpt-4o-mini"
 endpoint = "https://uiuc-convai.openai.azure.com/"
 api_key = os.getenv("AZURE_OPENAI_KEY_4o")

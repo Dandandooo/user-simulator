@@ -5,6 +5,8 @@ import json
 import os
 from tqdm import tqdm
 
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
 """
 This script is made for the second version of my User-Sim dataset.
 It is typically a chat format dataset, but I have instruct format
@@ -94,7 +96,7 @@ class BaseLM:
 from openai import AzureOpenAI, RateLimitError
 import time
 class AzureLM(BaseLM):
-    def __init__(self, endpoint: str, api_key: str, model: str):
+    def __init__(self, endpoint: str, api_key: str, model: str, dataset_streaming: bool = True):
         super().__init__(model_name = model, prompt_format = "chat")
         self.prompt_format = "chat"
 
@@ -205,6 +207,7 @@ class HugLM(BaseLM):
             use_fast = True,
             padding_side = "right",
         )
+
         match self.tokenizer.padding_side:
             case "right":
                 self.tokenizer.pad_token = self.tokenizer.eos_token
@@ -227,7 +230,11 @@ class HugLM(BaseLM):
             if "bnb" not in model_name:
                 model_config["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
 
-        self.pipeline = pipeline("text-generation", model=model_name, tokenizer=self.tokenizer, model_kwargs=model_config)
+        self.config = model_config
+
+        self.model = AutoModelForCausalLM.from_pretrained(model_name, **model_config)
+
+        self.pipeline = pipeline("text-generation", model=self.model, tokenizer=self.tokenizer)
 
     def answer(self, prompt: dict) -> str:
         match self.prompt_format:
@@ -237,52 +244,91 @@ class HugLM(BaseLM):
                 return self.pipeline(prompt["prompt"], return_full_text=False)[0]["generated_text"]
 
 
-from trl import SFTTrainer, SFTConfig, DataCollatorForCompletionOnlyLM
+from trl import SFTTrainer, DataCollatorForCompletionOnlyLM, SFTConfig
+from transformers import TrainingArguments
 from peft import LoraConfig, PeftModel
 class LoraLM(HugLM):
-    def __init__(self, model_name: str = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit", dataset_name="no-move_0-shot_100pc-obs", tokenizer: str = None):
+    def __init__(self, model_name: str = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit", dataset_name="no-move_0-shot_100pc-obs", tokenizer: str = None, adapter_name: str = None):
         super().__init__(model_name, tokenizer, prompt_format="instruct")
 
-        save_name = f"llm_training_sessions/{model_name.split('/')[-1]}/{dataset_name}"
+
+        save_name = f"llm_models/{model_name.split('/')[-1]}/{dataset_name}"
         save_model = f"Dandandooo/user_sim2__{model_name.split('/')[-1]}__{dataset_name}"
 
-        self.fetch_dataset(dataset_name)
-        del self.fetch_dataset  # To prevent accidental contamination
+        # Dataset streaming turned off for proper epoch calculation
+        self.fetch_dataset(dataset_name, streaming=False)
 
-        self.instruct_template = "### Instruction:"
-        self.response_template = "### Response:"
+        self.tokenizer.padding_side = "right" # It keeps giving me warning about this
 
-        collator = DataCollatorForCompletionOnlyLM(self.response_template, self.instruct_template)
+
+        collator = DataCollatorForCompletionOnlyLM(
+            response_template="### Response:",
+            instruction_template="### Instruction",
+            tokenizer=self.tokenizer
+        )
+
+        BATCH_SIZE = 1
+        GRAD_STEPS = 2
+        EPOCHS = 1
+
+
+        num_steps = get_dataset_config_info("Dandandooo/user-sim2", f"instruct_{dataset_name}").splits["train"].num_examples // BATCH_SIZE // GRAD_STEPS
+
         config = SFTConfig(
             output_dir=save_name,
-            per_device_train_batch_size=1,
-            max_seq_length=self.tokenizer.model_max_length - 1, # It's given errors before
-            num_train_epochs=1,
+            per_device_train_batch_size=BATCH_SIZE,
+            max_seq_length=8000,
+            gradient_accumulation_steps=GRAD_STEPS,
+            num_train_epochs=EPOCHS,
+
+            eval_steps=num_steps // 4,
+            save_steps=500,
+            run_name=save_model.split("/")[-1],
+            report_to="wandb",
+            # max_steps=num_steps
         )
 
         lora_config = LoraConfig(
-            r=16,
-            lora_alpha=8,
-            lora_dropout=0.1,
-            bias='none',
             task_type="CAUSAL_LM",
-            use_rslora=True,  # Huggingface said "shown to work better"
+            # use_rslora=True,  # Huggingface said "shown to work better". Disabling because I don't know enough
         )
+
+        train_dataset = self.datasets[dataset_name]["train"]
+        valid_dataset = self.datasets[dataset_name]["valid"]
+
+        if adapter_name is not None:
+            self.model.load_adapter(adapter_name)
 
         self.trainer = SFTTrainer(
-            model=PeftModel.from_pretrained(self.model),
+            model=self.model,
+            tokenizer=self.tokenizer,
             args=config,
             data_collator=collator,
-            train_dataset=self.datasets[dataset_name]["train"],
-            eval_dataset=self.datasets[dataset_name]["valid"],
+            train_dataset=train_dataset,
+            eval_dataset=valid_dataset,
             formatting_func=self._format_func,
             peft_config=lora_config,
+            # max_seq_length=8000
         )
 
-    def fine_tune(self,  num_epochs: int, batch_size: int, save_dir: str = None):
-        raise NotImplementedError()
+    def answer(self, prompt: dict) -> str:
+        # Not sure if this will change anything, but I'm not risking the fine tuning
+        return self.pipeline(self._format_prompt(prompt["prompt"], ""), return_full_text=False)[0]["generated_text"]
+
+    def fine_tune(self,  epochs: int = None, batch_size: int = None):
+        if epochs is not None:
+            self.trainer.args.num_train_epochs = epochs
+        if batch_size is not None:
+            self.trainer.args.max_steps = self.trainer.args.max_steps * self.trainer.args.per_device_train_batch_size // batch_size
+            self.trainer.args.per_device_train_batch_size = batch_size
+
+        self.trainer.train()
+
+
+    @staticmethod
+    def _format_prompt(prompt: str, answer: str) -> str:
+        return f"### Instruction: \n {prompt}\n### Response: \n {answer}"
 
 
     def _format_func(self, data: Dataset):
-        return [f"{self.instruct_template} {prompt}\n {self.response_template} {answer}"
-                for prompt, answer in zip(data["prompt"], data["answer"])]
+        return [self._format_prompt(prompt, answer) for prompt, answer in zip(data["prompt"], data["completion"])]

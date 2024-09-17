@@ -1,4 +1,19 @@
 Unused kwargs: ['_load_in_4bit', '_load_in_8bit', 'quant_method']. These kwargs are not used in <class 'transformers.utils.quantization_config.BitsAndBytesConfig'>.
-Found 0 existing answers
-Reading answers: 0it [00:00, ?it/s]Reading answers: 0it [00:00, ?it/s]
-Answering:   0%|          | 0/7742 [00:00<?, ?it/s]Answering:   0%|          | 1/7742 [00:01<3:23:25,  1.58s/it]Answering:   0%|          | 2/7742 [00:02<2:04:30,  1.04it/s]
+Found 2473 existing answers
+Reading answers:   0%|          | 0/2473 [00:00<?, ?it/s]Reading answers:  15%|█▍        | 369/2473 [00:00<00:00, 5014.44it/s]
+Traceback (most recent call last):
+  File "/var/spool/slurmd/job4835766/slurm_script", line 29, in <module>
+    model.answer_dataset(f"experiment_results/exp2.5/fs-hug.jsonl", dataset_name, split="test")
+  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/src/model/llms2.py", line 65, in answer_dataset
+    for prompt, response in zip(dataset, self.answer_batch(dataset, lines=lines, total_num=dataset_length)):
+  File "/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/src/model/llms2.py", line 39, in answer_batch
+    yield from tqdm(map(json.loads, lines), total=answered_number, desc="Reading answers")
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/u/dphilipov/miniforge3/envs/Tur/lib/python3.10/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
