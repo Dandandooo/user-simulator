@@ -4,7 +4,7 @@
 #SBATCH --job-name="exp3: sft"
 #SBATCH --output="/taiga/illinois/collab/eng/cs/conv-ai/UserSimulator/logs/exp3_sft.out"
 
-#SBATCH --partition="gpuA100x4"
+#SBATCH --partition="gpuA40x4"
 #SBATCH --mem=32G
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1

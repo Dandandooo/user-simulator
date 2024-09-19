@@ -103,7 +103,7 @@ class AzureLM(BaseLM):
         self.client = AzureOpenAI(
             azure_endpoint=endpoint,
             api_key=api_key,
-            api_version="2024-07-01-preview"
+            api_version="2024-08-01-preview"
         )
 
 
@@ -145,9 +145,11 @@ class AzureLM(BaseLM):
                 print("Found existing dataset file")
                 return file.id
 
+        print("File not found, uploading...")
+
         filename = f"/tmp/{dataset_id}_{split}.jsonl"
         with open(filename, "w") as f:
-            filename.write("\n".join(map(json.dumps, self.batch_format(dataset))))
+            f.write("\n".join(map(json.dumps, self._batch_format(dataset))))
 
         file_response = self.client.files.create("/tmp/user_sim2_dataset")
         status = "pending"
@@ -197,7 +199,7 @@ class AzureLM(BaseLM):
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, pipeline
 class HugLM(BaseLM):
-    def __init__(self, model_name: str = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit", tokenizer_name: str = None, prompt_format="chat", **model_kwargs):
+    def __init__(self, model_name: str = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit", tokenizer_name: str = None, prompt_format="chat", adapter_name: str=None, **model_kwargs):
         super().__init__(model_name, prompt_format)
         if tokenizer_name is None:
             tokenizer_name = model_name
@@ -233,6 +235,8 @@ class HugLM(BaseLM):
         self.config = model_config
 
         self.model = AutoModelForCausalLM.from_pretrained(model_name, **model_config)
+        if adapter_name is not None:
+            self.model.load_adapter(adapter_name)
 
         self.pipeline = pipeline("text-generation", model=self.model, tokenizer=self.tokenizer)
 
@@ -249,7 +253,7 @@ from transformers import TrainingArguments
 from peft import LoraConfig, PeftModel
 class LoraLM(HugLM):
     def __init__(self, model_name: str = "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit", dataset_name="no-move_0-shot_100pc-obs", tokenizer: str = None, adapter_name: str = None):
-        super().__init__(model_name, tokenizer, prompt_format="instruct")
+        super().__init__(model_name, tokenizer, prompt_format="chat", adapter_name=adapter_name)
 
 
         save_name = f"llm_models/{model_name.split('/')[-1]}/{dataset_name}"
@@ -295,25 +299,30 @@ class LoraLM(HugLM):
 
         train_dataset = self.datasets[dataset_name]["train"]
         valid_dataset = self.datasets[dataset_name]["valid"]
+        self.test_dataset = self.datasets[dataset_name]["test"]
 
-        if adapter_name is not None:
-            self.model.load_adapter(adapter_name)
 
         self.trainer = SFTTrainer(
             model=self.model,
             tokenizer=self.tokenizer,
             args=config,
-            data_collator=collator,
+            # data_collator=collator,
             train_dataset=train_dataset,
             eval_dataset=valid_dataset,
-            formatting_func=self._format_func,
+            # formatting_func=self._format_func,
             peft_config=lora_config,
+
             # max_seq_length=8000
         )
 
-    def answer(self, prompt: dict) -> str:
+    def answer2(self, prompt: dict) -> str:
         # Not sure if this will change anything, but I'm not risking the fine tuning
-        return self.pipeline(self._format_prompt(prompt["prompt"], ""), return_full_text=False)[0]["generated_text"]
+        prompt_ = self._format_prompt(prompt["prompt"], '')
+        tokenized = self.tokenizer(prompt_, return_tensors="pt", padding="max_length", max_length=8000, truncation=True).to(self.model.device)
+        result = self.model.generate(**tokenized, max_new_tokens=10)
+        decoded = self.tokenizer.decode(result[0], skip_special_tokens=True).removeprefix(prompt_).strip()
+        return decoded
+        return self.pipeline(prompt_, return_full_text=False)[0]["generated_text"]
 
     def fine_tune(self,  epochs: int = None, batch_size: int = None):
         if epochs is not None:
@@ -323,6 +332,9 @@ class LoraLM(HugLM):
             self.trainer.args.per_device_train_batch_size = batch_size
 
         self.trainer.train()
+
+    def test(self, save_to: str):
+        preds = self.trainer.predict(self.test_dataset, predict_with_generate=True)
 
 
     @staticmethod

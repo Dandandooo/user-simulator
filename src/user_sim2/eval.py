@@ -49,24 +49,29 @@ class Evaluate:
         First column and row is Observe
         Last column and row is Other
         """
+        def coord_f1(matrix: np.ndarray, i: int) -> float:
+            return np.nan_to_num(2 * matrix[i, i] / (np.sum(matrix[i, :]) + np.sum(matrix[:, i])), nan=0.0)
+        def coord_acc(matrix: np.ndarray, i: int) -> float:
+            return np.nan_to_num(matrix[i, i] / np.sum(matrix[i, :]), nan=0.0)
+
         speak_matrix = np.array([
             [matrix[0][0], np.sum(matrix[0][1:])],
             [np.sum(matrix[1:, 0]), np.sum(matrix[1:, 1:])]
         ])
 
-        speak_f1 = 2 * speak_matrix[1, 1] / (2 * speak_matrix[1, 1] + speak_matrix[0, 1] + speak_matrix[1, 0])
+        speak_f1 = coord_f1(speak_matrix, 1)
 
         # d, e
         da_matrix = matrix[1:, 1:]
         da_frequencies = np.sum(da_matrix, axis=1).flatten()
-        da_f1s = np.array([2 * da_matrix[i, i] / (np.sum(da_matrix[i, :]) + np.sum(da_matrix[:, i])) for i in range(da_matrix.shape[0])])
+        da_f1s = np.array([coord_f1(da_matrix, i) for i in range(da_matrix.shape[0])])
         da_f1 = np.average(da_f1s, weights=da_frequencies)
 
         # c, d, e
         spandana_matrix = matrix
         spandana_frequencies = np.sum(spandana_matrix, axis=1).flatten()[1:-1]
-        spandana_f1s = np.array([2 * spandana_matrix[i, i] / (np.sum(spandana_matrix[i, :]) + np.sum(spandana_matrix[:, i])) for i in range(1, spandana_matrix.shape[0]-1)])
-        spandana_accuracies = np.array([spandana_matrix[i, i] / np.sum(spandana_matrix[i, :]) for i in range(1, spandana_matrix.shape[0]-1)])
+        spandana_f1s = np.array([coord_f1(spandana_matrix, i) for i in range(1, spandana_matrix.shape[0]-1)])
+        spandana_accuracies = np.array([coord_acc(spandana_matrix, i) for i in range(1, spandana_matrix.shape[0]-1)])
         spandana_f1 = np.average(spandana_f1s, weights=spandana_frequencies)
         spandana_accuracy = np.average(spandana_accuracies, weights=spandana_frequencies)
 
